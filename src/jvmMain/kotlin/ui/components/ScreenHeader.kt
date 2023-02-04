@@ -8,6 +8,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+/**
+ * Header for each screen
+ * @param pageTitle Title text to display
+ * @param currentStep Determines how filled the bar is, first step is 0
+ */
 @Composable
 fun ScreenHeader(
     pageTitle: String,

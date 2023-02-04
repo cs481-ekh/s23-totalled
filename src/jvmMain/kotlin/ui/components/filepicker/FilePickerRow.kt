@@ -10,6 +10,13 @@ import androidx.compose.ui.unit.dp
 import ui.filepicker.DirectoryPicker
 import ui.filepicker.FilePicker
 
+/**
+ * Text field and button to open native file dialog
+ * @param pathState The state to store the path in
+ * @param label Label text for the text box
+ * @param isDirPicker Set to true if you want to pick directories instead of files
+ * @param fileExtensions File extensions whitelist, defaults to showing all file types
+ */
 @Composable
 fun FilePickerRow(
     pathState: MutableState<String>,

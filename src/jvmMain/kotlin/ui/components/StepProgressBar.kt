@@ -17,6 +17,12 @@ import androidx.compose.ui.unit.dp
  * Slightly modified version of the top answer to this question
  */
 
+/**
+ * A step progress bar for tracking progress in a task
+ * @param modifier Standard modifier
+ * @param numberOfSteps Total number of steps to display
+ * @param currentStep Determines how filled the bar is, first step is 0
+ */
 @Composable
 fun StepProgressBar(modifier: Modifier = Modifier, numberOfSteps: Int, currentStep: Int) {
     Row(

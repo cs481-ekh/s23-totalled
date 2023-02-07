@@ -8,6 +8,8 @@ plugins {
 group = "com.totalled"
 version = "1.0-SNAPSHOT"
 
+val lwjglVersion = "3.3.1"
+
 repositories {
     google()
     mavenCentral()
@@ -23,6 +25,17 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation(compose.desktop.currentOs)
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.6.4")
+                listOf("lwjgl", "lwjgl-nfd").forEach { lwjglDep ->
+                    implementation("org.lwjgl:${lwjglDep}:${lwjglVersion}")
+                    listOf(
+                        "natives-windows", "natives-windows-x86", "natives-windows-arm64",
+                        "natives-macos", "natives-macos-arm64",
+                        "natives-linux", "natives-linux-arm64", "natives-linux-arm32"
+                    ).forEach { native ->
+                        runtimeOnly("org.lwjgl:${lwjglDep}:${lwjglVersion}:${native}")
+                    }
+                }
             }
         }
         val jvmTest by getting {

@@ -18,7 +18,7 @@ fun SelectOutputScreen() {
     BottomNavBar(
         onClickNext = { },
         onClickBack = { },
-        isNextEnabled = { isNextEnabled() },
+        nextEnabled = { isNextEnabled() },
     ) {
         Column() {
             ScreenHeader("Select Output Directory", 1)

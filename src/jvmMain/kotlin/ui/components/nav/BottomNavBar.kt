@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.dp
  * Bottom navigation bar containing a next button and back button
  * @param onClickNext Function to be called when next is clicked
  * @param onClickBack Function to be called when back is clicked
- * @param isNextEnabled Function used to check if next should be enabled
+ * @param nextEnabled Function used to check if next should be enabled
  * @param validateOnNext Will only call onClickNext if this returns true
  * @param nextButtonText Text displayed on next button
  * @param backButtonText Text displayed on back button
@@ -20,15 +20,15 @@ import androidx.compose.ui.unit.dp
 fun BottomNavBar(
     onClickNext: () -> Unit,
     onClickBack: (() -> Unit)? = null,
-    isNextEnabled: () -> Boolean= { true },
+    nextEnabled: () -> Boolean= { true },
     validateOnNext: () -> Boolean = { true },
     nextButtonText: String = "Next >",
     backButtonText: String = "< Back",
     content: @Composable () -> Unit
 ) {
-    var isBackEnabled = true
+    var backEnabled = true
     if (onClickBack == null) {
-        isBackEnabled = false
+        backEnabled = false
     }
     Scaffold(
         bottomBar = {
@@ -45,7 +45,7 @@ fun BottomNavBar(
                                 onClickBack()
                             }
                         },
-                        enabled = isBackEnabled,
+                        enabled = backEnabled,
                         modifier = Modifier.padding(start = 4.dp, end = 4.dp, top = 4.dp, bottom = 4.dp)
                     ) {
                         Text(backButtonText)
@@ -56,7 +56,7 @@ fun BottomNavBar(
                                 onClickNext()
                             }
                         },
-                        enabled = isNextEnabled(),
+                        enabled = nextEnabled(),
                         modifier = Modifier.padding(start = 4.dp, end = 24.dp, top = 4.dp, bottom = 4.dp)
                     ) {
                         Text(nextButtonText)

@@ -1,8 +1,8 @@
-package ui.nav
+package ui.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
@@ -20,11 +20,11 @@ import androidx.compose.ui.unit.dp
 fun BottomNavBar(
     onClickNext: () -> Unit,
     onClickBack: (() -> Unit)? = null,
-    nextEnabled: () -> Boolean= { true },
+    nextEnabled: () -> Boolean = { true },
     validateOnNext: () -> Boolean = { true },
     nextButtonText: String = "Next >",
     backButtonText: String = "< Back",
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     var backEnabled = true
     if (onClickBack == null) {
@@ -46,7 +46,7 @@ fun BottomNavBar(
                             }
                         },
                         enabled = backEnabled,
-                        modifier = Modifier.padding(start = 4.dp, end = 4.dp, top = 4.dp, bottom = 4.dp)
+                        modifier = Modifier.padding(start = 4.dp, end = 4.dp, top = 4.dp, bottom = 4.dp),
                     ) {
                         Text(backButtonText)
                     }
@@ -57,13 +57,13 @@ fun BottomNavBar(
                             }
                         },
                         enabled = nextEnabled(),
-                        modifier = Modifier.padding(start = 4.dp, end = 24.dp, top = 4.dp, bottom = 4.dp)
+                        modifier = Modifier.padding(start = 4.dp, end = 24.dp, top = 4.dp, bottom = 4.dp),
                     ) {
                         Text(nextButtonText)
                     }
                 }
             }
-        }
+        },
     ) {
         content()
     }

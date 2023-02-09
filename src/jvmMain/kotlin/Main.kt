@@ -9,12 +9,14 @@ import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import ui.screens.SelectInputScreen
+import ui.screens.SelectOutputScreen
 
 @Composable
 @Preview
 fun App() {
     MaterialTheme(darkColors(surface = Color(0xff1f1f1f))) {
-        SelectInputScreen()
+        // SelectInputScreen()
+        SelectOutputScreen()
     }
 }
 

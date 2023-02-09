@@ -16,7 +16,7 @@ fun SelectInputScreen() {
 
     BottomNavBar(
         onClickNext = {  },
-        isNextEnabled = { isNextEnabled() },
+        nextEnabled = { isNextEnabled() },
     ) {
         Column() {
             ScreenHeader("Select Input File", 0)

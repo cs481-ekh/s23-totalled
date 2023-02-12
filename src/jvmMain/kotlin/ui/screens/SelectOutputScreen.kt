@@ -21,7 +21,7 @@ data class SelectOutputScreen(val inputFilePath: String) : Screen {
         }
 
         BottomNavBar(
-            onClickNext = { println("$inputFilePath, ${outputDirPath.value}") },
+            onClickNext = { navigator.push(ConfirmChoicesScreen(inputFilePath, outputDirPath.value)) },
             onClickBack = { navigator.pop() },
             nextEnabled = { isNextEnabled() },
         ) {

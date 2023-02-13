@@ -1,11 +1,11 @@
-# Totaled Senior Design Project
+# Totalled Senior Design Project
 
 ---
 
 ## Team
 ### Bree Latimer, Chase Stauts, D Metz, Paul Ellis
 ## Sponsors
-### Ashley Holden, Justin Larson, Kristina Martin
+### Boise State University Mechanical and Biomedical Engineering Department
 
 ---
 

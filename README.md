@@ -1,5 +1,5 @@
 # Totalled Senior Design Project
-[![CI]((https://github.com/cs481-ekh/s23-totalled/actions/workflows/ci.yml/badge.svg)](https://github.com/cs481-ekh/s23-totalled/actions/workflows/ci.yml)
+[![CI](https://github.com/cs481-ekh/s23-totalled/actions/workflows/ci.yml/badge.svg)](https://github.com/cs481-ekh/s23-totalled/actions/workflows/ci.yml)
 ---
 
 ## Team

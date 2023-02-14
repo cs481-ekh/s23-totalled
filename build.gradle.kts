@@ -20,6 +20,9 @@ kotlin {
     jvm {
         jvmToolchain(11)
         withJava()
+        testRuns["test"].executionTask.configure {
+            useJUnitPlatform()
+        }
     }
     sourceSets {
         val jvmMain by getting {
@@ -40,7 +43,7 @@ kotlin {
         }
         val jvmTest by getting {
             dependencies{
-                implementation("org.junit.jupiter:junit-jupiter:5.8.0")
+                implementation(kotlin("test"))
             }
         }
     }

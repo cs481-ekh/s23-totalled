@@ -1,4 +1,3 @@
-import org.jetbrains.compose.compose
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
@@ -21,6 +20,9 @@ kotlin {
     jvm {
         jvmToolchain(11)
         withJava()
+        testRuns["test"].executionTask.configure {
+            useJUnitPlatform()
+        }
     }
     sourceSets {
         val jvmMain by getting {
@@ -45,7 +47,11 @@ kotlin {
                 implementation("cafe.adriel.voyager:voyager-navigator-desktop:1.0.0-rc03")
             }
         }
-        val jvmTest by getting
+        val jvmTest by getting {
+            dependencies{
+                implementation(kotlin("test"))
+            }
+        }
     }
 }
 

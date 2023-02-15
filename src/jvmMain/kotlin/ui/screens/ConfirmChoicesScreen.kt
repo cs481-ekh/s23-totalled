@@ -15,12 +15,24 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import ui.components.BottomNavBar
 import ui.components.ScreenHeader
 
-data class ConfirmChoicesScreen(val inputFilePath: String, val outputDirPath: String) : Screen {
+data class ConfirmChoicesScreen(
+    val expenseLogPath1: String,
+    val expenseLogPath2: String,
+    val outputDirPath: String,
+) : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         BottomNavBar(
-            onClickNext = { navigator.push(LoadingScreen(inputFilePath, outputDirPath)) },
+            onClickNext = {
+                navigator.push(
+                    LoadingScreen(
+                        expenseLogPath1,
+                        expenseLogPath2,
+                        outputDirPath,
+                    ),
+                )
+            },
             onClickBack = { navigator.pop() },
         ) {
             Column() {
@@ -29,8 +41,12 @@ data class ConfirmChoicesScreen(val inputFilePath: String, val outputDirPath: St
                     modifier = Modifier.padding(24.dp).fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Text("Expense Log to be used as input:")
-                    Text("$inputFilePath\n", fontWeight = FontWeight.Light)
+                    Text("Expense Log:")
+                    Text("$expenseLogPath1\n", fontWeight = FontWeight.Light)
+                    if (expenseLogPath2 != "") {
+                        Text("Second Expense Log:")
+                        Text("$expenseLogPath2\n", fontWeight = FontWeight.Light)
+                    }
                     Text("Output will be saved to:")
                     Text(outputDirPath, fontWeight = FontWeight.Light)
                 }

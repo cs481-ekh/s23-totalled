@@ -11,7 +11,10 @@ import ui.components.BottomNavBar
 import ui.components.ScreenHeader
 import ui.components.filepicker.FilePickerRow
 
-data class SelectOutputScreen(val inputFilePath: String) : Screen {
+data class SelectOutputScreen(
+    val expenseLogPath1: String,
+    val expenseLogPath2: String,
+) : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
@@ -21,7 +24,15 @@ data class SelectOutputScreen(val inputFilePath: String) : Screen {
         }
 
         BottomNavBar(
-            onClickNext = { navigator.push(ConfirmChoicesScreen(inputFilePath, outputDirPath.value)) },
+            onClickNext = {
+                navigator.push(
+                    ConfirmChoicesScreen(
+                        expenseLogPath1,
+                        expenseLogPath2,
+                        outputDirPath.value,
+                    ),
+                )
+            },
             onClickBack = { navigator.pop() },
             nextEnabled = { isNextEnabled() },
         ) {

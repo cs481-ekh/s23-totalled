@@ -21,14 +21,18 @@ import processing.generateOutput
 import ui.components.BottomNavBar
 import ui.components.ScreenHeader
 
-data class LoadingScreen(val inputFilePath: String, val outputDirPath: String) : Screen {
+data class LoadingScreen(
+    val expenseLogPath1: String,
+    val expenseLogPath2: String,
+    val outputDirPath: String,
+) : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         LaunchedEffect(Unit) {
             withContext(Dispatchers.IO) {
                 try {
-                    generateOutput(inputFilePath, outputDirPath)
+                    generateOutput(expenseLogPath1, expenseLogPath2, outputDirPath)
                     navigator.push(SuccessScreen(outputDirPath))
                 } catch (e: Exception) {
                     e.printStackTrace()

@@ -38,6 +38,6 @@ enum class PurchaseType{
  * cardType - this is an enum with different types of cards used in the Expense Workbook
  * purchaseType - this is an enum that will allow us to separate Travel, services, and material purchases
  */
-data class LineItem(val totalTaxable: Double, val totalNonTaxable: Double, val description: String,
+data class LineItem(val totalTaxable: Double?, val totalNonTaxable: Double?, val description: String,
                     val date: String, val vendor: String, val cardType: CardType, val purchaseType: PurchaseType){
 }

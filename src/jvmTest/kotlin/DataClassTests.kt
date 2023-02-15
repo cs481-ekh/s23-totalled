@@ -8,7 +8,7 @@ import kotlin.test.DefaultAsserter.assertTrue
 
 class DataClassTests {
 
-    private var item1: LineItem? = null;
+    private var item1: LineItem? = null
     private var expectedToString = ""
     @BeforeEach
     fun initVars(){
@@ -16,39 +16,39 @@ class DataClassTests {
         expectedToString = "LineItem(totalTaxable=1.11, totalNonTaxable=2.22, description=test, date=1/2/23, vendor=Amazon, cardType=AH, purchaseType=PURCHASE)"
     }
     @Test
-    fun lineItemCreate(){
+    fun lineItem_constructorAttempted_LineItemCreated(){
         assertEquals("Create Failed", expectedToString, item1.toString())
     }
 
     @Test
-    fun lineItemCopy(){
+    fun lineItem_CopyCalled_IdenticalLineItemCreated(){
         var item2 = item1?.copy()
         assertEquals("Copy Failed", expectedToString, item2.toString())
     }
 
     @Test
-    fun lineItemNonTaxableZero(){
+    fun lineItemNonTaxable_ZeroValueGiven_LineItemCreationSuccessful(){
         var item2 = LineItem(3.00, 0.00, "Purchase with No S+H", "2/15/2023", "Home Depot", CardType.JL, PurchaseType.PURCHASE)
         var item2ExpectedString = "LineItem(totalTaxable=3.0, totalNonTaxable=0.0, description=Purchase with No S+H, date=2/15/2023, vendor=Home Depot, cardType=JL, purchaseType=PURCHASE)"
         assertEquals("No NonTax LineItem Creation Failed", item2ExpectedString,item2.toString())
     }
 
     @Test
-    fun lineItemNonTaxableNull(){
+    fun lineItemNonTaxable_NullValueGiven_LineItemCreationSuccessful(){
         var item2 = LineItem(3.00, null, "Purchase with No S+H", "2/15/2023", "Home Depot", CardType.JL, PurchaseType.PURCHASE)
         var item2ExpectedString = "LineItem(totalTaxable=3.0, totalNonTaxable=null, description=Purchase with No S+H, date=2/15/2023, vendor=Home Depot, cardType=JL, purchaseType=PURCHASE)"
         assertEquals("No NonTax LineItem Creation Failed", item2ExpectedString,item2.toString())
     }
 
     @Test
-    fun lineItemTaxableNull(){
+    fun lineItemTaxableNull_NullValueGiven_LineItemCreationSuccessful(){
         var item2 = LineItem(null, 3.00, "Purchase with No S+H", "2/15/2023", "Home Depot", CardType.JL, PurchaseType.PURCHASE)
         var item2ExpectedString = "LineItem(totalTaxable=null, totalNonTaxable=3.0, description=Purchase with No S+H, date=2/15/2023, vendor=Home Depot, cardType=JL, purchaseType=PURCHASE)"
         assertEquals("No NonTax LineItem Creation Failed", item2ExpectedString,item2.toString())
     }
 
     @Test
-    fun lineItemTaxableZero(){
+    fun lineItemTaxableZero_ZeroValueGiven_LineItemCreationSuccessful(){
         var item2 = LineItem(0.00, 3.00, "Purchase with No S+H", "2/15/2023", "Home Depot", CardType.JL, PurchaseType.PURCHASE)
         var item2ExpectedString = "LineItem(totalTaxable=0.0, totalNonTaxable=3.0, description=Purchase with No S+H, date=2/15/2023, vendor=Home Depot, cardType=JL, purchaseType=PURCHASE)"
         assertEquals("No NonTax LineItem Creation Failed", item2ExpectedString,item2.toString())

@@ -20,8 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import ui.filepicker.DirectoryPicker
-import ui.filepicker.FilePicker
+
 /**
  * Text field and button to open native file dialog
  * @param pathState The state to store the path in

@@ -4,9 +4,8 @@ import data.PurchaseType
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import kotlin.test.DefaultAsserter.assertEquals
-import kotlin.test.DefaultAsserter.assertTrue
 
-class DataClassTests {
+class LineItemDataClassTests {
 
     private var item1: LineItem? = null
     private var expectedToString = ""

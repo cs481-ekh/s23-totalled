@@ -8,6 +8,8 @@ package data
  * TRV - Any travel Expenses that were paid for with something other than one of the cards
  *
  * RMB - Any reimbursements paid for services, or material purchases
+ *
+ * NONE - No Card Type Found in the Expense Report (Such as Sponsorship Fees)
  */
 enum class CardType {
     AH,
@@ -15,7 +17,8 @@ enum class CardType {
     ME,
     JL,
     TRV,
-    RMB
+    RMB,
+    NONE
 }
 
 /**

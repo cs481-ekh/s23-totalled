@@ -7,10 +7,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AddCircle
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -66,7 +67,7 @@ class SelectInputScreen : Screen {
                             onClick = { secondFilePickerVisible = true },
                             modifier = Modifier.padding(24.dp),
                         ) {
-                            Icon(Icons.Outlined.AddCircle, "Add")
+                            Icon(Icons.Outlined.AddCircle, "Add", tint = MaterialTheme.colorScheme.primary)
                             Text(" Add an expense log for a second fiscal year")
                         }
                     }

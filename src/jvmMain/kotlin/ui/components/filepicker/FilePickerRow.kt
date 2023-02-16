@@ -9,9 +9,10 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
-import androidx.compose.material.Button
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -57,12 +58,13 @@ fun FilePickerRow(
                 onValueChange = { pathState.value = it },
                 label = { Text(label) },
                 singleLine = true,
-                modifier = Modifier.fillMaxWidth(0.8.toFloat()).fillMaxHeight(),
+                modifier = Modifier.fillMaxWidth(0.79.toFloat()).fillMaxHeight(),
             )
             Button(
                 onClick = {
                     showFilePicker = true
                 },
+                shape = RoundedCornerShape(0.dp, 4.dp, 4.dp, 0.dp),
                 modifier = Modifier.fillMaxHeight().fillMaxWidth(),
             ) {
                 Text("Browse...")

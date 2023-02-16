@@ -4,8 +4,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Text
-import androidx.compose.material.darkColors
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,7 +35,7 @@ data class ErrorScreen(val e: Exception) : Screen {
                     modifier = Modifier.padding(24.dp).fillMaxWidth(),
                 ) {
                     Text("Failed to generate the output!\n")
-                    Text(e.toString(), color = darkColors().error)
+                    Text(e.toString(), color = MaterialTheme.colorScheme.error)
                 }
             }
         }

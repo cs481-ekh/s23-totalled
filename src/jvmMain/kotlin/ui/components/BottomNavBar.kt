@@ -1,7 +1,16 @@
 package ui.components
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -16,6 +25,7 @@ import androidx.compose.ui.unit.dp
  * @param backButtonText Text displayed on back button
  * @param content The content that should be located above this bar
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomNavBar(
     onClickNext: () -> Unit,
@@ -33,7 +43,8 @@ fun BottomNavBar(
     Scaffold(
         bottomBar = {
             BottomAppBar(
-                elevation = 2.dp,
+                tonalElevation = 2.dp,
+                modifier = Modifier.requiredHeight(64.dp),
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth().fillMaxHeight(),

@@ -16,6 +16,7 @@ repositories {
     maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
 }
 
+@OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
 kotlin {
     jvm {
         jvmToolchain(11)
@@ -28,6 +29,7 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation(compose.desktop.currentOs)
+                implementation(compose.material3)
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.6.4")
                 listOf("lwjgl", "lwjgl-nfd").forEach { lwjglDep ->
                     implementation("org.lwjgl:$lwjglDep:$lwjglVersion")
@@ -48,7 +50,7 @@ kotlin {
             }
         }
         val jvmTest by getting {
-            dependencies{
+            dependencies {
                 implementation(kotlin("test"))
             }
         }

@@ -5,8 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Scaffold
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -40,22 +39,20 @@ data class LoadingScreen(
                 }
             }
         }
-        Scaffold {
-            BottomNavBar(
-                onClickNext = { },
-                nextEnabled = { false },
+        BottomNavBar(
+            onClickNext = { },
+            nextEnabled = { false },
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth().fillMaxHeight(),
             ) {
+                ScreenHeader("Generating Output", 2)
                 Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxWidth().fillMaxHeight(),
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier.padding(24.dp).fillMaxHeight(.5f),
                 ) {
-                    ScreenHeader("Generating Output", 2)
-                    Column(
-                        verticalArrangement = Arrangement.Center,
-                        modifier = Modifier.padding(24.dp).fillMaxHeight(.5f),
-                    ) {
-                        CircularProgressIndicator()
-                    }
+                    CircularProgressIndicator()
                 }
             }
         }

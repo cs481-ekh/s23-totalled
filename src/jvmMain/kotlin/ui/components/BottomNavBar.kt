@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -45,7 +44,7 @@ fun BottomNavBar(
     Scaffold(
         bottomBar = {
             BottomAppBar(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                tonalElevation = 3.dp,
                 contentPadding = PaddingValues(12.dp),
                 modifier = Modifier.requiredHeight(64.dp),
             ) {

@@ -1,6 +1,7 @@
 package ui.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -43,7 +45,8 @@ fun BottomNavBar(
     Scaffold(
         bottomBar = {
             BottomAppBar(
-                tonalElevation = 2.dp,
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                contentPadding = PaddingValues(12.dp),
                 modifier = Modifier.requiredHeight(64.dp),
             ) {
                 Row(
@@ -57,7 +60,7 @@ fun BottomNavBar(
                             }
                         },
                         enabled = backEnabled,
-                        modifier = Modifier.padding(start = 4.dp, end = 4.dp, top = 4.dp, bottom = 4.dp),
+                        modifier = Modifier.padding(end = 8.dp),
                     ) {
                         Text(backButtonText)
                     }
@@ -68,7 +71,6 @@ fun BottomNavBar(
                             }
                         },
                         enabled = nextEnabled(),
-                        modifier = Modifier.padding(start = 4.dp, end = 24.dp, top = 4.dp, bottom = 4.dp),
                     ) {
                         Text(nextButtonText)
                     }

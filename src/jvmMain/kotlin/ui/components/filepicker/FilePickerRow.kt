@@ -58,6 +58,7 @@ fun FilePickerRow(
                 onValueChange = { pathState.value = it },
                 label = { Text(label) },
                 singleLine = true,
+                shape = RoundedCornerShape(topStart = 4.dp),
                 modifier = Modifier.fillMaxWidth(0.79.toFloat()).fillMaxHeight(),
             )
             Button(

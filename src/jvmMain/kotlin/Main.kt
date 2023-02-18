@@ -1,6 +1,4 @@
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
@@ -10,11 +8,12 @@ import androidx.compose.ui.window.rememberWindowState
 import cafe.adriel.voyager.navigator.CurrentScreen
 import cafe.adriel.voyager.navigator.Navigator
 import ui.screens.SelectInputScreen
+import ui.theme.AppTheme
 
 @Composable
 @Preview
 fun App() {
-    MaterialTheme(darkColorScheme()) {
+    AppTheme() {
         Navigator(SelectInputScreen()) { CurrentScreen() }
     }
 }

@@ -71,7 +71,7 @@ private val darkColors = darkColorScheme(
 
 /**
  * Attempt to check for dark theme if currentSystemTheme is unknown
- * @return true is the system is in a dark theme
+ * @return true if the system is in dark theme
  */
 @Composable
 fun checkSystemDarkTheme(): Boolean {

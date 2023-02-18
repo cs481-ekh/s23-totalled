@@ -5,6 +5,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import org.jetbrains.skiko.SystemTheme
+import org.jetbrains.skiko.currentSystemTheme
+import java.lang.Runtime.getRuntime
 
 private val lightColors = lightColorScheme(
     primary = md_theme_light_primary,
@@ -67,15 +70,36 @@ private val darkColors = darkColorScheme(
 )
 
 /**
+ * Attempt to check for dark theme if currentSystemTheme is unknown
+ * @return true is the system is in a dark theme
+ */
+@Composable
+fun checkSystemDarkTheme(): Boolean {
+    return if (currentSystemTheme == SystemTheme.UNKNOWN) {
+        try {
+            val process = getRuntime().exec("gsettings get org.gnome.desktop.interface gtk-theme")
+            val line = process.inputStream.bufferedReader().readLine()
+            line.contains("dark", ignoreCase = true)
+        } catch (e: Exception) {
+            true
+        }
+    } else {
+        isSystemInDarkTheme()
+    }
+}
+
+/**
  * The theme for the app to use.
- * Auto-detects light/dark theme on macOS or Windows
+ * Auto-detects light/dark theme on macOS and Windows.
+ * It will attempt to detect dark theme if the system theme
+ * is unknown (Linux), using gsettings
  *
  * @param useDarkTheme whether to use the dark theme, defaults to auto-detection
  * @param content
  */
 @Composable
 fun AppTheme(
-    useDarkTheme: Boolean = isSystemInDarkTheme(),
+    useDarkTheme: Boolean = checkSystemDarkTheme(),
     content: @Composable () -> Unit,
 ) {
     val colors = if (!useDarkTheme) {

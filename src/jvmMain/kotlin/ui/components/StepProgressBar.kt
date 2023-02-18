@@ -11,7 +11,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 /*
@@ -50,7 +49,7 @@ fun StepProgressBar(modifier: Modifier = Modifier, numberOfSteps: Int, currentSt
 
 @Composable
 private fun Step(modifier: Modifier = Modifier, isCompete: Boolean, isCurrent: Boolean, isFirst: Boolean) {
-    val color = if (isCompete || isCurrent) MaterialTheme.colorScheme.primary else Color(0xff4f4f4f)
+    val color = if (isCompete || isCurrent) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline
     val innerCircleColor = if (isCompete) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background
 
     Box(modifier = modifier) {

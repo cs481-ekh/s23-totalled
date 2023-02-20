@@ -30,7 +30,6 @@ kotlin {
             dependencies {
                 implementation(compose.desktop.currentOs)
                 implementation(compose.material3)
-                implementation(compose.materialIconsExtended)
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.6.4")
                 listOf("lwjgl", "lwjgl-nfd").forEach { lwjglDep ->
                     implementation("org.lwjgl:$lwjglDep:$lwjglVersion")

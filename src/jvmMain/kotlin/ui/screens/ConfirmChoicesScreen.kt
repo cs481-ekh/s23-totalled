@@ -7,16 +7,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Folder
-import androidx.compose.material.icons.filled.InsertDriveFile
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -31,10 +28,10 @@ data class ConfirmChoicesScreen(
     val outputDirPath: String,
 ) : Screen {
     @Composable
-    private fun PathRow(label: String, path: String, icon: ImageVector = Icons.Filled.InsertDriveFile) {
+    private fun PathRow(label: String, path: String, iconResourcePath: String = "insert_drive_file_black_24dp.svg") {
         Row {
             Icon(
-                icon,
+                painter = painterResource(iconResourcePath),
                 contentDescription = "File Icon",
             )
             Column(
@@ -91,7 +88,7 @@ data class ConfirmChoicesScreen(
                             PathRow("Second Expense Log:", expenseLogPath2)
                             Spacer(modifier = Modifier.height(space))
                         }
-                        PathRow("Output will be saved to:", outputDirPath, Icons.Filled.Folder)
+                        PathRow("Output will be saved to:", outputDirPath, "folder_black_24dp.svg")
                     }
                 }
             }

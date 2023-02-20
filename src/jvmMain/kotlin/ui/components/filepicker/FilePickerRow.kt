@@ -11,8 +11,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -20,6 +22,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 /**
@@ -53,13 +56,20 @@ fun FilePickerRow(
 
     AnimatedVisibility(visible = visible, enter = fadeIn() + scaleIn(initialScale = .8f)) {
         Row(modifier = Modifier.padding(24.dp).requiredHeight(60.dp)) {
-            TextField(
-                value = pathState.value,
-                onValueChange = { pathState.value = it },
-                label = { Text(label) },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth(0.79.toFloat()).fillMaxHeight(),
-            )
+            Surface(
+                tonalElevation = 3.dp,
+                shape = RoundedCornerShape(topStart = 4.dp),
+            ) {
+                TextField(
+                    value = pathState.value,
+                    onValueChange = { pathState.value = it },
+                    label = { Text(label) },
+                    singleLine = true,
+                    shape = RoundedCornerShape(topStart = 4.dp),
+                    colors = TextFieldDefaults.textFieldColors(containerColor = Color(0x00000000)),
+                    modifier = Modifier.fillMaxWidth(0.79.toFloat()).fillMaxHeight(),
+                )
+            }
             Button(
                 onClick = {
                     showFilePicker = true

@@ -5,9 +5,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory
 import java.io.File
 import java.io.FileInputStream
 
-class FileInputParser(var primaryPath: String, var secondaryPath: String?) {
-    constructor(primaryPath: String): this(primaryPath, null);
-
+class FileInputParser(private var primaryPath: String, private var secondaryPath: String? = null) {
     fun getAllSheets(): MutableList<Sheet> {
         val allSheets = mutableListOf<Sheet>()
 

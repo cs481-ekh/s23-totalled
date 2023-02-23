@@ -22,7 +22,7 @@ class FileInputParserTests {
         "March 2022",
         "April 2022",
         "May 2022",
-        "June 2022"
+        "June 2022",
     )
 
     private val secondaryList = mutableListOf<String>(
@@ -49,11 +49,11 @@ class FileInputParserTests {
         "March 2022",
         "April 2022",
         "May 2022",
-        "June 2022"
+        "June 2022",
     )
 
     @Test
-    fun primaryFile_GivenToParser_CreatesAccurateSheetsList(){
+    fun primaryFile_GivenToParser_CreatesAccurateSheetsList() {
         // Create Parser object with only primary file
         var parser = FileInputParser(primaryPath)
 
@@ -61,16 +61,16 @@ class FileInputParserTests {
         var sheetsList = parser.getAllSheets()
 
         // Assert that the expected size matches up
-        assertEquals("Number of sheets from input does not match what is expected!",sheetsList.size, 12)
+        assertEquals("Number of sheets from input does not match what is expected!", sheetsList.size, 12)
         assertTrue(sheetsList == primaryList, "Contents of sheets list are not correct!")
 
         // Make sure none of the sheets are named "account codes"
-        for(sheet: Sheet in sheetsList){
+        for (sheet: Sheet in sheetsList) {
             assertTrue(!sheet.sheetName.equals("account codes", ignoreCase = true))
         }
     }
 
-    fun primaryAndSecondaryFile_GivenToParser_CreatesAccurateSheetsList(){
+    fun primaryAndSecondaryFile_GivenToParser_CreatesAccurateSheetsList() {
         // Create Parser object with both primary and secondary files
         var parser = FileInputParser(primaryPath, secondaryPath)
 
@@ -78,11 +78,11 @@ class FileInputParserTests {
         var sheetsList = parser.getAllSheets()
 
         // Assert that the expected size matches up
-        assertEquals("Number of sheets from input does not match what is expected!",sheetsList.size, 12)
+        assertEquals("Number of sheets from input does not match what is expected!", sheetsList.size, 12)
         assertTrue(sheetsList == primaryList, "Contents of sheets list are not correct!")
 
         // Make sure none of the sheets are named "account codes"
-        for(sheet: Sheet in sheetsList){
+        for (sheet: Sheet in sheetsList) {
             assertTrue(!sheet.sheetName.equals("account codes", ignoreCase = true))
         }
     }

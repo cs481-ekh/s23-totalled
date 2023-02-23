@@ -19,7 +19,7 @@ repositories {
 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
 kotlin {
     jvm {
-        jvmToolchain(11)
+        jvmToolchain(17)
         withJava()
         testRuns["test"].executionTask.configure {
             useJUnitPlatform()

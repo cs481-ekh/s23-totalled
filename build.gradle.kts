@@ -48,6 +48,8 @@ kotlin {
                 }
                 implementation("cafe.adriel.voyager:voyager-navigator-desktop:1.0.0-rc03")
                 implementation("org.apache.poi:poi:5.2.3")
+                implementation("org.apache.poi:poi-ooxml:5.2.3")
+                implementation("org.apache.logging.log4j:log4j-core:2.20.0")
             }
         }
         val jvmTest by getting {

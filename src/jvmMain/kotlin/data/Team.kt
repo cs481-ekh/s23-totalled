@@ -19,9 +19,24 @@ package data
  *
  * totalCharges - The sum of all other Totals (taxable + S&H + Services + Travel + taxes)
  */
-data class Team(val teamName: String, var lineItemList: MutableList<LineItem>, var totalTaxable: Double,
-                var totalShippingHandling: Double, var totalServices: Double, var totalTravel: Double,
-                var totalTaxes: Double, var totalCharges:Double) {
-    constructor(teamName: String, lineItemList: MutableList<LineItem>) : this(teamName, lineItemList, 0.0,
-        0.0, 0.0, 0.0, 0.0, 0.0)
+data class Team(
+    val teamName: String,
+    var lineItemList: MutableList<LineItem>,
+    var totalTaxable: Double,
+    var totalShippingHandling: Double,
+    var totalServices: Double,
+    var totalTravel: Double,
+    var totalTaxes: Double,
+    var totalCharges: Double,
+) {
+    constructor(teamName: String, lineItemList: MutableList<LineItem>) : this(
+        teamName,
+        lineItemList,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+    )
 }

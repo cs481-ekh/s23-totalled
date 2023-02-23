@@ -18,7 +18,7 @@ enum class CardType {
     JL,
     TRV,
     RMB,
-    NONE
+    NONE,
 }
 
 /**
@@ -32,7 +32,7 @@ enum class CardType {
  *
  * SERVICE is any services paid for (Welding, Sponsor Fee, etc.) - Non Taxable
  */
-enum class PurchaseType{
+enum class PurchaseType {
     PURCHASE, TRAVEL, SERVICE
 }
 
@@ -54,6 +54,12 @@ enum class PurchaseType{
  *
  * purchaseType - this is an enum that will allow us to separate Travel, services, and material purchases
  */
-data class LineItem(val totalTaxable: Double, val totalNonTaxable: Double, val description: String,
-                    val date: String, val vendor: String, val cardType: CardType, val purchaseType: PurchaseType){
-}
+data class LineItem(
+    val totalTaxable: Double,
+    val totalNonTaxable: Double,
+    val description: String,
+    val date: String,
+    val vendor: String,
+    val cardType: CardType,
+    val purchaseType: PurchaseType,
+)

@@ -1,5 +1,9 @@
 package ui.components
 
+import androidx.compose.animation.animateColor
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -9,6 +13,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -32,14 +37,14 @@ fun StepProgressBar(modifier: Modifier = Modifier, numberOfSteps: Int, currentSt
     ) {
         Step(
             modifier = Modifier.weight(1F, false),
-            isCompete = 0 < currentStep,
+            isComplete = 0 < currentStep,
             isCurrent = 0 == currentStep,
             isFirst = true,
         )
         for (step in 1 until numberOfSteps) {
             Step(
                 modifier = Modifier.weight(1F),
-                isCompete = step < currentStep,
+                isComplete = step < currentStep,
                 isCurrent = step == currentStep,
                 isFirst = false,
             )
@@ -48,9 +53,30 @@ fun StepProgressBar(modifier: Modifier = Modifier, numberOfSteps: Int, currentSt
 }
 
 @Composable
-private fun Step(modifier: Modifier = Modifier, isCompete: Boolean, isCurrent: Boolean, isFirst: Boolean) {
-    val color = if (isCompete || isCurrent) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline
-    val innerCircleColor = if (isCompete) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background
+private fun Step(modifier: Modifier = Modifier, isComplete: Boolean, isCurrent: Boolean, isFirst: Boolean) {
+    val transition = updateTransition(isComplete, label = "Step Progress Bar Transition")
+
+    val color by transition.animateColor(
+        transitionSpec = { spring(stiffness = Spring.StiffnessMediumLow) },
+        label = "color",
+    ) {
+        if (isCurrent || isComplete) {
+            MaterialTheme.colorScheme.primary
+        } else {
+            MaterialTheme.colorScheme.outline
+        }
+    }
+
+    val innerCircleColor by transition.animateColor(
+        transitionSpec = { spring(stiffness = Spring.StiffnessMediumLow) },
+        label = "innerCircleColor",
+    ) {
+        if (isComplete) {
+            MaterialTheme.colorScheme.primary
+        } else {
+            MaterialTheme.colorScheme.background
+        }
+    }
 
     Box(modifier = modifier) {
         if (!isFirst) {

@@ -11,20 +11,23 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import processing.generateOutput
-import ui.components.BottomNavBar
-import ui.components.ScreenHeader
+import ui.components.WizardScreen
 
 data class LoadingScreen(
     val expenseLogPath1: String,
     val expenseLogPath2: String,
     val outputDirPath: String,
-) : Screen {
+) : WizardScreen() {
+    override val title = "Generating Output"
+    override val step = 2
+    override val nextEnabled = false
+    override val backEnabled = false
+
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
@@ -39,22 +42,12 @@ data class LoadingScreen(
                 }
             }
         }
-        BottomNavBar(
-            onClickNext = { },
-            nextEnabled = { false },
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(24.dp).fillMaxWidth().fillMaxHeight(.5f),
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth().fillMaxHeight(),
-            ) {
-                ScreenHeader("Generating Output", 2)
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    modifier = Modifier.padding(24.dp).fillMaxHeight(.5f),
-                ) {
-                    CircularProgressIndicator()
-                }
-            }
+            CircularProgressIndicator()
         }
     }
 }

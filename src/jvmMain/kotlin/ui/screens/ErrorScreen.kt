@@ -24,6 +24,7 @@ data class ErrorScreen(val e: Exception) : WizardScreen() {
     }
     override fun onClickBack(navigator: Navigator) {
         navigator.popAll()
+        navigator.replace(SelectInputScreen())
     }
 
     @Composable

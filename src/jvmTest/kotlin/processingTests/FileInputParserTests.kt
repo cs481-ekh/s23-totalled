@@ -79,6 +79,7 @@ class FileInputParserTests {
         }
     }
 
+    @Test
     fun primaryAndSecondaryFile_GivenToParser_CreatesAccurateSheetsList() {
         // Create Parser object with both primary and secondary files
         var parser = FileInputParser(primaryPath, secondaryPath)

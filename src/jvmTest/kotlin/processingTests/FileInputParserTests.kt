@@ -55,12 +55,12 @@ class FileInputParserTests {
     @Test
     fun primaryFile_GivenToParser_CreatesAccurateSheetsList() {
         // Create Parser object with only primary file
-        var parser = FileInputParser(primaryPath)
+        val parser = FileInputParser(primaryPath)
 
         // Create list using getSheetsFromFile()
-        var sheetsList = parser.getAllSheets()
+        val sheetsList = parser.getAllSheets()
 
-        var sheetNamesList = mutableListOf<String>()
+        val sheetNamesList = mutableListOf<String>()
 
         // Easier to compare two list of strings than it is to compare two differently typed lists
         for (sheet: Sheet in sheetsList) {
@@ -82,12 +82,12 @@ class FileInputParserTests {
     @Test
     fun primaryAndSecondaryFile_GivenToParser_CreatesAccurateSheetsList() {
         // Create Parser object with both primary and secondary files
-        var parser = FileInputParser(primaryPath, secondaryPath)
+        val parser = FileInputParser(primaryPath, secondaryPath)
 
         // Create list using getSheetsFromFile()
-        var sheetsList = parser.getAllSheets()
+        val sheetsList = parser.getAllSheets()
 
-        var sheetNamesList = mutableListOf<String>()
+        val sheetNamesList = mutableListOf<String>()
 
         // Easier to compare two list of strings than it is to compare two differently typed lists
         for (sheet: Sheet in sheetsList) {

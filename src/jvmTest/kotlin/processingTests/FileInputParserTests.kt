@@ -6,7 +6,7 @@ import kotlin.test.DefaultAsserter.assertEquals
 import kotlin.test.assertTrue
 
 class FileInputParserTests {
-    val path = System.getProperty("user.dir")
+    private val path = System.getProperty("user.dir")
     private var primaryPath = "$path/src/jvmTest/TestExcelFiles/PrimaryWorkbook.xlsx"
     private var secondaryPath = primaryPath
 

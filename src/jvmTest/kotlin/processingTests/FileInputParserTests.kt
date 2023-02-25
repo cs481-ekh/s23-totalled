@@ -95,10 +95,10 @@ class FileInputParserTests {
         }
 
         // Assert that the expected size matches up
-        assertEquals("Number of sheets from input does not match what is expected!", sheetsList.size, 12)
+        assertEquals("Number of sheets from input does not match what is expected!", sheetsList.size, 24)
 
         // Assert that the contents match
-        assertTrue(sheetNamesList.containsAll(primaryList) && primaryList.containsAll(sheetNamesList), "Contents do not match!")
+        assertTrue(sheetNamesList.containsAll(secondaryList) && secondaryList.containsAll(sheetNamesList), "Contents do not match!")
 
         // Make sure none of the sheets are named "account codes"
         for (sheet: Sheet in sheetsList) {

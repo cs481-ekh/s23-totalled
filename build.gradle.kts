@@ -50,7 +50,9 @@ kotlin {
                 implementation("cafe.adriel.voyager:voyager-navigator-desktop:1.0.0-rc03")
                 implementation("org.apache.poi:poi:5.2.3")
                 implementation("org.apache.poi:poi-ooxml:5.2.3")
-                implementation("org.apache.logging.log4j:log4j-core:2.20.0")
+                implementation("com.github.pjfanning:excel-streaming-reader:4.0.5")
+                implementation("org.slf4j:slf4j-api:2.0.6")
+                implementation("org.slf4j:slf4j-jdk14:2.0.0")
             }
         }
         val jvmTest by getting {

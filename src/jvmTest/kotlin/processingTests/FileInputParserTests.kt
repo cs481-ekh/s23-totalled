@@ -60,13 +60,22 @@ class FileInputParserTests {
         // Create list using getSheetsFromFile()
         var sheetsList = parser.getAllSheets()
 
+        var sheetNamesList = mutableListOf<String>()
+
+        // Easier to compare two list of strings than it is to compare two differently typed lists
+        for (sheet: Sheet in sheetsList) {
+            sheetNamesList.add(sheet.sheetName)
+        }
+
         // Assert that the expected size matches up
         assertEquals("Number of sheets from input does not match what is expected!", sheetsList.size, 12)
-        assertTrue(sheetsList == primaryList, "Contents of sheets list are not correct!")
+
+        // Assert that the contents match
+        assertTrue(sheetNamesList.containsAll(primaryList) && primaryList.containsAll(sheetNamesList), "Contents do not match!")
 
         // Make sure none of the sheets are named "account codes"
-        for (sheet: Sheet in sheetsList) {
-            assertTrue(!sheet.sheetName.equals("account codes", ignoreCase = true))
+        for (sheet: String in sheetNamesList) {
+            assertTrue(!sheet.equals("account codes", ignoreCase = true), "List contains account codes sheet!")
         }
     }
 
@@ -77,13 +86,22 @@ class FileInputParserTests {
         // Create list using getSheetsFromFile()
         var sheetsList = parser.getAllSheets()
 
+        var sheetNamesList = mutableListOf<String>()
+
+        // Easier to compare two list of strings than it is to compare two differently typed lists
+        for (sheet: Sheet in sheetsList) {
+            sheetNamesList.add(sheet.sheetName)
+        }
+
         // Assert that the expected size matches up
         assertEquals("Number of sheets from input does not match what is expected!", sheetsList.size, 12)
-        assertTrue(sheetsList == primaryList, "Contents of sheets list are not correct!")
+
+        // Assert that the contents match
+        assertTrue(sheetNamesList.containsAll(primaryList) && primaryList.containsAll(sheetNamesList), "Contents do not match!")
 
         // Make sure none of the sheets are named "account codes"
         for (sheet: Sheet in sheetsList) {
-            assertTrue(!sheet.sheetName.equals("account codes", ignoreCase = true))
+            assertTrue(!sheet.sheetName.equals("account codes", ignoreCase = true), "List contains account codes sheet!")
         }
     }
 }

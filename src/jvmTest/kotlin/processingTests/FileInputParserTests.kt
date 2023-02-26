@@ -77,6 +77,8 @@ class FileInputParserTests {
         for (sheet: String in sheetNamesList) {
             assertTrue(!sheet.equals("account codes", ignoreCase = true), "List contains account codes sheet!")
         }
+
+        parser.closeWorkbooks()
     }
 
     @Test
@@ -104,5 +106,7 @@ class FileInputParserTests {
         for (sheet: Sheet in sheetsList) {
             assertTrue(!sheet.sheetName.equals("account codes", ignoreCase = true), "List contains account codes sheet!")
         }
+
+        parser.closeWorkbooks()
     }
 }

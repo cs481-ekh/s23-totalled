@@ -48,6 +48,7 @@ kotlin {
                     }
                 }
                 implementation("cafe.adriel.voyager:voyager-navigator-desktop:1.0.0-rc03")
+                implementation("cafe.adriel.voyager:voyager-transitions-desktop:1.0.0-rc03")
                 implementation("org.apache.poi:poi:5.2.3")
                 implementation("org.apache.poi:poi-ooxml:5.2.3")
                 implementation("com.github.pjfanning:excel-streaming-reader:4.0.5")

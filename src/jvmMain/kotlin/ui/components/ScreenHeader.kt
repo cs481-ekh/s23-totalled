@@ -1,5 +1,12 @@
 package ui.components
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.with
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,6 +24,7 @@ import androidx.compose.ui.unit.dp
  * @param pageTitle Title text to display
  * @param currentStep Determines how filled the bar is, first step is 0
  */
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun ScreenHeader(
     pageTitle: String,
@@ -28,7 +36,16 @@ fun ScreenHeader(
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            Text(pageTitle, style = MaterialTheme.typography.titleMedium)
+            AnimatedContent(
+                targetState = pageTitle,
+                transitionSpec = {
+                    fadeIn(spring(stiffness = Spring.StiffnessMediumLow)) with
+                        fadeOut(spring(stiffness = Spring.StiffnessMediumLow))
+                },
+
+            ) { title ->
+                Text(title, style = MaterialTheme.typography.titleMedium)
+            }
             StepProgressBar(
                 numberOfSteps = 3,
                 currentStep = currentStep,

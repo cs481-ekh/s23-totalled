@@ -18,7 +18,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,7 +27,8 @@ import androidx.compose.ui.unit.dp
 
 /**
  * Text field and button to open native file dialog
- * @param pathState The state to store the path in
+ * @param pathString string to store path in
+ * @param onValueChange what to do when the value changes
  * @param label Label text for the text box
  * @param isDirPicker Set to true if you want to pick directories instead of files
  * @param fileExtensions File extensions whitelist, defaults to showing all file types
@@ -36,7 +36,8 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun FilePickerRow(
-    pathState: MutableState<String>,
+    pathString: String = "",
+    onValueChange: (String) -> Unit,
     label: String,
     isDirPicker: Boolean = false,
     fileExtensions: List<String> = listOf(""),
@@ -45,12 +46,16 @@ fun FilePickerRow(
     var showFilePicker by remember { mutableStateOf(false) }
     if (isDirPicker) {
         DirectoryPicker(showFilePicker, initialDirectory = null) { path ->
-            pathState.value = path ?: ""
+            if (path != null) {
+                onValueChange(path)
+            }
             showFilePicker = false
         }
     } else {
         FilePicker(showFilePicker, fileExtensions = fileExtensions, initialDirectory = null) { path ->
-            pathState.value = path ?: ""
+            if (path != null) {
+                onValueChange(path)
+            }
             showFilePicker = false
         }
     }
@@ -58,8 +63,8 @@ fun FilePickerRow(
     AnimatedVisibility(visible = visible, enter = fadeIn() + scaleIn(initialScale = .8f)) {
         Row(modifier = Modifier.padding(24.dp).requiredHeight(60.dp)) {
             TextField(
-                value = pathState.value,
-                onValueChange = { pathState.value = it },
+                value = pathString,
+                onValueChange = onValueChange,
                 label = { Text(label) },
                 singleLine = true,
                 shape = RoundedCornerShape(topStart = 4.dp),

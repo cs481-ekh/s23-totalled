@@ -15,18 +15,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
-import ui.components.BottomNavBar
-import ui.components.ScreenHeader
+import cafe.adriel.voyager.navigator.Navigator
 import ui.components.ScrollBox
+import ui.components.WizardScreen
 
 data class ConfirmChoicesScreen(
     val expenseLogPath1: String,
     val expenseLogPath2: String,
     val outputDirPath: String,
-) : Screen {
+) : WizardScreen() {
+    override val title = "Confirm Choices"
+    override val step = 2
+    override fun onClickNext(navigator: Navigator) {
+        navigator.push(
+            LoadingScreen(
+                expenseLogPath1,
+                expenseLogPath2,
+                outputDirPath,
+            ),
+        )
+    }
+
     @Composable
     private fun PathRow(label: String, path: String, iconResourcePath: String = "insert_drive_file_black_24dp.svg") {
         Row {
@@ -56,40 +65,25 @@ data class ConfirmChoicesScreen(
 
     @Composable
     override fun Content() {
-        val navigator = LocalNavigator.currentOrThrow
-        BottomNavBar(
-            onClickNext = {
-                navigator.push(
-                    LoadingScreen(
-                        expenseLogPath1,
-                        expenseLogPath2,
-                        outputDirPath,
-                    ),
-                )
-            },
-            onClickBack = { navigator.pop() },
-        ) {
-            Column() {
-                ScreenHeader("Confirm Choices", 2)
-                // Scrollable so that long paths don't get cut off
-                ScrollBox(
-                    modifier = Modifier.padding(
-                        start = 24.dp,
-                        top = 12.dp,
-                        end = 24.dp,
-                        bottom = 64.dp + 12.dp, // 64 because the bottom bar is 64 dp tall
-                    ).fillMaxWidth(),
-                ) {
-                    Column(modifier = Modifier.padding(start = 12.dp, end = 12.dp)) {
-                        val space = 12.dp
-                        PathRow("Expense Log:", expenseLogPath1)
+        Column() {
+            // Scrollable so that long paths don't get cut off
+            ScrollBox(
+                modifier = Modifier.padding(
+                    start = 24.dp,
+                    top = 12.dp,
+                    end = 24.dp,
+                    bottom = 64.dp + 12.dp, // 64 because the bottom bar is 64 dp tall
+                ).fillMaxWidth(),
+            ) {
+                Column(modifier = Modifier.padding(start = 12.dp, end = 12.dp)) {
+                    val space = 12.dp
+                    PathRow("Expense Log:", expenseLogPath1)
+                    Spacer(modifier = Modifier.height(space))
+                    if (expenseLogPath2 != "") {
+                        PathRow("Second Expense Log:", expenseLogPath2)
                         Spacer(modifier = Modifier.height(space))
-                        if (expenseLogPath2 != "") {
-                            PathRow("Second Expense Log:", expenseLogPath2)
-                            Spacer(modifier = Modifier.height(space))
-                        }
-                        PathRow("Output will be saved to:", outputDirPath, "folder_black_24dp.svg")
                     }
+                    PathRow("Output will be saved to:", outputDirPath, "folder_black_24dp.svg")
                 }
             }
         }

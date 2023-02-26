@@ -48,6 +48,7 @@ kotlin {
                     }
                 }
                 implementation("cafe.adriel.voyager:voyager-navigator-desktop:1.0.0-rc03")
+                implementation("cafe.adriel.voyager:voyager-transitions-desktop:1.0.0-rc03")
             }
         }
         val jvmTest by getting {

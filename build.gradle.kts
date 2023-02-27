@@ -47,6 +47,10 @@ kotlin {
                     }
                 }
                 implementation("cafe.adriel.voyager:voyager-navigator-desktop:1.0.0-rc03")
+                implementation("org.apache.poi:poi:5.2.3")
+                implementation("org.apache.poi:poi-ooxml:5.2.3")
+
+
             }
         }
         val jvmTest by getting {

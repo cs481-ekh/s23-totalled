@@ -1,26 +1,6 @@
-name: deploy
+name: Deploy
 
 on:
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - '.github/**'
-      - 'docs/**'
-      - '**/.gitignore'
-      - 'CONTRIBUTORS'
-      - 'LICENSE'
-      - 'README.MD'
-  pull_request:
-    branches:
-      - main
-    paths-ignore:
-      - '.github/**'
-      - 'docs/**'
-      - '**/.gitignore'
-      - 'CONTRIBUTORS'
-      - 'LICENSE'
-      - 'README.MD'
   workflow_dispatch:
     inputs:
       logLevel:
@@ -40,5 +20,5 @@ jobs:
           java-version: 17
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
-      - name: Package Msi
+      - name: packageMsi
         run: ./gradlew packageMsi

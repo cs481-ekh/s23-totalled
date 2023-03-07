@@ -22,3 +22,8 @@ jobs:
         uses: gradle/gradle-build-action@v2
       - name: packageMsi
         run: ./gradlew packageMsi
+      - name: Upload Totalled package
+        uses: actions/upload-artifact@v3
+        with:
+          name: Totalled
+          path: D:\a\s23-totalled\s23-totalled\build\compose\binaries\main\msi\Totalled-1.0.0.msi

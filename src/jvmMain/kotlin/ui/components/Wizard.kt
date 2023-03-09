@@ -1,6 +1,12 @@
 package ui.components
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.with
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -20,7 +26,19 @@ fun Wizard() {
         Scaffold(
             content = {
                 Column {
-                    ScreenHeader(currentScreen.title, currentScreen.step)
+                    AnimatedContent(
+                        targetState = currentScreen.step,
+                        transitionSpec = {
+                            fadeIn(spring(stiffness = Spring.StiffnessMediumLow)) with
+                                fadeOut(spring(stiffness = Spring.StiffnessMediumLow))
+                        },
+
+                    ) { currentStep ->
+                        // Hide the header if the screen's current step is negative
+                        if (currentStep >= 0) {
+                            ScreenHeader(currentScreen.title, currentScreen.step)
+                        }
+                    }
                     FadeTransition(navigator)
                 }
             },

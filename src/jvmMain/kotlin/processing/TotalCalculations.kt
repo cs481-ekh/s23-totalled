@@ -1,6 +1,11 @@
 package processing
 
-import org.apache.poi.ss.usermodel.*
+import org.apache.poi.ss.usermodel.BorderStyle
+import org.apache.poi.ss.usermodel.CellStyle
+import org.apache.poi.ss.usermodel.DataFormat
+import org.apache.poi.ss.usermodel.FillPatternType
+import org.apache.poi.ss.usermodel.IndexedColors
+import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.xssf.usermodel.XSSFColor
 
 /*
@@ -49,7 +54,7 @@ fun totalCalculation(wb: Workbook, topCell: Int, bottomCell: Int, merchCol: Int)
     val taxCell = taxRow.createCell(6)
     val eval = wb.creationHelper.createFormulaEvaluator()
     var res = eval.evaluate(merchCell).formatAsString().toDouble()
-    taxCell.cellFormula = "${res}*0.06"
+    taxCell.cellFormula = "$res*0.06"
     taxCell.cellStyle = dollarStyle
     val totalChargesRow = sheet.createRow(bottomCell + 5)
     val totalChargesCell = totalChargesRow.createCell(6)

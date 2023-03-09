@@ -1,23 +1,15 @@
-import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
+import ui.components.WindowTitleBar
 import ui.components.Wizard
 import ui.theme.AppTheme
 
-@Composable
-@Preview
-fun App() {
-    AppTheme() {
-        Wizard()
-    }
-}
-
 fun main() = application {
-    val state = rememberWindowState(
+    val windowState = rememberWindowState(
         placement = WindowPlacement.Floating,
         isMinimized = false,
         width = 600.dp,
@@ -26,8 +18,14 @@ fun main() = application {
     Window(
         onCloseRequest = ::exitApplication,
         title = "Totalled",
-        state = state,
+        undecorated = true,
+        state = windowState,
     ) {
-        App()
+        AppTheme() {
+            Column {
+                WindowTitleBar(windowState)
+                Wizard()
+            }
+        }
     }
 }

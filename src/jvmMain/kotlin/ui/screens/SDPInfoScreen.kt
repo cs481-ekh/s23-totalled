@@ -50,7 +50,7 @@ class SDPInfoScreen : WizardScreen() {
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize().padding(24.dp),
+            modifier = Modifier.fillMaxSize().padding(top = 12.dp),
         ) {
             Box(
                 modifier = Modifier.requiredSize(160.dp, 80.dp).clip(RoundedCornerShape(4.dp)),

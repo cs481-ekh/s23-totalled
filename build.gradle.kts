@@ -60,6 +60,7 @@ kotlin {
         val jvmTest by getting {
             dependencies {
                 implementation(kotlin("test"))
+                implementation("org.mockito:mockito-core:5.1.1")
             }
         }
     }

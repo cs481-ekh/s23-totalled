@@ -70,7 +70,7 @@ data class ConfirmChoicesScreen(
             ScrollBox(
                 modifier = Modifier.padding(
                     start = 24.dp,
-                    top = 12.dp,
+                    top = 24.dp,
                     end = 24.dp,
                     bottom = 64.dp + 12.dp, // 64 because the bottom bar is 64 dp tall
                 ).fillMaxWidth(),

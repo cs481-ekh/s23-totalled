@@ -44,7 +44,7 @@ fun WindowScope.WindowTitleBar(windowState: WindowState) {
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Image(
-                        painterResource("sdp-logo-squares.png"),
+                        painterResource("totalled-icon.svg"),
                         modifier = Modifier.height(16.dp).padding(start = 4.dp).clip(RoundedCornerShape(2.dp)),
                         contentDescription = "App Icon",
                     )
@@ -74,7 +74,6 @@ fun WindowScope.WindowTitleBar(windowState: WindowState) {
 @Composable
 fun TitleBarButton(onClick: () -> Unit, iconResourcePath: String) {
     val interactionSource = remember { MutableInteractionSource() }
-    // val isHovered by interactionSource.collectIsHoveredAsState()
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier.fillMaxHeight().requiredWidth(48.dp)

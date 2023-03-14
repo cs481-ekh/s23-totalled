@@ -35,27 +35,29 @@ class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
         }
     }
 
-    fun filterRows(){
-
-        //for each sheet we will go from firstRow+1 to first 3 blank rows
-            //Each row check if senior design po has data
-                // push row into a list
-        for((index, currentSheet) in sheetList.withIndex()){
-            //This will get the current design po column, if null then continues to the next sheet
-            val currentSDPColumn = sheetToHeadingsMap.get(index)?.get("senior design po") ?: continue
-            var blankRows = 0;
-            var currentRow = currentSheet.firstRowNum+1
-            while (blankRows<3){
-                val tempRow = currentSheet.getRow(currentRow)
-                if(tempRow.firstCellNum.equals(-1)){
+    fun filterRows() {
+        // for each sheet we will go from firstRow+1 to first 3 blank rows
+        // Each row check if senior design po has data
+        // push row into a list
+        for ((index, currentSheet) in sheetList.withIndex()) {
+            // This will get the current design po column, if null then continues to the next sheet
+            val currentSDPColumn = sheetToHeadingsMap[index]?.get("senior design po") ?: continue
+            var blankRows = 0
+            var currentRow = currentSheet.firstRowNum + 1
+            val blankRowSignifier: Short = -1
+            while (blankRows < 3) {
+                var tempRow = currentSheet.getRow(currentRow)
+                if (tempRow.firstCellNum == blankRowSignifier) {
                     blankRows++
+                    currentRow++
                     continue
-                } else{
+                } else {
                     blankRows = 0
                 }
-                if (tempRow.getCell(currentSDPColumn) != null){
+                if (tempRow.getCell(currentSDPColumn).stringCellValue != "") {
                     filteredRowList.add(tempRow)
                 }
+                currentRow++
             }
         }
     }

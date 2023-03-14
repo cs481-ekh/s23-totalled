@@ -30,7 +30,7 @@ fun ScreenHeader(
     pageTitle: String,
     currentStep: Int,
 ) {
-    Row(modifier = Modifier.padding(24.dp).fillMaxWidth()) {
+    Row(modifier = Modifier.padding(top = 12.dp, bottom = 24.dp).fillMaxWidth()) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,

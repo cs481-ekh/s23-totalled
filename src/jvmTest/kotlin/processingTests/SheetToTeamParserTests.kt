@@ -201,4 +201,35 @@ class SheetToTeamParserTests {
             parser.filteredRowList.size == 4,
         )
     }
+
+    @Test
+    @SuppressWarnings("UNCHECKED_CAST")
+    fun givenSheetWith2BlankRows_filterRowsCalled_properRowsRecorded() {
+        val parser = SheetToTeamParser(mockSheetList as MutableList<Sheet>)
+        Mockito.`when`(mockSheetList.iterator()).thenAnswer { fakeSingleMutableList.iterator() }
+        Mockito.`when`(mockFullSheet1.firstRowNum).thenReturn(1)
+        Mockito.`when`(mockFullSheet1.getRow(1)).thenAnswer { fakeRow1 }
+        Mockito.`when`(fakeRow1.iterator()).thenAnswer { fakeCellList1.iterator() }
+        prepCellMock()
+        parser.populateColumnHeadingMap()
+
+        prepareDataRows()
+
+        Mockito.`when`(mockFullSheet1.getRow(2)).thenReturn(fakeRowData1)
+        Mockito.`when`(mockFullSheet1.getRow(3)).thenReturn(fakeRowData2)
+        Mockito.`when`(mockFullSheet1.getRow(4)).thenReturn(fakeRowData3)
+        Mockito.`when`(mockFullSheet1.getRow(5)).thenReturn(fakeBlankRow)
+        Mockito.`when`(mockFullSheet1.getRow(6)).thenReturn(fakeBlankRow)
+        Mockito.`when`(mockFullSheet1.getRow(7)).thenReturn(fakeRowData4)
+        Mockito.`when`(mockFullSheet1.getRow(8)).thenReturn(fakeBlankRow)
+        Mockito.`when`(mockFullSheet1.getRow(9)).thenReturn(fakeBlankRow)
+        Mockito.`when`(mockFullSheet1.getRow(10)).thenReturn(fakeBlankRow)
+
+        parser.filterRows()
+
+        assertTrue(
+            String.format("Error Filtering rows, got %d expected 4", parser.filteredRowList.size),
+            parser.filteredRowList.size == 4,
+        )
+    }
 }

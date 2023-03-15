@@ -17,22 +17,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import ui.components.ScrollBox
+import ui.components.TotalledInputData
 import ui.components.WizardScreen
 
 data class ConfirmChoicesScreen(
-    val expenseLogPath1: String,
-    val expenseLogPath2: String,
-    val outputDirPath: String,
+    val inputData: TotalledInputData,
 ) : WizardScreen() {
     override val title = "Confirm Choices"
     override val step = 2
     override fun onClickNext(navigator: Navigator) {
         navigator.push(
-            LoadingScreen(
-                expenseLogPath1,
-                expenseLogPath2,
-                outputDirPath,
-            ),
+            LoadingScreen(inputData),
         )
     }
 
@@ -77,13 +72,13 @@ data class ConfirmChoicesScreen(
             ) {
                 Column(modifier = Modifier.padding(start = 12.dp, end = 12.dp)) {
                     val space = 12.dp
-                    PathRow("Expense Log:", expenseLogPath1)
+                    PathRow("Expense Log:", inputData.expenseLogPath1)
                     Spacer(modifier = Modifier.height(space))
-                    if (expenseLogPath2 != "") {
-                        PathRow("Second Expense Log:", expenseLogPath2)
+                    if (inputData.expenseLogPath2 != "") {
+                        PathRow("Second Expense Log:", inputData.expenseLogPath2)
                         Spacer(modifier = Modifier.height(space))
                     }
-                    PathRow("Output will be saved to:", outputDirPath, "folder_black_24dp.svg")
+                    PathRow("Output will be saved to:", inputData.outputDirPath, "folder_black_24dp.svg")
                 }
             }
         }

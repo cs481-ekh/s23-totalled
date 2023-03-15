@@ -21,34 +21,30 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
-import ui.components.TotalledInputData
+import ui.components.TotalledInput
 import ui.components.WizardScreen
 import ui.components.filepicker.FilePickerRow
 
-data class SelectInputScreen(
-    var inputData: TotalledInputData,
-) : WizardScreen() {
+data class SelectInputScreen(var input: TotalledInput) : WizardScreen() {
     override val title = "Select Expense Log(s)"
     override val step = 0
     override var nextEnabled by mutableStateOf(false)
     override val backEnabled = false
     override fun onClickNext(navigator: Navigator) {
-        navigator.push(
-            SelectProjectBookScreen(inputData),
-        )
+        navigator.push(SelectOutputScreen(input))
     }
 
     @Composable
     override fun Content() {
         fun maybeEnableNext() {
-            nextEnabled = inputData.expenseLogPath1.isNotEmpty()
+            nextEnabled = input.expenseLogPath1.isNotEmpty()
         }
         var secondFilePickerVisible by rememberSaveable { mutableStateOf(false) }
 
         Column() {
             FilePickerRow(
-                pathString = inputData.expenseLogPath1,
-                onValueChange = { inputData.expenseLogPath1 = it ; maybeEnableNext() },
+                pathString = input.expenseLogPath1,
+                onValueChange = { input.expenseLogPath1 = it ; maybeEnableNext() },
                 label = "Expense Log (.xlsx)",
                 fileExtensions = listOf("xlsx"),
             )
@@ -71,8 +67,8 @@ data class SelectInputScreen(
                     }
                 }
                 FilePickerRow(
-                    pathString = inputData.expenseLogPath2,
-                    onValueChange = { inputData.expenseLogPath2 = it },
+                    pathString = input.expenseLogPath2,
+                    onValueChange = { input.expenseLogPath2 = it },
                     label = "Second Expense Log - Optional (.xlsx)",
                     fileExtensions = listOf("xlsx"),
                     visible = secondFilePickerVisible,

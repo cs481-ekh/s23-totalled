@@ -16,12 +16,10 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import processing.generateOutput
-import ui.components.TotalledInputData
+import ui.components.TotalledInput
 import ui.components.WizardScreen
 
-data class LoadingScreen(
-    val inputData: TotalledInputData,
-) : WizardScreen() {
+data class LoadingScreen(val inputData: TotalledInput) : WizardScreen() {
     override val title = "Generating Output"
     override val step = 2
     override val nextEnabled = false
@@ -33,7 +31,12 @@ data class LoadingScreen(
         LaunchedEffect(Unit) {
             withContext(Dispatchers.IO) {
                 try {
-                    generateOutput(inputData.expenseLogPath1, inputData.expenseLogPath2, inputData.outputDirPath)
+                    generateOutput(
+                        inputData.expenseLogPath1,
+                        inputData.expenseLogPath2,
+                        inputData.projectBookPath,
+                        inputData.outputDirPath,
+                    )
                     navigator.push(SuccessScreen(inputData))
                 } catch (e: Exception) {
                     e.printStackTrace()

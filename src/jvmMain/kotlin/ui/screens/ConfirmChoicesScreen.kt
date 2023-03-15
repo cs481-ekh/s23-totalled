@@ -11,24 +11,24 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import ui.components.ScrollBox
-import ui.components.TotalledInputData
+import ui.components.TotalledInput
 import ui.components.WizardScreen
 
-data class ConfirmChoicesScreen(
-    val inputData: TotalledInputData,
-) : WizardScreen() {
+data class ConfirmChoicesScreen(val input: TotalledInput) : WizardScreen() {
     override val title = "Confirm Choices"
     override val step = 2
     override fun onClickNext(navigator: Navigator) {
-        navigator.push(
-            LoadingScreen(inputData),
-        )
+        navigator.push(LoadingScreen(input))
     }
 
     @Composable
@@ -65,20 +65,30 @@ data class ConfirmChoicesScreen(
             ScrollBox(
                 modifier = Modifier.padding(
                     start = 24.dp,
-                    top = 24.dp,
+                    top = 16.dp,
                     end = 24.dp,
-                    bottom = 64.dp + 12.dp, // 64 because the bottom bar is 64 dp tall
+                    bottom = 64.dp, // 64 because the bottom bar is 64 dp tall
                 ).fillMaxWidth(),
             ) {
-                Column(modifier = Modifier.padding(start = 12.dp, end = 12.dp)) {
-                    val space = 12.dp
-                    PathRow("Expense Log:", inputData.expenseLogPath1)
+                Column(modifier = Modifier.padding(start = 0.dp, end = 0.dp)) {
+                    var space by remember { mutableStateOf(24.dp) }
+                    // Squish things down to fit everything if all 4 are visible
+                    space = if (input.expenseLogPath2 != "" && input.projectBookPath != "") {
+                        0.dp
+                    } else {
+                        18.dp
+                    }
+                    PathRow("Expense Log:", input.expenseLogPath1)
                     Spacer(modifier = Modifier.height(space))
-                    if (inputData.expenseLogPath2 != "") {
-                        PathRow("Second Expense Log:", inputData.expenseLogPath2)
+                    if (input.expenseLogPath2 != "") {
+                        PathRow("Second Expense Log:", input.expenseLogPath2)
                         Spacer(modifier = Modifier.height(space))
                     }
-                    PathRow("Output will be saved to:", inputData.outputDirPath, "folder_black_24dp.svg")
+                    if (input.projectBookPath != "") {
+                        PathRow("Project Book:", input.projectBookPath)
+                        Spacer(modifier = Modifier.height(space))
+                    }
+                    PathRow("Output will be saved to:", input.outputDirPath, "folder_black_24dp.svg")
                 }
             }
         }

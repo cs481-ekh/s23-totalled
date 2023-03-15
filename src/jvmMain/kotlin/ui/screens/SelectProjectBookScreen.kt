@@ -7,11 +7,9 @@ import ui.components.TotalledInput
 import ui.components.WizardScreen
 import ui.components.filepicker.FilePickerRow
 
-data class SelectProjectBookScreen(
-    val input: TotalledInput,
-) : WizardScreen() {
+data class SelectProjectBookScreen(val input: TotalledInput) : WizardScreen() {
     override val title = "Select Project Book (Optional)"
-    override val step = 0
+    override val step = 1
     override var nextEnabled = true
     override fun onClickNext(navigator: Navigator) {
         navigator.push(

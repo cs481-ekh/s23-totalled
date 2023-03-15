@@ -11,7 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
-import ui.components.TotalledInputData
+import ui.components.TotalledInput
 import ui.components.WizardScreen
 import kotlin.system.exitProcess
 
@@ -25,7 +25,7 @@ data class ErrorScreen(val e: Exception) : WizardScreen() {
     }
     override fun onClickBack(navigator: Navigator) {
         navigator.popAll()
-        navigator.replace(SelectInputScreen(TotalledInputData()))
+        navigator.replace(SelectInputScreen(TotalledInput()))
     }
 
     @Composable

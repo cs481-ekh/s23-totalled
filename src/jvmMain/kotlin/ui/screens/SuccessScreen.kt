@@ -11,18 +11,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
-import ui.components.TotalledInputData
+import ui.components.TotalledInput
 import ui.components.WizardScreen
 import java.awt.Desktop
 import java.io.File
 import java.lang.Exception
 import kotlin.system.exitProcess
 
-data class SuccessScreen(
-    val inputData: TotalledInputData,
-) : WizardScreen() {
+data class SuccessScreen(val inputData: TotalledInput) : WizardScreen() {
     override val title = "Success"
-    override val step = 3
+    override val step = 2
     override val nextButtonText = "Exit >"
     override val backButtonText = "< Restart"
     override fun onClickNext(navigator: Navigator) {
@@ -30,7 +28,7 @@ data class SuccessScreen(
     }
     override fun onClickBack(navigator: Navigator) {
         navigator.popAll()
-        navigator.replace(SelectInputScreen(TotalledInputData()))
+        navigator.replace(SelectInputScreen(TotalledInput()))
     }
 
     @Composable

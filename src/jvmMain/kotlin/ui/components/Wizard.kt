@@ -11,22 +11,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.FadeTransition
-import ui.screens.SelectInputScreen
 
 /**
  * Screens accessed from a Wizard should extend WizardScreen
  */
 @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun Wizard() {
-    val wizardData = rememberSaveable { TotalledInputData() }
-    Navigator(SelectInputScreen(wizardData)) { navigator ->
+fun Wizard(startScreen: WizardScreen, numberOfSteps: Int = -1) {
+    Navigator(startScreen) { navigator ->
         val currentScreen = navigator.lastItem as WizardScreen
         Scaffold(
             content = {
@@ -41,7 +35,7 @@ fun Wizard() {
                     ) { currentStep ->
                         // Hide the header if the screen's current step is negative
                         if (currentStep >= 0) {
-                            ScreenHeader(currentScreen.title, currentScreen.step)
+                            ScreenHeader(currentScreen.title, currentScreen.step, numberOfSteps)
                         }
                     }
                     FadeTransition(navigator)
@@ -59,13 +53,4 @@ fun Wizard() {
             },
         )
     }
-}
-
-open class WizardData
-
-class TotalledInputData : WizardData() {
-    var expenseLogPath1 by mutableStateOf("")
-    var expenseLogPath2 by mutableStateOf("")
-    var projectBookPath by mutableStateOf("")
-    var outputDirPath by mutableStateOf("")
 }

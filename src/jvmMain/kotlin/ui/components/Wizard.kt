@@ -19,7 +19,7 @@ import cafe.adriel.voyager.transitions.FadeTransition
  */
 @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun Wizard(startScreen: WizardScreen, numberOfSteps: Int = -1) {
+fun Wizard(startScreen: WizardScreen, numberOfSteps: Int = 0) {
     Navigator(startScreen) { navigator ->
         val currentScreen = navigator.lastItem as WizardScreen
         Scaffold(

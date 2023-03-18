@@ -13,15 +13,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.FadeTransition
-import ui.screens.SelectInputScreen
 
 /**
  * Screens accessed from a Wizard should extend WizardScreen
  */
 @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun Wizard() {
-    Navigator(SelectInputScreen()) { navigator ->
+fun Wizard(startScreen: WizardScreen, numberOfSteps: Int = 0) {
+    Navigator(startScreen) { navigator ->
         val currentScreen = navigator.lastItem as WizardScreen
         Scaffold(
             content = {
@@ -36,7 +35,7 @@ fun Wizard() {
                     ) { currentStep ->
                         // Hide the header if the screen's current step is negative
                         if (currentStep >= 0) {
-                            ScreenHeader(currentScreen.title, currentScreen.step)
+                            ScreenHeader(currentScreen.title, currentScreen.step, numberOfSteps)
                         }
                     }
                     FadeTransition(navigator)

@@ -8,8 +8,10 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
+import ui.components.TotalledInput
 import ui.components.WindowTitleBar
 import ui.components.Wizard
+import ui.screens.SelectInputScreen
 import ui.theme.AppTheme
 
 fun main() = application {
@@ -35,7 +37,7 @@ fun main() = application {
                 modifier = Modifier.clip(RoundedCornerShape(8.dp)),
             ) {
                 WindowTitleBar(windowState, title, icon)
-                Wizard()
+                Wizard(SelectInputScreen(TotalledInput()), numberOfSteps = 3)
             }
         }
     }

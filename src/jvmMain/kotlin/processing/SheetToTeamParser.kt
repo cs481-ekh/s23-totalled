@@ -72,41 +72,64 @@ class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
         }
     }
 
-    fun createTeams(){
-        for((index, row) in filteredRowList.withIndex()){
-            val currentMap = sheetToHeadingsMap[teamListRowMapIndex[index]] ?:
-                throw Exception("Null value found when non null expected")
-            val currentTeam = row.getCell(currentMap["senior design po"]?:-1).stringCellValue
+    fun createTeams() {
+        for ((index, row) in filteredRowList.withIndex()) {
+            val currentMap = sheetToHeadingsMap[teamListRowMapIndex[index]]
+                ?: throw Exception("Null value found when non null expected")
+            val currentTeam = row.getCell(currentMap["senior design po"] ?: -1).stringCellValue
                 .substringBefore('-').trim().lowercase()
 
-            if(teamList.containsKey(currentTeam)){
+            if (teamList.containsKey(currentTeam)) {
                 val teamObject = teamList[currentTeam] ?: throw Exception("Team object not found in list")
-                val amount: Double = row.getCell(currentMap["Total Amount"]?: throw Exception("Error"))
-                    .numericCellValue
-                val amount2: Double = row.getCell(currentMap["amount 2"]?: throw Exception("Error"))
-                    .numericCellValue
-                val type: String = row.getCell(currentMap["card"]?: throw Exception("Error"))
-                    .stringCellValue
-                val description: String = row.getCell(currentMap["Business Purpose"]?: throw Exception("Error"))
-                    .stringCellValue
-                val date: String = row.getCell(currentMap["date"]?: throw Exception("Error"))
-                    .stringCellValue
-                val vendor: String = row.getCell(currentMap["vendor"]?: throw Exception("Error"))
-                    .stringCellValue
-                var purchaseType: PurchaseType
-                var cardType: CardType
-
-
-
-                //teamObject.lineItemList.add(LineItem())
+                teamObject.lineItemList.add(newLineItem(row, currentMap))
             } else {
-                teamList[currentTeam] = Team(currentTeam, mutableListOf())
+                teamList[currentTeam] = Team(currentTeam, mutableListOf(newLineItem(row, currentMap)))
             }
-
         }
     }
 
-    fun getTeams(): HashMap<String, Team>{
+    private fun newLineItem(row: Row, currentMap: HashMap<String, Int>): LineItem{
+        val amount: Double = row.getCell(currentMap["Total Amount"] ?: throw Exception("Error"))
+            .numericCellValue
+        val amount2: Double = row.getCell(currentMap["amount 2"] ?: throw Exception("Error"))
+            .numericCellValue
+        val type: String = row.getCell(currentMap["card"] ?: throw Exception("Error"))
+            .stringCellValue
+        val description: String = row.getCell(currentMap["Business Purpose"] ?: throw Exception("Error"))
+            .stringCellValue
+        val date: String = row.getCell(currentMap["date"] ?: throw Exception("Error"))
+            .stringCellValue
+        val vendor: String = row.getCell(currentMap["vendor"] ?: throw Exception("Error"))
+            .stringCellValue
+        var purchaseType: PurchaseType = PurchaseType.PURCHASE
+        var cardType: CardType = CardType.NONE
+        var totalTaxable: Double = amount
+        var totalNonTaxable: Double = amount2
+        when(type){
+            "AH" -> cardType = CardType.AH
+            "PH" -> cardType = CardType.PH
+            "ME" -> cardType = CardType.ME
+            "JL" -> cardType = CardType.JL
+            "TRV" -> { cardType = CardType.TRV
+                purchaseType = PurchaseType.TRAVEL
+                totalTaxable = 0.0
+                totalNonTaxable += amount }
+            "RMB" -> cardType = CardType.RMB
+            "NONE" -> { cardType = CardType.NONE
+                purchaseType = PurchaseType.SERVICE
+                totalTaxable = 0.0
+                totalNonTaxable += amount}
+        }
+        return LineItem(totalTaxable,
+            totalNonTaxable,
+            description,
+            date,
+            vendor,
+            cardType,
+            purchaseType)
+    }
+
+    fun getTeams(): HashMap<String, Team> {
         return teamList
     }
 }

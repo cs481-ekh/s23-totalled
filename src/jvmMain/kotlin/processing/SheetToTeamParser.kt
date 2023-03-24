@@ -105,21 +105,29 @@ class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
         var cardType: CardType = CardType.NONE
         var totalTaxable: Double = amount
         var totalNonTaxable: Double = amount2
+
         when(type){
             "AH" -> cardType = CardType.AH
+
             "PH" -> cardType = CardType.PH
+
             "ME" -> cardType = CardType.ME
+
             "JL" -> cardType = CardType.JL
+
             "TRV" -> { cardType = CardType.TRV
                 purchaseType = PurchaseType.TRAVEL
                 totalTaxable = 0.0
                 totalNonTaxable += amount }
+
             "RMB" -> cardType = CardType.RMB
+
             "NONE" -> { cardType = CardType.NONE
                 purchaseType = PurchaseType.SERVICE
                 totalTaxable = 0.0
                 totalNonTaxable += amount}
         }
+
         return LineItem(totalTaxable,
             totalNonTaxable,
             description,
@@ -132,4 +140,5 @@ class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
     fun getTeams(): HashMap<String, Team> {
         return teamList
     }
+
 }

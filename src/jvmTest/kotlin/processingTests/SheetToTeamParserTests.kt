@@ -232,4 +232,12 @@ class SheetToTeamParserTests {
             parser.filteredRowList.size == 4,
         )
     }
+
+    @Test
+    @SuppressWarnings("UNCHECKED_CAST")
+    fun givenParserWithFilteredRows_createTeamsCalled_TeamItemsPopulated(){
+        val parser = Mockito.mock(SheetToTeamParser::class.java)
+        parser.createTeams()
+        parser.getTeams()
+    }
 }

@@ -47,6 +47,10 @@ class SheetToTeamParserTests {
     private val fakeData15 = Mockito.mock(Cell::class.java)
     private val fakeData16 = Mockito.mock(Cell::class.java)
     private val fakeBlankRow = Mockito.mock(Row::class.java)
+    private val filteredRow1 = Mockito.mock(Row::class.java)
+    private val filteredRow2 = Mockito.mock(Row::class.java)
+    private val mockFilteredRowListIterator = mutableListOf<Row>(filteredRow1, filteredRow2)
+    private val mockHeadingsMap = HashMap<Int, HashMap<String, Int>>()
 
     private fun prepCellMock() {
         Mockito.`when`(fakeCell1.stringCellValue).thenReturn("Senior Design PO ")
@@ -85,6 +89,14 @@ class SheetToTeamParserTests {
         Mockito.`when`(fakeData15.stringCellValue).thenReturn("23.0")
         Mockito.`when`(fakeData16.stringCellValue).thenReturn("321.11")
         Mockito.`when`(fakeBlankRow.firstCellNum).thenReturn(-1)
+    }
+
+    private fun prepFilteredRowList(){
+        Mockito.`when`(filteredRow1.getCell(0).stringCellValue).thenReturn(null) //Return a string value
+        Mockito.`when`(filteredRow2.getCell(0).stringCellValue).thenReturn(null) //Return a string value
+    }
+    private fun prepHeadingsMap() {
+        TODO("Not yet implemented")
     }
 
     @Test
@@ -237,7 +249,16 @@ class SheetToTeamParserTests {
     @SuppressWarnings("UNCHECKED_CAST")
     fun givenParserWithFilteredRows_createTeamsCalled_TeamItemsPopulated(){
         val parser = Mockito.mock(SheetToTeamParser::class.java)
+        prepFilteredRowList()
+        prepHeadingsMap()
+        Mockito.`when`(parser.filteredRowList.iterator()).thenReturn(mockFilteredRowListIterator.iterator()) //change null to be an iterator (should be two items)
+        Mockito.`when`(parser.teamListRowMapIndex[0]).thenReturn(0)
+        Mockito.`when`(parser.teamListRowMapIndex[1]).thenReturn(0)
+        Mockito.`when`(parser.sheetToHeadingsMap[0]).thenReturn(null) //change null to be a HashMap
+
         parser.createTeams()
         parser.getTeams()
     }
+
+
 }

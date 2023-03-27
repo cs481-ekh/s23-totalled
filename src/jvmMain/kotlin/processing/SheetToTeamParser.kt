@@ -10,7 +10,7 @@ import org.apache.poi.ss.usermodel.Sheet
 class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
     private val teamList = HashMap<String, Team>()
     private val tempHeadingIndicesMap = HashMap<String, Int>()
-    private val teamListRowMapIndex = mutableListOf<Int>()
+    val teamListRowMapIndex = mutableListOf<Int>()
 
     // Because each sheet may contain different indicies for headings, we will store the map for each sheet
     val sheetToHeadingsMap = HashMap<Int, HashMap<String, Int>>()

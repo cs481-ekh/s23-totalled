@@ -8,7 +8,7 @@ import java.io.File
 import java.io.FileInputStream
 
 /**
- * Parses the project book and finds all relevant teams
+ * Parses the project book and finds all relevant projects
  * @param projectBookPath path to the project book xlsx file
  * @param teamList list of teams, each team should have a total calculated
  * @return list of relevant projects for invoicing

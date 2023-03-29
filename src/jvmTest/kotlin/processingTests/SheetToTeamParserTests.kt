@@ -112,8 +112,6 @@ class SheetToTeamParserTests {
         Mockito.`when`(filteredRow2.getCell(5).stringCellValue).thenReturn("5/22/2023") // Return a string value
         Mockito.`when`(filteredRow1.getCell(6).stringCellValue).thenReturn("StuffCentral") // Return a string value
         Mockito.`when`(filteredRow2.getCell(6).stringCellValue).thenReturn("Amazon") // Return a string value
-
-        // TODO add more data so that the rows are "full" and can be properly used
     }
     private fun prepHeadingsMap() {
         mockMap["senior design po"] = 0

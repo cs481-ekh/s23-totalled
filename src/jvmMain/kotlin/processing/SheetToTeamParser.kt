@@ -72,7 +72,7 @@ class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
         }
     }
 
-    fun createTeams() { // TODO Replace all ?: with !!
+    fun createTeams() {
         for ((index, row) in filteredRowList.withIndex()) {
             val currentMap = sheetToHeadingsMap[teamListRowMapIndex[index]]
                 ?: throw Exception("Null value found when non null expected")
@@ -88,7 +88,7 @@ class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
         }
     }
 
-    private fun newLineItem(row: Row, currentMap: HashMap<String, Int>): LineItem { // TODO Replace ?: with !!
+    private fun newLineItem(row: Row, currentMap: HashMap<String, Int>): LineItem {
         val amount: Double = row.getCell(currentMap["Total Amount"] ?: throw Exception("Error"))
             .numericCellValue
         val amount2: Double = row.getCell(currentMap["amount 2"] ?: throw Exception("Error"))

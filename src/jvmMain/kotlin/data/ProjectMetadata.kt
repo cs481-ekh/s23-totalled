@@ -1,6 +1,6 @@
 package data
 
-data class Project(
+data class ProjectMetadata(
     var teamAbbr: String = "",
     var billTo: String = "",
     var email: String = "",

@@ -1,7 +1,7 @@
 package processing
 
 import com.github.pjfanning.xlsx.StreamingReader
-import data.Project
+import data.ProjectMetadata
 import data.Team
 import org.apache.poi.ss.usermodel.Row
 import java.io.File
@@ -13,7 +13,7 @@ import java.io.FileInputStream
  * @param teamList list of teams, each team should have a total calculated
  * @return list of relevant projects for invoicing
  */
-fun getProjectBookProjects(projectBookPath: String, teamList: List<Team>): List<Project> {
+fun getProjectBookProjects(projectBookPath: String, teamList: List<Team>): List<ProjectMetadata> {
     val wb = StreamingReader.builder()
         .rowCacheSize(50)
         .bufferSize(700)
@@ -31,7 +31,7 @@ fun getProjectBookProjects(projectBookPath: String, teamList: List<Team>): List<
         "Sponsor Contact email (optional)",
     )
 
-    val projects = mutableListOf<Project>()
+    val projects = mutableListOf<ProjectMetadata>()
 
     var foundColumnHeadings = false // set to true when the column headings are found
     var prevEmptyProject = false // if 2 empty project rows are found consecutively we are done
@@ -82,8 +82,8 @@ fun getProjectBookProjects(projectBookPath: String, teamList: List<Team>): List<
  * @param teamList list containing each team
  * @return the project, null if it shouldn't be used
  */
-private fun getProject(r: Row, columnNameToNumber: Map<String, Int>, teamList: List<Team>): Project? {
-    val project = Project()
+private fun getProject(r: Row, columnNameToNumber: Map<String, Int>, teamList: List<Team>): ProjectMetadata? {
+    val project = ProjectMetadata()
     project.teamAbbr = r.getCell(columnNameToNumber["Team Abbr"]!!).stringCellValue
 
     // find the amount in the team list

@@ -1,5 +1,5 @@
 package processingTests
-import data.Project
+import data.ProjectMetadata
 import data.Team
 import org.junit.jupiter.api.Test
 import processing.getProjectBookProjects
@@ -13,7 +13,7 @@ class ProjectBookParserTests {
         "LUNAR",
         mutableListOf(),
     )
-    private val team1ExpectedProject = Project(
+    private val team1ExpectedProject = ProjectMetadata(
         teamAbbr = "LUNAR",
         billTo = "Visioneering Space Corp",
         email = "strategic.blueberry@visioneeringspace.com",
@@ -30,7 +30,7 @@ class ProjectBookParserTests {
         "CODEX",
         mutableListOf(),
     )
-    private val team2ExpectedProject = Project(
+    private val team2ExpectedProject = ProjectMetadata(
         teamAbbr = "CODEX",
         billTo = "Visioneering Space Corp",
         email = "lively.carrot@visioneeringspace.com",
@@ -47,7 +47,7 @@ class ProjectBookParserTests {
         "NLG",
         mutableListOf(),
     )
-    private val team3ExpectedProject = Project(
+    private val team3ExpectedProject = ProjectMetadata(
         teamAbbr = "NLG",
         billTo = "NLG LLC",
         email = "z@zezzel.com, Wonderful.Broccoli@gmail.com",
@@ -64,7 +64,7 @@ class ProjectBookParserTests {
         "JBL",
         mutableListOf(),
     )
-    private val team4ExpectedProject = Project(
+    private val team4ExpectedProject = ProjectMetadata(
         teamAbbr = "JBL",
         billTo = "JB laser",
         email = "wittylettuce@wittylettuce.com",

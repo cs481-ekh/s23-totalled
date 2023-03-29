@@ -1,5 +1,8 @@
 package processingTests
 
+import data.CardType
+import data.LineItem
+import data.PurchaseType
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.Sheet
@@ -51,6 +54,7 @@ class SheetToTeamParserTests {
     private val filteredRow2 = Mockito.mock(Row::class.java)
     private val mockFilteredRowListIterator = mutableListOf<Row>(filteredRow1, filteredRow2)
     private val mockHeadingsMap = HashMap<Int, HashMap<String, Int>>()
+    private val mockMap = HashMap<String, Int>()
 
     private fun prepCellMock() {
         Mockito.`when`(fakeCell1.stringCellValue).thenReturn("Senior Design PO ")
@@ -91,12 +95,36 @@ class SheetToTeamParserTests {
         Mockito.`when`(fakeBlankRow.firstCellNum).thenReturn(-1)
     }
 
-    private fun prepFilteredRowList(){
-        Mockito.`when`(filteredRow1.getCell(0).stringCellValue).thenReturn(null) //Return a string value
-        Mockito.`when`(filteredRow2.getCell(0).stringCellValue).thenReturn(null) //Return a string value
+    private fun prepFilteredRowList() {
+        Mockito.`when`(filteredRow1.getCell(Mockito.anyInt())).thenReturn(Mockito.mock(Cell::class.java))
+        Mockito.`when`(filteredRow2.getCell(Mockito.anyInt())).thenReturn(Mockito.mock(Cell::class.java))
+        Mockito.`when`(filteredRow1.getCell(0).stringCellValue).thenReturn("PO-01") // Return a string value
+        Mockito.`when`(filteredRow2.getCell(0).stringCellValue).thenReturn("PO-02") // Return a string value
+        Mockito.`when`(filteredRow1.getCell(1).stringCellValue).thenReturn("$123") // Return a string value
+        Mockito.`when`(filteredRow2.getCell(1).stringCellValue).thenReturn("$234") // Return a string value
+        Mockito.`when`(filteredRow1.getCell(2).stringCellValue).thenReturn("$12") // Return a string value
+        Mockito.`when`(filteredRow2.getCell(2)).thenReturn(null) // Return a string value
+        Mockito.`when`(filteredRow1.getCell(3).stringCellValue).thenReturn("AH") // Return a string value
+        Mockito.`when`(filteredRow2.getCell(3).stringCellValue).thenReturn("JL") // Return a string value
+        Mockito.`when`(filteredRow1.getCell(4).stringCellValue).thenReturn("Purchase of Stuff") // Return a string value
+        Mockito.`when`(filteredRow2.getCell(4).stringCellValue).thenReturn("Amazon Order") // Return a string value
+        Mockito.`when`(filteredRow1.getCell(5).stringCellValue).thenReturn("5/25/2022") // Return a string value
+        Mockito.`when`(filteredRow2.getCell(5).stringCellValue).thenReturn("5/22/2023") // Return a string value
+        Mockito.`when`(filteredRow1.getCell(6).stringCellValue).thenReturn("StuffCentral") // Return a string value
+        Mockito.`when`(filteredRow2.getCell(6).stringCellValue).thenReturn("Amazon") // Return a string value
+
+        // TODO add more data so that the rows are "full" and can be properly used
     }
     private fun prepHeadingsMap() {
-        TODO("Not yet implemented")
+        mockMap["senior design po"] = 0
+        mockMap["Total Amount"] = 1
+        mockMap["amount 2"] = 2
+        mockMap["card"] = 3
+        mockMap["Business Purpose"] = 4
+        mockMap["date"] = 5
+        mockMap["vendor"] = 6
+
+        mockHeadingsMap[0] = mockMap
     }
 
     @Test
@@ -247,18 +275,36 @@ class SheetToTeamParserTests {
 
     @Test
     @SuppressWarnings("UNCHECKED_CAST")
-    fun givenParserWithFilteredRows_createTeamsCalled_TeamItemsPopulated(){
+    fun givenParserWithFilteredRows_createTeamsCalled_TeamItemsPopulated() {
         val parser = Mockito.mock(SheetToTeamParser::class.java)
         prepFilteredRowList()
         prepHeadingsMap()
-        Mockito.`when`(parser.filteredRowList.iterator()).thenReturn(mockFilteredRowListIterator.iterator()) //change null to be an iterator (should be two items)
-        Mockito.`when`(parser.teamListRowMapIndex[0]).thenReturn(0)
-        Mockito.`when`(parser.teamListRowMapIndex[1]).thenReturn(0)
-        Mockito.`when`(parser.sheetToHeadingsMap[0]).thenReturn(null) //change null to be a HashMap
+        Mockito.`when`(parser.filteredRowList).thenReturn(mockFilteredRowListIterator)
+        Mockito.`when`(parser.teamListRowMapIndex).thenReturn(mutableListOf(0, 0)) // This means that the HeadingsMap will be the same for both indices
+        Mockito.`when`(parser.sheetToHeadingsMap[0]).thenReturn(mockHeadingsMap[0])
+        val lI1 = LineItem(123.0, 12.0, "Purchase of Stuff", "5/25/2023", "StuffCentral", CardType.AH, PurchaseType.PURCHASE)
+        val lI2 = LineItem(234.0, 0.0, "Amazon Order", "5/22/2023", "Amazon", CardType.JL, PurchaseType.PURCHASE)
 
         parser.createTeams()
-        parser.getTeams()
+        val teamMap = parser.getTeams()
+        for ((teamName, teamObject) in teamMap) {
+            if (teamName != "PO") {
+                assertTrue("TeamName Failed to Parse", false)
+            }
+            teamObject.teamName
+            for ((index, lineItem) in teamObject.lineItemList.withIndex()) {
+                when (index) {
+                    0 -> {
+                        assertTrue("Line Item 1 failed", lineItem == lI1)
+                    }
+                    1 -> {
+                        assertTrue("Line Item 2 failed", lineItem == lI2)
+                    }
+                    else -> {
+                        assertTrue("Unexpected Number of LineItems", false)
+                    }
+                }
+            }
+        }
     }
-
-
 }

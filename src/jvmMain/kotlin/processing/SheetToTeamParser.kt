@@ -72,7 +72,7 @@ class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
         }
     }
 
-    fun createTeams() {
+    fun createTeams() { // TODO Replace all ?: with !!
         for ((index, row) in filteredRowList.withIndex()) {
             val currentMap = sheetToHeadingsMap[teamListRowMapIndex[index]]
                 ?: throw Exception("Null value found when non null expected")
@@ -88,7 +88,7 @@ class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
         }
     }
 
-    private fun newLineItem(row: Row, currentMap: HashMap<String, Int>): LineItem{
+    private fun newLineItem(row: Row, currentMap: HashMap<String, Int>): LineItem { // TODO Replace ?: with !!
         val amount: Double = row.getCell(currentMap["Total Amount"] ?: throw Exception("Error"))
             .numericCellValue
         val amount2: Double = row.getCell(currentMap["amount 2"] ?: throw Exception("Error"))
@@ -106,7 +106,7 @@ class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
         var totalTaxable: Double = amount
         var totalNonTaxable: Double = amount2
 
-        when(type){
+        when (type) {
             "AH" -> cardType = CardType.AH
 
             "PH" -> cardType = CardType.PH
@@ -125,20 +125,21 @@ class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
             "NONE" -> { cardType = CardType.NONE
                 purchaseType = PurchaseType.SERVICE
                 totalTaxable = 0.0
-                totalNonTaxable += amount}
+                totalNonTaxable += amount }
         }
 
-        return LineItem(totalTaxable,
+        return LineItem(
+            totalTaxable,
             totalNonTaxable,
             description,
             date,
             vendor,
             cardType,
-            purchaseType)
+            purchaseType,
+        )
     }
 
     fun getTeams(): HashMap<String, Team> {
         return teamList
     }
-
 }

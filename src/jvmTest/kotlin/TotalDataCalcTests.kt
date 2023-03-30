@@ -6,10 +6,9 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import processing.totalCalculations
 import java.io.File
-import java.io.FileInputStream
 import java.io.FileOutputStream
 import kotlin.random.Random
-import kotlin.test.DefaultAsserter
+import kotlin.test.assertEquals
 
 class TotalDataCalcTests {
 
@@ -19,8 +18,8 @@ class TotalDataCalcTests {
     private lateinit var fIP: java.io.FileInputStream
     private lateinit var wb: XSSFWorkbook
     private lateinit var sheet: Sheet
-    private val dataFormat: DataFormat = wb.createDataFormat()
-    private var dollarStyle: XSSFCellStyle = wb.createCellStyle()
+    private lateinit var dataFormat: DataFormat
+    private lateinit var dollarStyle: XSSFCellStyle
     private var merchCellTotal: Double = 0.0
     private var shipCellTotal: Double = 0.0
     private var servCellTotal: Double = 0.0
@@ -31,11 +30,14 @@ class TotalDataCalcTests {
 
     @BeforeEach
     fun initVars() {
-        //reset the file
+        // reset the file
+        tempFile.delete()
         file.copyTo(tempFile)
         fIP = java.io.FileInputStream(tempFile)
         wb = XSSFWorkbook(fIP)
         sheet = wb.getSheetAt(0)
+        dataFormat = wb.createDataFormat()
+        dollarStyle = wb.createCellStyle()
         dollarStyle.dataFormat = dataFormat.getFormat("$#,#0.00")
         merchCellTotal = 0.0
         shipCellTotal = 0.0
@@ -44,14 +46,12 @@ class TotalDataCalcTests {
         completeTotal = 0.0
         expectedToString = " "
         actualToString = ""
-        //item1 = LineItem(1.11, 2.22, "test", "1/2/23", "Amazon", CardType.AH, PurchaseType.PURCHASE)
-        //expectedToString = "LineItem(totalTaxable=1.11, totalNonTaxable=2.22, description=test, date=1/2/23, vendor=Amazon, cardType=AH, purchaseType=PURCHASE)"
     }
 
     @Test
     fun totalData_NormalDataFormat() {
         for (i in 1..5) {
-            val currRow = sheet.createRow(4+i)
+            val currRow = sheet.createRow(4 + i)
             val merchCell = currRow.createCell(6)
             merchCell.cellStyle = dollarStyle
             val shipCell = currRow.createCell(7)
@@ -60,7 +60,7 @@ class TotalDataCalcTests {
             servCell.cellStyle = dollarStyle
             val travelCell = currRow.createCell(9)
             travelCell.cellStyle = dollarStyle
-            for (j in 1..4 ) {
+            for (j in 1..4) {
                 merchCell.setCellValue(Random.nextDouble(0.0, 3000.0))
                 shipCell.setCellValue(Random.nextDouble(0.0, 3000.0))
                 servCell.setCellValue(Random.nextDouble(0.0, 3000.0))
@@ -72,16 +72,16 @@ class TotalDataCalcTests {
             }
         }
         completeTotal = merchCellTotal + shipCellTotal + servCellTotal + travelCellTotal
-        expectedToString = merchCellTotal.toString() + " " + shipCellTotal.toString() + " " + servCellTotal.toString() + " " + travelCellTotal.toString() + " " + (completeTotal*0.06).toString() + " " + completeTotal.toString()
-                totalCalculations(wb, 4, 9, 6)
+        expectedToString = merchCellTotal.toString() + " " + shipCellTotal.toString() + " " + servCellTotal.toString() + " " + travelCellTotal.toString() + " " + (completeTotal * 0.06).toString() + " " + completeTotal.toString()
+        totalCalculations(wb, 4, 9, 6)
         FileOutputStream(file).use { outputStream -> wb.write(outputStream) }
         for (i in 1..4) {
-            actualToString = actualToString + " " + wb.getSheetAt(0).getRow(11).getCell(5+i).toString()
+            actualToString = actualToString + " " + wb.getSheetAt(0).getRow(11).getCell(5 + i).reference.toString()
         }
-        actualToString = actualToString + " " + wb.getSheetAt(0).getRow(12).getCell(6).toString()
-        actualToString = actualToString + " " + wb.getSheetAt(0).getRow(14).getCell(6).toString()
+        actualToString = actualToString + " " + wb.getSheetAt(0).getRow(12).getCell(6).reference.toString()
+        actualToString = actualToString + " " + wb.getSheetAt(0).getRow(14).getCell(6).reference.toString()
         print(actualToString)
         print(expectedToString)
-        DefaultAsserter.assertEquals("Base case Failed", expectedToString, actualToString)
+        assertEquals("Base case Failed", expectedToString, actualToString)
     }
 }

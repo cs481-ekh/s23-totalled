@@ -8,6 +8,7 @@ import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.Sheet
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
+import processing.FileInputParser
 import processing.SheetToTeamParser
 import kotlin.test.DefaultAsserter.assertTrue
 

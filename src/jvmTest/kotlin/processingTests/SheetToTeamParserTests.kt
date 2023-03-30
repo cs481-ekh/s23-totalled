@@ -10,9 +10,13 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import processing.FileInputParser
 import processing.SheetToTeamParser
+import kotlin.test.DefaultAsserter.assertEquals
 import kotlin.test.DefaultAsserter.assertTrue
 
 class SheetToTeamParserTests {
+
+    private val dir = System.getProperty("user.dir")
+    private val path: String = "$dir/src/jvmTest/TestExcelFiles/PrimaryWorkbook.xlsx"
 
     private val mockSheetList = Mockito.mock(MutableList::class.java)
     private val mockEmptySheet = Mockito.mock(Sheet::class.java)
@@ -144,14 +148,25 @@ class SheetToTeamParserTests {
     }
 
     @Test
+    fun listOfFullSheetsGiven_populateColumnHeadingsCalled_HeadingsMapPopulatedNoMocks() {
+        val fip = FileInputParser(path)
+        val parser = SheetToTeamParser(fip.getAllSheets())
+
+        parser.populateColumnHeadingMap()
+        assertEquals("Error Wrong Number of sheets with Senior Design PO found", 7, parser.sheetToHeadingsMap.size)
+    }
+
+    @Test
     @Suppress("UNCHECKED_CAST")
     fun listOfFullSheetsGiven_populateColumnHeadingsCalled_HeadingMapPopulated() {
         val parser = SheetToTeamParser(mockSheetList as MutableList<Sheet>)
         Mockito.`when`(mockSheetList.iterator()).thenAnswer { fakeFullMutableList.iterator() }
-        Mockito.`when`(mockFullSheet1.firstRowNum).thenReturn(1)
-        Mockito.`when`(mockFullSheet2.firstRowNum).thenReturn(1)
-        Mockito.`when`(mockFullSheet1.getRow(1)).thenAnswer { fakeRow1 }
-        Mockito.`when`(mockFullSheet2.getRow(1)).thenAnswer { fakeRow2 }
+//        Mockito.`when`(mockFullSheet1.firstRowNum).thenReturn(1)
+        Mockito.`when`(mockFullSheet1.iterator()).thenAnswer { mutableListOf<Row>(fakeRow1).iterator() }
+        Mockito.`when`(mockFullSheet2.iterator()).thenAnswer { mutableListOf<Row>(fakeRow2).iterator() }
+//        Mockito.`when`(mockFullSheet2.firstRowNum).thenReturn(1)
+//        Mockito.`when`(mockFullSheet1.getRow(1)).thenAnswer { fakeRow1 }
+//        Mockito.`when`(mockFullSheet2.getRow(1)).thenAnswer { fakeRow2 }
         Mockito.`when`(fakeRow1.iterator()).thenAnswer { fakeCellList1.iterator() }
         Mockito.`when`(fakeRow2.iterator()).thenAnswer { fakeCellList2.iterator() }
         prepCellMock()
@@ -173,7 +188,7 @@ class SheetToTeamParserTests {
             }
             assertTrue("This should never be printed", true)
         } else {
-            assertTrue("Parsing sheets returned incorrect number of maps", false)
+            assertTrue("Parsing sheets returned incorrect number of maps got " + parser.sheetToHeadingsMap.size, false)
         }
     }
 
@@ -182,11 +197,15 @@ class SheetToTeamParserTests {
     fun listOfMixedSheetsGiven_populateColumnHeadingsCalled_HeadingMapPopulated() {
         val parser = SheetToTeamParser(mockSheetList as MutableList<Sheet>)
         Mockito.`when`(mockSheetList.iterator()).thenAnswer { fakeMixedMutableList.iterator() }
-        Mockito.`when`(mockFullSheet1.firstRowNum).thenReturn(1)
-        Mockito.`when`(mockFullSheet2.firstRowNum).thenReturn(1)
-        Mockito.`when`(mockEmptySheet.firstRowNum).thenReturn(-1)
-        Mockito.`when`(mockFullSheet1.getRow(1)).thenAnswer { fakeRow1 }
-        Mockito.`when`(mockFullSheet2.getRow(1)).thenAnswer { fakeRow2 }
+//        Mockito.`when`(mockFullSheet1.firstRowNum).thenReturn(1)
+//        Mockito.`when`(mockFullSheet2.firstRowNum).thenReturn(1)
+//        Mockito.`when`(mockEmptySheet.firstRowNum).thenReturn(-1)
+//        Mockito.`when`(mockFullSheet1.getRow(1)).thenAnswer { fakeRow1 }
+//        Mockito.`when`(mockFullSheet2.getRow(1)).thenAnswer { fakeRow2 }
+        Mockito.`when`(mockFullSheet1.iterator()).thenReturn(mutableListOf<Row>(fakeRow1).iterator())
+        Mockito.`when`(mockFullSheet2.iterator()).thenReturn(mutableListOf<Row>(fakeRow2).iterator())
+        Mockito.`when`(mockEmptySheet.iterator()).thenReturn(mutableListOf<Row>().iterator())
+
         Mockito.`when`(fakeRow1.iterator()).thenAnswer { fakeCellList1.iterator() }
         Mockito.`when`(fakeRow2.iterator()).thenAnswer { fakeCellList2.iterator() }
         prepCellMock()
@@ -208,7 +227,7 @@ class SheetToTeamParserTests {
             }
             assertTrue("This should never be printed", true)
         } else {
-            assertTrue("Parsing sheets returned incorrect number of maps", false)
+            assertTrue("Parsing sheets returned incorrect number of maps got " + parser.sheetToHeadingsMap.size, false)
         }
     }
 
@@ -217,21 +236,32 @@ class SheetToTeamParserTests {
     fun givenSheetsWithMapFilledOut_filterRowsCalled_properRowsRecorded() {
         val parser = SheetToTeamParser(mockSheetList as MutableList<Sheet>)
         Mockito.`when`(mockSheetList.iterator()).thenAnswer { fakeSingleMutableList.iterator() }
-        Mockito.`when`(mockFullSheet1.firstRowNum).thenReturn(1)
-        Mockito.`when`(mockFullSheet1.getRow(1)).thenAnswer { fakeRow1 }
+//        Mockito.`when`(mockFullSheet1.firstRowNum).thenReturn(1)
+//        Mockito.`when`(mockFullSheet1.getRow(1)).thenAnswer { fakeRow1 }
+        val fakeSheet = mutableListOf<Row>(
+            fakeRow1,
+            fakeRowData1,
+            fakeRowData2,
+            fakeRowData3,
+            fakeRowData4,
+            fakeBlankRow,
+            fakeBlankRow,
+            fakeBlankRow,
+        )
+        Mockito.`when`(mockFullSheet1.iterator()).thenReturn(fakeSheet.iterator())
         Mockito.`when`(fakeRow1.iterator()).thenAnswer { fakeCellList1.iterator() }
         prepCellMock()
         parser.populateColumnHeadingMap()
 
         prepareDataRows()
 
-        Mockito.`when`(mockFullSheet1.getRow(2)).thenReturn(fakeRowData1)
-        Mockito.`when`(mockFullSheet1.getRow(3)).thenReturn(fakeRowData2)
-        Mockito.`when`(mockFullSheet1.getRow(4)).thenReturn(fakeRowData3)
-        Mockito.`when`(mockFullSheet1.getRow(5)).thenReturn(fakeRowData4)
-        Mockito.`when`(mockFullSheet1.getRow(6)).thenReturn(fakeBlankRow)
-        Mockito.`when`(mockFullSheet1.getRow(7)).thenReturn(fakeBlankRow)
-        Mockito.`when`(mockFullSheet1.getRow(8)).thenReturn(fakeBlankRow)
+//        Mockito.`when`(mockFullSheet1.getRow(2)).thenReturn(fakeRowData1)
+//        Mockito.`when`(mockFullSheet1.getRow(3)).thenReturn(fakeRowData2)
+//        Mockito.`when`(mockFullSheet1.getRow(4)).thenReturn(fakeRowData3)
+//        Mockito.`when`(mockFullSheet1.getRow(5)).thenReturn(fakeRowData4)
+//        Mockito.`when`(mockFullSheet1.getRow(6)).thenReturn(fakeBlankRow)
+//        Mockito.`when`(mockFullSheet1.getRow(7)).thenReturn(fakeBlankRow)
+//        Mockito.`when`(mockFullSheet1.getRow(8)).thenReturn(fakeBlankRow)
 
         parser.filterRows()
 
@@ -246,23 +276,34 @@ class SheetToTeamParserTests {
     fun givenSheetWith2BlankRows_filterRowsCalled_properRowsRecorded() {
         val parser = SheetToTeamParser(mockSheetList as MutableList<Sheet>)
         Mockito.`when`(mockSheetList.iterator()).thenAnswer { fakeSingleMutableList.iterator() }
-        Mockito.`when`(mockFullSheet1.firstRowNum).thenReturn(1)
-        Mockito.`when`(mockFullSheet1.getRow(1)).thenAnswer { fakeRow1 }
+//        Mockito.`when`(mockFullSheet1.firstRowNum).thenReturn(1)
+//        Mockito.`when`(mockFullSheet1.getRow(1)).thenAnswer { fakeRow1 }
+        val fakeSheet = mutableListOf<Row>(
+            fakeRow1,
+            fakeRowData1,
+            fakeRowData2,
+            fakeRowData3,
+            fakeRowData4,
+            fakeBlankRow,
+            fakeBlankRow,
+            fakeBlankRow,
+        )
+        Mockito.`when`(mockFullSheet1.iterator()).thenReturn(fakeSheet.iterator())
         Mockito.`when`(fakeRow1.iterator()).thenAnswer { fakeCellList1.iterator() }
         prepCellMock()
         parser.populateColumnHeadingMap()
 
         prepareDataRows()
 
-        Mockito.`when`(mockFullSheet1.getRow(2)).thenReturn(fakeRowData1)
-        Mockito.`when`(mockFullSheet1.getRow(3)).thenReturn(fakeRowData2)
-        Mockito.`when`(mockFullSheet1.getRow(4)).thenReturn(fakeRowData3)
-        Mockito.`when`(mockFullSheet1.getRow(5)).thenReturn(fakeBlankRow)
-        Mockito.`when`(mockFullSheet1.getRow(6)).thenReturn(fakeBlankRow)
-        Mockito.`when`(mockFullSheet1.getRow(7)).thenReturn(fakeRowData4)
-        Mockito.`when`(mockFullSheet1.getRow(8)).thenReturn(fakeBlankRow)
-        Mockito.`when`(mockFullSheet1.getRow(9)).thenReturn(fakeBlankRow)
-        Mockito.`when`(mockFullSheet1.getRow(10)).thenReturn(fakeBlankRow)
+//        Mockito.`when`(mockFullSheet1.getRow(2)).thenReturn(fakeRowData1)
+//        Mockito.`when`(mockFullSheet1.getRow(3)).thenReturn(fakeRowData2)
+//        Mockito.`when`(mockFullSheet1.getRow(4)).thenReturn(fakeRowData3)
+//        Mockito.`when`(mockFullSheet1.getRow(5)).thenReturn(fakeBlankRow)
+//        Mockito.`when`(mockFullSheet1.getRow(6)).thenReturn(fakeBlankRow)
+//        Mockito.`when`(mockFullSheet1.getRow(7)).thenReturn(fakeRowData4)
+//        Mockito.`when`(mockFullSheet1.getRow(8)).thenReturn(fakeBlankRow)
+//        Mockito.`when`(mockFullSheet1.getRow(9)).thenReturn(fakeBlankRow)
+//        Mockito.`when`(mockFullSheet1.getRow(10)).thenReturn(fakeBlankRow)
 
         parser.filterRows()
 

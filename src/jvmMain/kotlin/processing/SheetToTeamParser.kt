@@ -6,10 +6,15 @@ import data.PurchaseType
 import data.Team
 import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.Sheet
+import org.slf4j.LoggerFactory
 
 class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
+
+    private val logger = LoggerFactory.getLogger(this.javaClass)
+
     private val teamList = HashMap<String, Team>()
     private val tempHeadingIndicesMap = HashMap<String, Int>()
+    private val shortNegativeOne: Short = -1
     val teamListRowMapIndex = mutableListOf<Int>()
 
     // Because each sheet may contain different indicies for headings, we will store the map for each sheet
@@ -19,6 +24,7 @@ class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
 
     private fun useRow(row: Row) {
         for (curCell in row) {
+            //logger.info(curCell.stringCellValue.substringBefore('-').lowercase().trim())
             when (curCell.stringCellValue.substringBefore('-').lowercase().trim()) {
                 "senior design po" -> tempHeadingIndicesMap["senior design po"] = curCell.columnIndex
                 "business purpose" -> tempHeadingIndicesMap["Business Purpose"] = curCell.columnIndex
@@ -32,23 +38,41 @@ class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
                 "vendor name" -> tempHeadingIndicesMap["vendor"] = curCell.columnIndex
             }
         }
+        logger.info("The Final Map for this sheet is $tempHeadingIndicesMap")
     }
 
     fun populateColumnHeadingMap() {
+        var nextSheet = false
+
         for ((index, curSheet) in sheetList.withIndex()) {
-            if (curSheet.firstRowNum < 0) {
+            logger.info("Current Sheet is index $index, and its first row is {${curSheet.firstRowNum}}")
+            if (curSheet.firstRowNum < 0 || nextSheet) {
+                nextSheet = false
                 continue // There is no data in the sheet if firstRowNum is negative
             }
             for (curRow in curSheet) {
+                // logger.info("Current Row is ${curRow.rowNum} and its first cell number is ${curRow.firstCellNum}")
                 var blankCells = 0
+                if (nextSheet) {
+                    break
+                }
+                if (curRow.firstCellNum == shortNegativeOne) {
+                    continue
+                }
                 for (curCell in curRow) {
+                    // logger.info("Current Cell is ${curCell.columnIndex} with value ${curCell.stringCellValue}")
                     if (curCell.stringCellValue.isEmpty()) {
                         blankCells++
+                        if (blankCells > 4) { // more than 4 blank cells in a row, move on to the next row
+                            break
+                        }
                     } else if (curCell.stringCellValue.contains("senior")) {
                         useRow(curRow)
                         sheetToHeadingsMap[index] = HashMap<String, Int>(tempHeadingIndicesMap)
                         // Clear current sheets mappings before moving on to the next one
                         tempHeadingIndicesMap.clear()
+                        nextSheet = true
+                        break // The current row had the headings, move onto the next sheet
                     }
                 }
             }
@@ -63,14 +87,14 @@ class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
             // This will get the current design po column, if null then continues to the next sheet
             val currentSDPColumn = sheetToHeadingsMap[index]?.get("senior design po") ?: continue
             var blankRows = 0
-            var currentRow = currentSheet.firstRowNum + 1
-            val blankRowSignifier: Short = -1
-            while (blankRows < 3) {
-                var tempRow = currentSheet.getRow(currentRow)
-                if (tempRow.firstCellNum == blankRowSignifier) {
+            for (tempRow in currentSheet) {
+                if (tempRow.firstCellNum == shortNegativeOne) {
                     blankRows++
-                    currentRow++
-                    continue
+                    if (blankRows < 3) {
+                        continue
+                    } else {
+                        break
+                    }
                 } else {
                     blankRows = 0
                 }
@@ -78,8 +102,23 @@ class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
                     filteredRowList.add(tempRow)
                     teamListRowMapIndex.add(index)
                 }
-                currentRow++
             }
+
+//            while (blankRows < 3) {
+//                var tempRow = currentSheet.getRow(currentRow)
+//                if (tempRow.firstCellNum == blankRowSignifier) {
+//                    blankRows++
+//                    currentRow++
+//                    continue
+//                } else {
+//                    blankRows = 0
+//                }
+//                if (tempRow.getCell(currentSDPColumn).stringCellValue != "") {
+//                    filteredRowList.add(tempRow)
+//                    teamListRowMapIndex.add(index)
+//                }
+//                currentRow++
+//            }
         }
     }
 
@@ -137,6 +176,9 @@ class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
                 purchaseType = PurchaseType.SERVICE
                 totalTaxable = 0.0
                 totalNonTaxable += amount }
+        }
+        if (totalNonTaxable != 0.0 && totalTaxable != 0.0) {
+            totalTaxable -= totalNonTaxable
         }
 
         return LineItem(

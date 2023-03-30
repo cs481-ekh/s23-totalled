@@ -6,18 +6,19 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import processing.totalCalculations
 import java.io.File
+import java.io.FileInputStream
 import java.io.FileOutputStream
 import kotlin.random.Random
 import kotlin.test.DefaultAsserter
 
-abstract class TotalDataCalcTests {
+class TotalDataCalcTests {
 
     private val path = System.getProperty("user.dir")
     private val file: File = File("$path/src/jvmTest/TestExcelFiles/", "TotalCalcWorkbook.xlsx")
     private val tempFile: File = File("$path/src/jvmTest/TestExcelFiles/", "tempTotalCalcWorkbook.xlsx")
-    abstract var fIP: java.io.FileInputStream
-    abstract var wb: XSSFWorkbook
-    abstract var sheet: Sheet
+    private lateinit var fIP: java.io.FileInputStream
+    private lateinit var wb: XSSFWorkbook
+    private lateinit var sheet: Sheet
     private val dataFormat: DataFormat = wb.createDataFormat()
     private var dollarStyle: XSSFCellStyle = wb.createCellStyle()
     private var merchCellTotal: Double = 0.0

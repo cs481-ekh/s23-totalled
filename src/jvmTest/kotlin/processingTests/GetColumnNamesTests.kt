@@ -65,4 +65,30 @@ class GetColumnNamesTests {
         val txtFilePath = "$path/src/jvmTest/TestInputFiles/column-names-empty.txt"
         assertThrows<Exception> { getColumnNames(txtFilePath) }
     }
+
+    @Test
+    fun givenEmptyColumnNamesPath_whenGetColumnNamesCalled_thenCorrectMapsReturned() {
+        val txtFilePath = ""
+        val expectedExpenseLogMap = mapOf(
+            "Senior Design PO" to "Senior Design PO",
+            "Business Purpose" to "Business Purpose",
+            "Total Amount" to "Total Amount",
+            "Amount 2" to "Amount 2",
+            "Card" to "Card",
+            "Date Ordered" to "Date Ordered",
+            "Vendor Name" to "Vendor Name",
+        )
+        val expectedProjectBookMap = mapOf(
+            "Team Abbr" to "Team Abbr",
+            "Sponsor / Funding Department" to "Sponsor / Funding Department",
+            "Billing Address / BSU Department ID" to "Billing Address / BSU Department ID",
+            "Sponsor Contact" to "Sponsor Contact",
+            "Sponsor Contact email (optional)" to "Sponsor Contact email (optional)",
+        )
+
+        val columnNames = getColumnNames(txtFilePath)
+
+        assertTrue { columnNames.expenseLogColumnNames == expectedExpenseLogMap }
+        assertTrue { columnNames.projectBookColumnNames == expectedProjectBookMap }
+    }
 }

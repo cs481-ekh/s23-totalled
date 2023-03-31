@@ -26,7 +26,7 @@ import ui.components.WizardScreen
 
 data class ConfirmChoicesScreen(val input: TotalledInput) : WizardScreen() {
     override val title = "Confirm Choices"
-    override val step = 2
+    override val step = 3
     override fun onClickNext(navigator: Navigator) {
         navigator.push(LoadingScreen(input))
     }

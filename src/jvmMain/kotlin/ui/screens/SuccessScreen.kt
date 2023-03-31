@@ -20,7 +20,7 @@ import kotlin.system.exitProcess
 
 data class SuccessScreen(val inputData: TotalledInput) : WizardScreen() {
     override val title = "Success"
-    override val step = 2
+    override val step = 4
     override val nextButtonText = "Exit >"
     override val backButtonText = "< Restart"
     override fun onClickNext(navigator: Navigator) {

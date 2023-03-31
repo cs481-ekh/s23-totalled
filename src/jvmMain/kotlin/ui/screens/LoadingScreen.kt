@@ -21,7 +21,7 @@ import ui.components.WizardScreen
 
 data class LoadingScreen(val inputData: TotalledInput) : WizardScreen() {
     override val title = "Generating Output"
-    override val step = 2
+    override val step = 3
     override val nextEnabled = false
     override val backEnabled = false
 

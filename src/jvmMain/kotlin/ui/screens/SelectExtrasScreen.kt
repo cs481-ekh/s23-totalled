@@ -9,7 +9,7 @@ import ui.components.filepicker.FilePickerRow
 
 data class SelectExtrasScreen(val input: TotalledInput) : WizardScreen() {
     override val title = "Select Optional Extras"
-    override val step = 1
+    override val step = 2
     override var nextEnabled = true
     override fun onClickNext(navigator: Navigator) {
         navigator.push(

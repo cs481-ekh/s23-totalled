@@ -17,7 +17,7 @@ import kotlin.system.exitProcess
 
 data class ErrorScreen(val e: Exception) : WizardScreen() {
     override val title = "Error"
-    override val step = 2
+    override val step = 3
     override val nextButtonText = "Exit >"
     override val backButtonText = "< Restart"
     override fun onClickNext(navigator: Navigator) {

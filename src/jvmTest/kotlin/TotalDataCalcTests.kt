@@ -14,7 +14,7 @@ class TotalDataCalcTests {
 
     private val path = System.getProperty("user.dir")
     private val file: File = File("$path/src/jvmTest/TestExcelFiles/", "TotalCalcWorkbook.xlsx")
-    private val tempFile: File = File("$path/src/jvmTest/TestExcelFiles/", "tempTotalCalcWorkbook.xlsx")
+    private var tempFile: File = File("$path/src/jvmTest/TestExcelFiles/", "tempTotalCalcWorkbook.xlsx")
     private lateinit var fIP: java.io.FileInputStream
     private lateinit var wb: XSSFWorkbook
     private lateinit var sheet: Sheet
@@ -32,6 +32,7 @@ class TotalDataCalcTests {
     fun initVars() {
         // reset the file
         tempFile.delete()
+        tempFile = File("$path/src/jvmTest/TestExcelFiles/", "tempTotalCalcWorkbook.xlsx")
         file.copyTo(tempFile)
         fIP = java.io.FileInputStream(tempFile)
         wb = XSSFWorkbook(fIP)
@@ -50,6 +51,7 @@ class TotalDataCalcTests {
 
     @Test
     fun totalData_NormalDataFormat() {
+        //fill cells with dummy data
         for (i in 1..5) {
             val currRow = sheet.createRow(4 + i)
             val merchCell = currRow.createCell(6)
@@ -60,28 +62,31 @@ class TotalDataCalcTests {
             servCell.cellStyle = dollarStyle
             val travelCell = currRow.createCell(9)
             travelCell.cellStyle = dollarStyle
-            for (j in 1..4) {
-                merchCell.setCellValue(Random.nextDouble(0.0, 3000.0))
-                shipCell.setCellValue(Random.nextDouble(0.0, 3000.0))
-                servCell.setCellValue(Random.nextDouble(0.0, 3000.0))
-                travelCell.setCellValue(Random.nextDouble(0.0, 3000.0))
-                merchCellTotal += merchCell.numericCellValue
-                shipCellTotal += shipCell.numericCellValue
-                servCellTotal += servCell.numericCellValue
-                travelCellTotal += travelCell.numericCellValue
-            }
+            merchCell.setCellValue(Random.nextInt(0, 3000).toDouble())
+            shipCell.setCellValue(Random.nextInt(0, 3000).toDouble())
+            servCell.setCellValue(Random.nextInt(0, 3000).toDouble())
+            travelCell.setCellValue(Random.nextInt(0, 3000).toDouble())
+            merchCellTotal += merchCell.numericCellValue
+            shipCellTotal += shipCell.numericCellValue
+            servCellTotal += servCell.numericCellValue
+            travelCellTotal += travelCell.numericCellValue
         }
+        //calculate cell formula values
         completeTotal = merchCellTotal + shipCellTotal + servCellTotal + travelCellTotal
-        expectedToString = merchCellTotal.toString() + " " + shipCellTotal.toString() + " " + servCellTotal.toString() + " " + travelCellTotal.toString() + " " + (completeTotal * 0.06).toString() + " " + completeTotal.toString()
-        totalCalculations(wb, 4, 9, 6)
-        FileOutputStream(file).use { outputStream -> wb.write(outputStream) }
+        expectedToString = merchCellTotal.toString() + " " + shipCellTotal + " " + servCellTotal + " " + travelCellTotal + " " + (merchCellTotal * 0.06) + " " + completeTotal
+        //run function to test
+        totalCalculations(wb, 5, 10, 6)
+        //output calculated values to dummy file
+        java.io.FileOutputStream(tempFile).use { outputStream -> wb.write(outputStream) }
+        val eval = wb.creationHelper.createFormulaEvaluator()
+        //wb.forceFormulaRecalculation = true
+        //get formula calculated values
         for (i in 1..4) {
-            actualToString = actualToString + " " + wb.getSheetAt(0).getRow(11).getCell(5 + i).reference.toString()
+            actualToString = actualToString + " " + eval.evaluate(wb.getSheetAt(0).getRow(12).getCell(5 + i)).formatAsString()
         }
-        actualToString = actualToString + " " + wb.getSheetAt(0).getRow(12).getCell(6).reference.toString()
-        actualToString = actualToString + " " + wb.getSheetAt(0).getRow(14).getCell(6).reference.toString()
-        print(actualToString)
-        print(expectedToString)
-        assertEquals("Base case Failed", expectedToString, actualToString)
+        actualToString = actualToString + " " + eval.evaluate(wb.getSheetAt(0).getRow(14).getCell(6))
+        actualToString = actualToString + " " + eval.evaluate(wb.getSheetAt(0).getRow(16).getCell(6))
+
+        assertEquals(expectedToString, actualToString, "Base case Failed")
     }
 }

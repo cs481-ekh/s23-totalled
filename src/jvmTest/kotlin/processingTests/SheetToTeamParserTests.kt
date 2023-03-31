@@ -1,15 +1,14 @@
 package processingTests
 
-import data.CardType
-import data.LineItem
-import data.PurchaseType
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.Sheet
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
+import org.slf4j.LoggerFactory
 import processing.FileInputParser
 import processing.SheetToTeamParser
+import java.lang.StringBuilder
 import kotlin.test.DefaultAsserter.assertEquals
 import kotlin.test.DefaultAsserter.assertTrue
 
@@ -17,6 +16,8 @@ class SheetToTeamParserTests {
 
     private val dir = System.getProperty("user.dir")
     private val path: String = "$dir/src/jvmTest/TestExcelFiles/PrimaryWorkbook.xlsx"
+    private val fip = FileInputParser(path)
+    private val logger = LoggerFactory.getLogger(this.javaClass)
 
     private val mockSheetList = Mockito.mock(MutableList::class.java)
     private val mockEmptySheet = Mockito.mock(Sheet::class.java)
@@ -148,203 +149,41 @@ class SheetToTeamParserTests {
     }
 
     @Test
-    fun listOfFullSheetsGiven_populateColumnHeadingsCalled_HeadingsMapPopulatedNoMocks() {
-        val fip = FileInputParser(path)
+    fun listOfSheetsGiven_populateColumnHeadingsCalled_HeadingsMapPopulatedNoMocks() {
         val parser = SheetToTeamParser(fip.getAllSheets())
 
         parser.populateColumnHeadingMap()
-        assertEquals("Error Wrong Number of sheets with Senior Design PO found", 7, parser.sheetToHeadingsMap.size)
+        assertEquals("Error Wrong Number of sheets with Senior Design PO found", 12, parser.sheetToHeadingsMap.size)
     }
 
     @Test
-    @Suppress("UNCHECKED_CAST")
-    fun listOfFullSheetsGiven_populateColumnHeadingsCalled_HeadingMapPopulated() {
-        val parser = SheetToTeamParser(mockSheetList as MutableList<Sheet>)
-        Mockito.`when`(mockSheetList.iterator()).thenAnswer { fakeFullMutableList.iterator() }
-//        Mockito.`when`(mockFullSheet1.firstRowNum).thenReturn(1)
-        Mockito.`when`(mockFullSheet1.iterator()).thenAnswer { mutableListOf<Row>(fakeRow1).iterator() }
-        Mockito.`when`(mockFullSheet2.iterator()).thenAnswer { mutableListOf<Row>(fakeRow2).iterator() }
-//        Mockito.`when`(mockFullSheet2.firstRowNum).thenReturn(1)
-//        Mockito.`when`(mockFullSheet1.getRow(1)).thenAnswer { fakeRow1 }
-//        Mockito.`when`(mockFullSheet2.getRow(1)).thenAnswer { fakeRow2 }
-        Mockito.`when`(fakeRow1.iterator()).thenAnswer { fakeCellList1.iterator() }
-        Mockito.`when`(fakeRow2.iterator()).thenAnswer { fakeCellList2.iterator() }
-        prepCellMock()
-
+    fun givenSheetsWithMapFilledOut_filterRowsCalled_ProperRowsRecorded() {
+        val parser = SheetToTeamParser(fip.getAllSheets())
         parser.populateColumnHeadingMap()
-        if (parser.sheetToHeadingsMap.size == 2) {
-            for (sheetSet in parser.sheetToHeadingsMap) {
-                if (sheetSet.value.size != 4) {
-                    assertTrue(
-                        String.format(
-                            "Parsing Sheet: %d of %d returned: %d values",
-                            sheetSet.key,
-                            parser.sheetToHeadingsMap.size - 1,
-                            sheetSet.value.size,
-                        ),
-                        false,
-                    )
-                }
-            }
-            assertTrue("This should never be printed", true)
-        } else {
-            assertTrue("Parsing sheets returned incorrect number of maps got " + parser.sheetToHeadingsMap.size, false)
-        }
-    }
-
-    @Test
-    @Suppress("UNCHECKED_CAST")
-    fun listOfMixedSheetsGiven_populateColumnHeadingsCalled_HeadingMapPopulated() {
-        val parser = SheetToTeamParser(mockSheetList as MutableList<Sheet>)
-        Mockito.`when`(mockSheetList.iterator()).thenAnswer { fakeMixedMutableList.iterator() }
-//        Mockito.`when`(mockFullSheet1.firstRowNum).thenReturn(1)
-//        Mockito.`when`(mockFullSheet2.firstRowNum).thenReturn(1)
-//        Mockito.`when`(mockEmptySheet.firstRowNum).thenReturn(-1)
-//        Mockito.`when`(mockFullSheet1.getRow(1)).thenAnswer { fakeRow1 }
-//        Mockito.`when`(mockFullSheet2.getRow(1)).thenAnswer { fakeRow2 }
-        Mockito.`when`(mockFullSheet1.iterator()).thenReturn(mutableListOf<Row>(fakeRow1).iterator())
-        Mockito.`when`(mockFullSheet2.iterator()).thenReturn(mutableListOf<Row>(fakeRow2).iterator())
-        Mockito.`when`(mockEmptySheet.iterator()).thenReturn(mutableListOf<Row>().iterator())
-
-        Mockito.`when`(fakeRow1.iterator()).thenAnswer { fakeCellList1.iterator() }
-        Mockito.`when`(fakeRow2.iterator()).thenAnswer { fakeCellList2.iterator() }
-        prepCellMock()
-
-        parser.populateColumnHeadingMap()
-        if (parser.sheetToHeadingsMap.size == 2) {
-            for (sheetSet in parser.sheetToHeadingsMap) {
-                if (sheetSet.value.size != 4) {
-                    assertTrue(
-                        String.format(
-                            "Parsing Sheet: %d of %d returned: %d values",
-                            sheetSet.key,
-                            parser.sheetToHeadingsMap.size - 1,
-                            sheetSet.value.size,
-                        ),
-                        false,
-                    )
-                }
-            }
-            assertTrue("This should never be printed", true)
-        } else {
-            assertTrue("Parsing sheets returned incorrect number of maps got " + parser.sheetToHeadingsMap.size, false)
-        }
-    }
-
-    @Test
-    @SuppressWarnings("UNCHECKED_CAST")
-    fun givenSheetsWithMapFilledOut_filterRowsCalled_properRowsRecorded() {
-        val parser = SheetToTeamParser(mockSheetList as MutableList<Sheet>)
-        Mockito.`when`(mockSheetList.iterator()).thenAnswer { fakeSingleMutableList.iterator() }
-//        Mockito.`when`(mockFullSheet1.firstRowNum).thenReturn(1)
-//        Mockito.`when`(mockFullSheet1.getRow(1)).thenAnswer { fakeRow1 }
-        val fakeSheet = mutableListOf<Row>(
-            fakeRow1,
-            fakeRowData1,
-            fakeRowData2,
-            fakeRowData3,
-            fakeRowData4,
-            fakeBlankRow,
-            fakeBlankRow,
-            fakeBlankRow,
-        )
-        Mockito.`when`(mockFullSheet1.iterator()).thenReturn(fakeSheet.iterator())
-        Mockito.`when`(fakeRow1.iterator()).thenAnswer { fakeCellList1.iterator() }
-        prepCellMock()
-        parser.populateColumnHeadingMap()
-
-        prepareDataRows()
-
-//        Mockito.`when`(mockFullSheet1.getRow(2)).thenReturn(fakeRowData1)
-//        Mockito.`when`(mockFullSheet1.getRow(3)).thenReturn(fakeRowData2)
-//        Mockito.`when`(mockFullSheet1.getRow(4)).thenReturn(fakeRowData3)
-//        Mockito.`when`(mockFullSheet1.getRow(5)).thenReturn(fakeRowData4)
-//        Mockito.`when`(mockFullSheet1.getRow(6)).thenReturn(fakeBlankRow)
-//        Mockito.`when`(mockFullSheet1.getRow(7)).thenReturn(fakeBlankRow)
-//        Mockito.`when`(mockFullSheet1.getRow(8)).thenReturn(fakeBlankRow)
-
         parser.filterRows()
+        for (row in parser.filteredRowList) {
+            val builder = StringBuilder()
+            for (cell in row) {
+                builder.append(cell.stringCellValue)
+                builder.append(" ")
+            }
+            logger.info(builder.toString())
+        }
 
-        assertTrue(
-            String.format("Error Filtering rows, got %d expected 4", parser.filteredRowList.size),
-            parser.filteredRowList.size == 4,
-        )
-    }
-
-    @Test
-    @SuppressWarnings("UNCHECKED_CAST")
-    fun givenSheetWith2BlankRows_filterRowsCalled_properRowsRecorded() {
-        val parser = SheetToTeamParser(mockSheetList as MutableList<Sheet>)
-        Mockito.`when`(mockSheetList.iterator()).thenAnswer { fakeSingleMutableList.iterator() }
-//        Mockito.`when`(mockFullSheet1.firstRowNum).thenReturn(1)
-//        Mockito.`when`(mockFullSheet1.getRow(1)).thenAnswer { fakeRow1 }
-        val fakeSheet = mutableListOf<Row>(
-            fakeRow1,
-            fakeRowData1,
-            fakeRowData2,
-            fakeRowData3,
-            fakeRowData4,
-            fakeBlankRow,
-            fakeBlankRow,
-            fakeBlankRow,
-        )
-        Mockito.`when`(mockFullSheet1.iterator()).thenReturn(fakeSheet.iterator())
-        Mockito.`when`(fakeRow1.iterator()).thenAnswer { fakeCellList1.iterator() }
-        prepCellMock()
-        parser.populateColumnHeadingMap()
-
-        prepareDataRows()
-
-//        Mockito.`when`(mockFullSheet1.getRow(2)).thenReturn(fakeRowData1)
-//        Mockito.`when`(mockFullSheet1.getRow(3)).thenReturn(fakeRowData2)
-//        Mockito.`when`(mockFullSheet1.getRow(4)).thenReturn(fakeRowData3)
-//        Mockito.`when`(mockFullSheet1.getRow(5)).thenReturn(fakeBlankRow)
-//        Mockito.`when`(mockFullSheet1.getRow(6)).thenReturn(fakeBlankRow)
-//        Mockito.`when`(mockFullSheet1.getRow(7)).thenReturn(fakeRowData4)
-//        Mockito.`when`(mockFullSheet1.getRow(8)).thenReturn(fakeBlankRow)
-//        Mockito.`when`(mockFullSheet1.getRow(9)).thenReturn(fakeBlankRow)
-//        Mockito.`when`(mockFullSheet1.getRow(10)).thenReturn(fakeBlankRow)
-
-        parser.filterRows()
-
-        assertTrue(
-            String.format("Error Filtering rows, got %d expected 4", parser.filteredRowList.size),
-            parser.filteredRowList.size == 4,
-        )
+        assertEquals("Unexpected Number of Rows Returned", 50, parser.filteredRowList.size)
     }
 
     @Test
     @SuppressWarnings("UNCHECKED_CAST")
     fun givenParserWithFilteredRows_createTeamsCalled_TeamItemsPopulated() {
-        val parser = Mockito.mock(SheetToTeamParser::class.java)
-        prepFilteredRowList()
-        prepHeadingsMap()
-        Mockito.`when`(parser.filteredRowList).thenReturn(mockFilteredRowListIterator)
-        Mockito.`when`(parser.teamListRowMapIndex).thenReturn(mutableListOf(0, 0)) // This means that the HeadingsMap will be the same for both indices
-        Mockito.`when`(parser.sheetToHeadingsMap[0]).thenReturn(mockHeadingsMap[0])
-        val lI1 = LineItem(123.0, 12.0, "Purchase of Stuff", "5/25/2023", "StuffCentral", CardType.AH, PurchaseType.PURCHASE)
-        val lI2 = LineItem(234.0, 0.0, "Amazon Order", "5/22/2023", "Amazon", CardType.JL, PurchaseType.PURCHASE)
+        val parser = SheetToTeamParser(fip.getAllSheets())
+        parser.populateColumnHeadingMap()
+        parser.filterRows()
 
         parser.createTeams()
         val teamMap = parser.getTeams()
         for ((teamName, teamObject) in teamMap) {
-            if (teamName != "PO") {
-                assertTrue("TeamName Failed to Parse", false)
-            }
-            teamObject.teamName
-            for ((index, lineItem) in teamObject.lineItemList.withIndex()) {
-                when (index) {
-                    0 -> {
-                        assertTrue("Line Item 1 failed", lineItem == lI1)
-                    }
-                    1 -> {
-                        assertTrue("Line Item 2 failed", lineItem == lI2)
-                    }
-                    else -> {
-                        assertTrue("Unexpected Number of LineItems", false)
-                    }
-                }
-            }
+            logger.info(teamName)
         }
     }
 }

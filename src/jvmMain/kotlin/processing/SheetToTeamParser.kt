@@ -24,8 +24,8 @@ class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
 
     private fun useRow(row: Row) {
         for (curCell in row) {
-            //logger.info(curCell.stringCellValue.substringBefore('-').lowercase().trim())
-            when (curCell.stringCellValue.substringBefore('-').lowercase().trim()) {
+            // logger.info(curCell.stringCellValue.lowercase().trim())
+            when (curCell.stringCellValue.lowercase().trim()) {
                 "senior design po" -> tempHeadingIndicesMap["senior design po"] = curCell.columnIndex
                 "business purpose" -> tempHeadingIndicesMap["Business Purpose"] = curCell.columnIndex
                 "total amount" -> tempHeadingIndicesMap["Total Amount"] = curCell.columnIndex
@@ -38,41 +38,29 @@ class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
                 "vendor name" -> tempHeadingIndicesMap["vendor"] = curCell.columnIndex
             }
         }
-        logger.info("The Final Map for this sheet is $tempHeadingIndicesMap")
+        // logger.info("The Final Map for this sheet is $tempHeadingIndicesMap")
     }
 
     fun populateColumnHeadingMap() {
         var nextSheet = false
 
         for ((index, curSheet) in sheetList.withIndex()) {
-            logger.info("Current Sheet is index $index, and its first row is {${curSheet.firstRowNum}}")
-            if (curSheet.firstRowNum < 0 || nextSheet) {
-                nextSheet = false
-                continue // There is no data in the sheet if firstRowNum is negative
-            }
+            // logger.info("Current sheet: ${curSheet.sheetName}")
             for (curRow in curSheet) {
-                // logger.info("Current Row is ${curRow.rowNum} and its first cell number is ${curRow.firstCellNum}")
-                var blankCells = 0
-                if (nextSheet) {
+                // logger.info("Current Row: ${curRow.rowNum}")
+                if (curRow.rowNum > 10 || nextSheet) {
+                    nextSheet = false
                     break
                 }
-                if (curRow.firstCellNum == shortNegativeOne) {
-                    continue
-                }
                 for (curCell in curRow) {
-                    // logger.info("Current Cell is ${curCell.columnIndex} with value ${curCell.stringCellValue}")
-                    if (curCell.stringCellValue.isEmpty()) {
-                        blankCells++
-                        if (blankCells > 4) { // more than 4 blank cells in a row, move on to the next row
-                            break
-                        }
-                    } else if (curCell.stringCellValue.contains("senior")) {
+                    // logger.info("Current Cell: ${curCell.stringCellValue} Index: ${curCell.columnIndex}")
+                    if (curCell.stringCellValue.contains("enior")) {
+                        // logger.info("Senior Design PO Found at: ${curCell.columnIndex} See!: ${curCell.stringCellValue}")
                         useRow(curRow)
-                        sheetToHeadingsMap[index] = HashMap<String, Int>(tempHeadingIndicesMap)
-                        // Clear current sheets mappings before moving on to the next one
+                        sheetToHeadingsMap[index] = tempHeadingIndicesMap.clone() as HashMap<String, Int>
                         tempHeadingIndicesMap.clear()
                         nextSheet = true
-                        break // The current row had the headings, move onto the next sheet
+                        break
                     }
                 }
             }
@@ -83,11 +71,16 @@ class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
         // for each sheet we will go from firstRow+1 to first 3 blank rows
         // Each row check if senior design po has data
         // push row into a list
+        var numRowsScanned = 0
         for ((index, currentSheet) in sheetList.withIndex()) {
             // This will get the current design po column, if null then continues to the next sheet
-            val currentSDPColumn = sheetToHeadingsMap[index]?.get("senior design po") ?: continue
+            // logger.info("SheetToHeadingsMap: $sheetToHeadingsMap")
+            val currentSDPColumn = sheetToHeadingsMap[index]!!["senior design po"]
             var blankRows = 0
+            // logger.info("Current Sheet: ${currentSheet.sheetName} Index: $index SDPColumn $currentSDPColumn")
             for (tempRow in currentSheet) {
+                numRowsScanned++
+                // logger.info("First Cell Num: ${tempRow.firstCellNum} at row $numRowsScanned")
                 if (tempRow.firstCellNum == shortNegativeOne) {
                     blankRows++
                     if (blankRows < 3) {
@@ -98,27 +91,11 @@ class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
                 } else {
                     blankRows = 0
                 }
-                if (tempRow.getCell(currentSDPColumn).stringCellValue != "") {
+                if (tempRow.getCell(currentSDPColumn!!)?.stringCellValue != "" && !(tempRow.getCell(currentSDPColumn)?.stringCellValue?.contains("esign") ?: continue)) {
                     filteredRowList.add(tempRow)
                     teamListRowMapIndex.add(index)
                 }
             }
-
-//            while (blankRows < 3) {
-//                var tempRow = currentSheet.getRow(currentRow)
-//                if (tempRow.firstCellNum == blankRowSignifier) {
-//                    blankRows++
-//                    currentRow++
-//                    continue
-//                } else {
-//                    blankRows = 0
-//                }
-//                if (tempRow.getCell(currentSDPColumn).stringCellValue != "") {
-//                    filteredRowList.add(tempRow)
-//                    teamListRowMapIndex.add(index)
-//                }
-//                currentRow++
-//            }
         }
     }
 

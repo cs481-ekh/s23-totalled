@@ -11,9 +11,14 @@ import java.io.FileInputStream
  * Parses the project book and finds all relevant projects
  * @param projectBookPath path to the project book xlsx file
  * @param teamList list of teams, each team should have a total calculated
+ * @param columnNames map of actual column name in the spreadsheet to the internal column name
  * @return list of relevant projects for invoicing
  */
-fun getProjectBookProjects(projectBookPath: String, teamList: List<Team>): List<ProjectMetadata> {
+fun getProjectBookProjects(
+    projectBookPath: String,
+    teamList: List<Team>,
+    columnNames: Map<String, String>,
+): List<ProjectMetadata> {
     val wb = StreamingReader.builder()
         .rowCacheSize(50)
         .bufferSize(700)
@@ -21,15 +26,6 @@ fun getProjectBookProjects(projectBookPath: String, teamList: List<Team>): List<
     val sheet = wb.getSheetAt(0)
 
     val columnNameToNumber = mutableMapOf<String, Int>()
-
-    // List of columns we care about, what they are in the template spreadsheet
-    val columnList = listOf(
-        "Team Abbr",
-        "Sponsor / Funding Department",
-        "Billing Address / BSU Department ID",
-        "Sponsor Contact",
-        "Sponsor Contact email (optional)",
-    )
 
     val projects = mutableListOf<ProjectMetadata>()
 
@@ -40,8 +36,8 @@ fun getProjectBookProjects(projectBookPath: String, teamList: List<Team>): List<
             // if this row contains column headings add the ones we care about to the map then continue
             for (i in 1 until r.physicalNumberOfCells) {
                 val cellString = r.getCell(i).stringCellValue.trim()
-                if (columnList.contains(cellString) && !columnNameToNumber.containsKey(cellString)) {
-                    columnNameToNumber[cellString] = i
+                if (columnNames.containsKey(cellString) && !columnNameToNumber.containsKey(columnNames[cellString])) {
+                    columnNameToNumber[columnNames[cellString]!!] = i
                 }
             }
             foundColumnHeadings = true
@@ -52,7 +48,11 @@ fun getProjectBookProjects(projectBookPath: String, teamList: List<Team>): List<
             continue
         }
 
-        // if we get here the column headings have been found
+        // if we get here the column headings should have been found
+        if (columnNameToNumber.size != columnNames.size) {
+            throw Exception("Could not find all project book columns")
+        }
+
         if (r.getCell(1).stringCellValue.isEmpty()) {
             if (prevEmptyProject) {
                 // if the previous project was empty and this on is also empty we are done
@@ -82,7 +82,11 @@ fun getProjectBookProjects(projectBookPath: String, teamList: List<Team>): List<
  * @param teamList list containing each team
  * @return the project, null if it shouldn't be used
  */
-private fun getProject(r: Row, columnNameToNumber: Map<String, Int>, teamList: List<Team>): ProjectMetadata? {
+private fun getProject(
+    r: Row,
+    columnNameToNumber: Map<String, Int>,
+    teamList: List<Team>,
+): ProjectMetadata? {
     val project = ProjectMetadata()
     project.teamAbbr = r.getCell(columnNameToNumber["Team Abbr"]!!).stringCellValue
 

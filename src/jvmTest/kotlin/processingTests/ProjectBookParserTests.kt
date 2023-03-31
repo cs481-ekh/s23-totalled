@@ -2,12 +2,15 @@ package processingTests
 import data.ProjectMetadata
 import data.Team
 import org.junit.jupiter.api.Test
+import processing.getColumnNames
 import processing.getProjectBookProjects
 import kotlin.test.assertTrue
 
 class ProjectBookParserTests {
     private val path = System.getProperty("user.dir")
-    private val projectBookPath = "$path/src/jvmTest/TestExcelFiles/ProjectBookSample.xlsx"
+    private val projectBookPath = "$path/src/jvmTest/TestInputFiles/ProjectBookSample.xlsx"
+    private val columnNamesPath = "$path/src/jvmTest/TestInputFiles/column-names-default.txt"
+    private val columnNames = getColumnNames(columnNamesPath).projectBookColumnNames
 
     private val team1 = Team(
         "LUNAR",
@@ -120,7 +123,7 @@ class ProjectBookParserTests {
             team4ExpectedProject,
         )
 
-        val actualProjectList = getProjectBookProjects(projectBookPath, teamList)
+        val actualProjectList = getProjectBookProjects(projectBookPath, teamList, columnNames)
 
         // order shouldn't matter so this is the easiest way to check equality
         assertTrue { actualProjectList.size == expectedProjectList.size }
@@ -135,7 +138,7 @@ class ProjectBookParserTests {
             team5,
         )
 
-        val actualProjectList = getProjectBookProjects(projectBookPath, teamList)
+        val actualProjectList = getProjectBookProjects(projectBookPath, teamList, columnNames)
 
         assertTrue { actualProjectList.isEmpty() }
     }
@@ -153,8 +156,37 @@ class ProjectBookParserTests {
             team1ExpectedProject,
         )
 
-        val actualProjectList = getProjectBookProjects(projectBookPath, teamList)
+        val actualProjectList = getProjectBookProjects(projectBookPath, teamList, columnNames)
 
         assertTrue { actualProjectList == expectedProjectList }
+    }
+
+    @Test
+    fun givenGarbageColumnNames_whenParseProjectBookCalled_thenProjectListCreated() {
+        val teamList = listOf(
+            team1,
+            team2,
+            team5,
+            team3,
+            team7,
+            team4,
+            team6,
+        )
+        val expectedProjectList = listOf(
+            team1ExpectedProject,
+            team2ExpectedProject,
+            team3ExpectedProject,
+            team4ExpectedProject,
+        )
+
+        val projectBookPath = "$path/src/jvmTest/TestInputFiles/ProjectBookSampleGarbageColumnNames.xlsx"
+        val columnNamesPath = "$path/src/jvmTest/TestInputFiles/column-names-garbage.txt"
+        val columnNames = getColumnNames(columnNamesPath).projectBookColumnNames
+
+        val actualProjectList = getProjectBookProjects(projectBookPath, teamList, columnNames)
+
+        // output should be the same no matter the column names
+        assertTrue { actualProjectList.size == expectedProjectList.size }
+        assertTrue { actualProjectList.containsAll(expectedProjectList) }
     }
 }

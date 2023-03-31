@@ -7,7 +7,7 @@ import kotlin.test.assertTrue
 
 class FileInputParserTests {
     private val path = System.getProperty("user.dir")
-    private var primaryPath = "$path/src/jvmTest/TestExcelFiles/PrimaryWorkbook.xlsx"
+    private var primaryPath = "$path/src/jvmTest/TestInputFiles/PrimaryWorkbook.xlsx"
     private var secondaryPath = primaryPath
 
     private val primaryList = mutableListOf<String>(

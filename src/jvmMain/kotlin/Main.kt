@@ -37,7 +37,7 @@ fun main() = application {
                 modifier = Modifier.clip(RoundedCornerShape(8.dp)),
             ) {
                 WindowTitleBar(windowState, title, icon)
-                Wizard(SelectInputScreen(TotalledInput()), numberOfSteps = 3)
+                Wizard(SelectInputScreen(TotalledInput()), numberOfSteps = 4)
             }
         }
     }

@@ -63,8 +63,3 @@ fun getColumnNames(columnNamesFilePath: String): ColumnNames {
 
     return ColumnNames(expenseLogColumnsToName, projectBookColumnsToName)
 }
-
-fun main() {
-    val columnNames = getColumnNames("/home/d/column-names-default.txt")
-    println(columnNames.projectBookColumnNames)
-}

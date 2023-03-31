@@ -36,6 +36,7 @@ data class LoadingScreen(val inputData: TotalledInput) : WizardScreen() {
                         inputData.expenseLogPath2,
                         inputData.projectBookPath,
                         inputData.outputDirPath,
+                        inputData.columnNamesPath,
                     )
                     navigator.push(SuccessScreen(inputData))
                 } catch (e: Exception) {

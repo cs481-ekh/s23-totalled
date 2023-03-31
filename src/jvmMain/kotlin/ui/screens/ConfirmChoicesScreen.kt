@@ -88,6 +88,10 @@ data class ConfirmChoicesScreen(val input: TotalledInput) : WizardScreen() {
                         PathRow("Project Book:", input.projectBookPath)
                         Spacer(modifier = Modifier.height(space))
                     }
+                    if (input.columnNamesPath != "") {
+                        PathRow("Column Names Text File:", input.projectBookPath)
+                        Spacer(modifier = Modifier.height(space))
+                    }
                     PathRow("Output will be saved to:", input.outputDirPath, "folder_black_24dp.svg")
                 }
             }

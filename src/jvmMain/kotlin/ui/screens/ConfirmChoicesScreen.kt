@@ -26,7 +26,7 @@ import ui.components.WizardScreen
 
 data class ConfirmChoicesScreen(val input: TotalledInput) : WizardScreen() {
     override val title = "Confirm Choices"
-    override val step = 2
+    override val step = 3
     override fun onClickNext(navigator: Navigator) {
         navigator.push(LoadingScreen(input))
     }
@@ -86,6 +86,10 @@ data class ConfirmChoicesScreen(val input: TotalledInput) : WizardScreen() {
                     }
                     if (input.projectBookPath != "") {
                         PathRow("Project Book:", input.projectBookPath)
+                        Spacer(modifier = Modifier.height(space))
+                    }
+                    if (input.columnNamesPath != "") {
+                        PathRow("Column Names Text File:", input.projectBookPath)
                         Spacer(modifier = Modifier.height(space))
                     }
                     PathRow("Output will be saved to:", input.outputDirPath, "folder_black_24dp.svg")

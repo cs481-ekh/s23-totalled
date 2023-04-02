@@ -16,7 +16,7 @@ data class SelectOutputScreen(val input: TotalledInput) : WizardScreen() {
     override val step = 1
     override var nextEnabled by mutableStateOf(false)
     override fun onClickNext(navigator: Navigator) {
-        navigator.push(ConfirmChoicesScreen(input))
+        navigator.push(SelectExtrasScreen(input))
     }
 
     @Composable

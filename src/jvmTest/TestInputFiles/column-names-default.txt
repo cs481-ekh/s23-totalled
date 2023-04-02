@@ -1,0 +1,16 @@
+# Any empty line or line starting with'#' will be ignored
+# Expense Log
+Senior Design PO
+Business Purpose
+Total Amount
+Amount 2
+Card
+Date Ordered
+Vendor Name
+
+# Project Book
+Team Abbr
+Sponsor / Funding Department
+Billing Address / BSU Department ID
+Sponsor Contact
+Sponsor Contact email (optional)

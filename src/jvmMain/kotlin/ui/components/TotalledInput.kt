@@ -9,4 +9,5 @@ class TotalledInput {
     var expenseLogPath2 by mutableStateOf("")
     var projectBookPath by mutableStateOf("")
     var outputDirPath by mutableStateOf("")
+    var columnNamesPath by mutableStateOf("")
 }

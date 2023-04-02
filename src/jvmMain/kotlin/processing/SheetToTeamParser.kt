@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory
  * The expected call order of functions after creating a SheetToTeamParser object is as follows:
  * populateColumnHeadings(), filterRows(), createTeams(), then you can access the teams with
  * getTeams()
+ * Or you can call processAndGetTeams() and it will take care of the call order and return a
+ * populated Teams Map from a new Parser Object.
  */
 class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
 
@@ -213,6 +215,17 @@ class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
     }
 
     fun getTeams(): HashMap<String, Team> {
+        return teamList
+    }
+
+    /**
+     * This function will allow you to call this single function and get the teams from a new
+     * parser object without calling the separate functions individually.
+     */
+    fun processAndGetTeams(): HashMap<String, Team> {
+        populateColumnHeadingMap()
+        filterRows()
+        createTeams()
         return teamList
     }
 }

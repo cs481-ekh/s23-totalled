@@ -74,4 +74,14 @@ class SheetToTeamParserTests {
 //        }
         assertTrue("Incorrect Number of Teams Received, got ${teamMap.size} expected 12", 12 == teamMap.size)
     }
+
+    @Test
+    @SuppressWarnings("UNCHECKED_CAST")
+    fun givenNewParser_processAndGetTeamsCalled_TeamItemsPopulated() {
+        val parser = SheetToTeamParser(fip.getAllSheets())
+
+        val teamMap = parser.processAndGetTeams()
+
+        assertTrue("Incorrect Number of Teams Received, got ${teamMap.size} expected 12", 12 == teamMap.size)
+    }
 }

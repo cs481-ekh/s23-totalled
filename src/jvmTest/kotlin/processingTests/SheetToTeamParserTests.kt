@@ -12,7 +12,7 @@ import kotlin.test.DefaultAsserter.assertTrue
 class SheetToTeamParserTests {
 
     private val dir = System.getProperty("user.dir")
-    private val path: String = "$dir/src/jvmTest/TestExcelFiles/PrimaryWorkbook.xlsx"
+    private val path: String = "$dir/src/jvmTest/TestInputFiles/PrimaryWorkbook.xlsx"
     private val fip = FileInputParser(path)
     private val logger = LoggerFactory.getLogger(this.javaClass)
 

@@ -12,6 +12,8 @@ class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
 
     private val logger = LoggerFactory.getLogger(this.javaClass)
 
+    private val amount2 = "Amount 2- Shipping and Handling Costs. Senior Design Only.".lowercase()
+
     private val teamList = HashMap<String, Team>()
     private val tempHeadingIndicesMap = HashMap<String, Int>()
     private val shortNegativeOne: Short = -1
@@ -31,7 +33,7 @@ class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
                 "total amount" -> tempHeadingIndicesMap["Total Amount"] = curCell.columnIndex
                 // There are technically multiple headings with "amount 2" in each sheet,
                 // so we only want the first one
-                "amount 2" -> { if (!tempHeadingIndicesMap.containsKey("Shipping and Handling")) {
+                amount2 -> { if (!tempHeadingIndicesMap.containsKey("Shipping and Handling")) {
                     tempHeadingIndicesMap["Shipping and Handling"] = curCell.columnIndex } }
                 "card" -> tempHeadingIndicesMap["card"] = curCell.columnIndex
                 "date ordered" -> tempHeadingIndicesMap["date"] = curCell.columnIndex
@@ -117,9 +119,9 @@ class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
 
     private fun newLineItem(row: Row, currentMap: HashMap<String, Int>): LineItem {
         val amount: Double = row.getCell(currentMap["Total Amount"] ?: throw Exception("Error"))
-            .numericCellValue
-        val amount2: Double = row.getCell(currentMap["amount 2"] ?: throw Exception("Error"))
-            .numericCellValue
+            .stringCellValue.replace("$", "").toDouble()
+        val amount2: String = row.getCell(currentMap["Shipping and Handling"] ?: throw Exception("Error"))
+            .stringCellValue
         val type: String = row.getCell(currentMap["card"] ?: throw Exception("Error"))
             .stringCellValue
         val description: String = row.getCell(currentMap["Business Purpose"] ?: throw Exception("Error"))
@@ -131,7 +133,12 @@ class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
         var purchaseType: PurchaseType = PurchaseType.PURCHASE
         var cardType: CardType = CardType.NONE
         var totalTaxable: Double = amount
-        var totalNonTaxable: Double = amount2
+        var totalNonTaxable: Double
+        if (amount2.length > 1) {
+            totalNonTaxable = amount2.trim().replace("$", "").toDouble()
+        } else {
+            totalNonTaxable = 0.0
+        }
 
         when (type) {
             "AH" -> cardType = CardType.AH

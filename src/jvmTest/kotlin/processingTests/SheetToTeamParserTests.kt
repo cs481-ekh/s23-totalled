@@ -8,7 +8,6 @@ import org.mockito.Mockito
 import org.slf4j.LoggerFactory
 import processing.FileInputParser
 import processing.SheetToTeamParser
-import java.lang.StringBuilder
 import kotlin.test.DefaultAsserter.assertEquals
 import kotlin.test.DefaultAsserter.assertTrue
 
@@ -141,9 +140,8 @@ class SheetToTeamParserTests {
     @Test
     @Suppress("UNCHECKED_CAST")
     fun listOfEmptySheetsGiven_populateColumHeadingsCalled_NoErrorsThrown() {
-        val parser = SheetToTeamParser(mockSheetList as MutableList<Sheet>)
-        Mockito.`when`(mockSheetList.iterator()).thenAnswer { fakeEmptyMutableList.iterator() }
-        Mockito.`when`(mockEmptySheet.firstRowNum).thenReturn(-1)
+        val parser = SheetToTeamParser(mutableListOf())
+
         parser.populateColumnHeadingMap()
         assert(true)
     }
@@ -161,14 +159,14 @@ class SheetToTeamParserTests {
         val parser = SheetToTeamParser(fip.getAllSheets())
         parser.populateColumnHeadingMap()
         parser.filterRows()
-        for (row in parser.filteredRowList) {
-            val builder = StringBuilder()
-            for (cell in row) {
-                builder.append(cell.stringCellValue)
-                builder.append(" ")
-            }
-            logger.info(builder.toString())
-        }
+//        for (row in parser.filteredRowList) {
+//            val builder = StringBuilder()
+//            for (cell in row) {
+//                builder.append(cell.stringCellValue)
+//                builder.append(" ")
+//            }
+//            logger.info(builder.toString())
+//        }
 
         assertEquals("Unexpected Number of Rows Returned", 50, parser.filteredRowList.size)
     }

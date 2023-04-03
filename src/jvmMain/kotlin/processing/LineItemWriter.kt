@@ -34,13 +34,13 @@ fun LineItemWriter(givenTeam: Team, outputPath: Path): Number {
 
     //Set up the headers
     // Write the Semester (A1)
-    WriteToCell(sheet, 0, 0, "{TODO: Add Semester} Capstone Design")
+    WriteToCell(sheet, 0, 0, "{TODO: Add Semester} Capstone Design") // TODO
 
     // Write Team Name (C2)
     WriteToCell(sheet, 1, 2, givenTeam.teamName)
 
     // Write Project Name (F2)
-    WriteToCell(sheet, 1, 5, "{TODO: Add Project Name}")
+    WriteToCell(sheet, 1, 5, "{TODO: Add Project Name}")  // TODO
 
     // Write out the line items (Starting on row 4 (5 in excel))
     for(lineItem in givenTeam.lineItemList){
@@ -48,7 +48,7 @@ fun LineItemWriter(givenTeam: Team, outputPath: Path): Number {
 
         // write out lineItem attributes
         WriteToCell(sheet, lastLineWritten, 0, lineItem.cardType.toString());
-        WriteToCell(sheet, lastLineWritten, 1, "TODO: Get PO");
+        WriteToCell(sheet, lastLineWritten, 1, "TODO: Get PO"); // TODO
         WriteToCell(sheet, lastLineWritten, 2, lineItem.vendor);
         WriteToCell(sheet, lastLineWritten, 3, lineItem.date);
         WriteToCell(sheet, lastLineWritten, 4, (lineItem.totalNonTaxable + lineItem.totalTaxable).toString());

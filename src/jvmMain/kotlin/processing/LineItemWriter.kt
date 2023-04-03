@@ -1,14 +1,20 @@
 package processing
 
 import com.github.pjfanning.xlsx.StreamingReader
-import data.Team;
 import data.PurchaseType
+import data.Team
 import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.ss.usermodel.Workbook
 import java.io.File
 import java.io.FileInputStream
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
 import java.nio.file.Files
 import java.nio.file.Path
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.logging.Logger
+
 
 /**
  * This function/class simply writes out the TeamExpenseBreakdown when given a Team object.
@@ -34,13 +40,13 @@ fun LineItemWriter(givenTeam: Team, outputPath: Path): Number {
 
     //Set up the headers
     // Write the Semester (A1)
-    WriteToCell(sheet, 0, 0, "{TODO: Add Semester} Capstone Design") // TODO
+    WriteToCell(sheet, 0, 0, getSemester(givenTeam.lineItemList[0].date) + " Capstone Design");
 
     // Write Team Name (C2)
-    WriteToCell(sheet, 1, 2, givenTeam.teamName)
+    WriteToCell(sheet, 1, 2, givenTeam.teamName);
 
     // Write Project Name (F2)
-    WriteToCell(sheet, 1, 5, "{TODO: Add Project Name}")  // TODO
+    WriteToCell(sheet, 1, 5, "{TODO: Add Project Name}");  // TODO: Implement after #118 is done
 
     // Write out the line items (Starting on row 4 (5 in excel))
     for(lineItem in givenTeam.lineItemList){
@@ -48,7 +54,7 @@ fun LineItemWriter(givenTeam: Team, outputPath: Path): Number {
 
         // write out lineItem attributes
         WriteToCell(sheet, lastLineWritten, 0, lineItem.cardType.toString());
-        WriteToCell(sheet, lastLineWritten, 1, "TODO: Get PO"); // TODO
+        WriteToCell(sheet, lastLineWritten, 1, "{TODO: Get PO}"); // TODO: Implement after #118 is done
         WriteToCell(sheet, lastLineWritten, 2, lineItem.vendor);
         WriteToCell(sheet, lastLineWritten, 3, lineItem.date);
         WriteToCell(sheet, lastLineWritten, 4, (lineItem.totalNonTaxable + lineItem.totalTaxable).toString());
@@ -64,9 +70,13 @@ fun LineItemWriter(givenTeam: Team, outputPath: Path): Number {
         }
     }
 
-    // TODO: Do I need to save the workbook before closing?
-    // TODO: Close the files
-
+    try {
+        val out = FileOutputStream(outputPath.toString());
+        workbook.write(out);
+        out.close();
+    } catch (ex: FileNotFoundException) {
+        throw ex;
+    }
     // Close things up
     workbook.close();
     return lastLineWritten;
@@ -80,4 +90,14 @@ private fun WriteToCell(sheet: Sheet,row: Int, column: Int, value: String){
     var cell = cellRow.getCell(column);
 
     cell.setCellValue(value);
+}
+
+/**
+ * Helper function to make finding the date easier and to tidy up the above code
+ */
+private fun getSemester(dateAsString: String): String {
+    val pattern = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+    val date = LocalDateTime.parse(dateAsString, pattern);
+
+    return "Fiscal Year " + date.year.toString();
 }

@@ -20,7 +20,10 @@ fun generateOutput(
 
     //This should probably be changes and the expenseLogPath2 should have some sort of nullable value
     //or change this to have it be a lateInit...
-    val fileParser = FileInputParser(expenseLogPath1, expenseLogPath2)
+    val fileParser = if (expenseLogPath2.trim().isEmpty())
+        FileInputParser(expenseLogPath1, null) 
+    else 
+        FileInputParser(expenseLogPath1, expenseLogPath2) 
     val sheetList = fileParser.getAllSheets()
 
 

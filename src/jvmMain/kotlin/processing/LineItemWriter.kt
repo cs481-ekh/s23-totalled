@@ -13,7 +13,8 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.logging.Logger
+import java.time.format.DateTimeParseException
+
 
 
 /**
@@ -96,8 +97,25 @@ private fun WriteToCell(sheet: Sheet,row: Int, column: Int, value: String){
  * Helper function to make finding the date easier and to tidy up the above code
  */
 private fun getSemester(dateAsString: String): String {
-    val pattern = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-    val date = LocalDateTime.parse(dateAsString, pattern);
+    var pattern = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+    var date: LocalDateTime;
 
-    return "Fiscal Year " + date.year.toString();
+    try{
+        date = LocalDateTime.parse(dateAsString, pattern); // attempt #1 to parse
+    } catch(ex: DateTimeParseException){
+        pattern = DateTimeFormatter.ofPattern("MM/dd/yy");
+        try{
+            date = LocalDateTime.parse(dateAsString, pattern); // attempt #2 to parse
+        } catch (ex: DateTimeParseException){
+            throw ex;
+        }
+    }
+
+    var year = date.year.toString();
+
+    if(year.length == 2){
+        year = "20$year";
+    }
+
+    return "Fiscal Year $year";
 }

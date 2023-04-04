@@ -177,6 +177,7 @@ class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
         } else {
             totalNonTaxable = 0.0
         }
+        val po: String = row.getCell(currentMap["senior design po"]!!).stringCellValue
 
         when (type) {
             "AH" -> cardType = CardType.AH
@@ -211,6 +212,7 @@ class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
             vendor,
             cardType,
             purchaseType,
+            po,
         )
     }
 

@@ -22,7 +22,7 @@ fun totalCalculations(wb: Workbook, topCell: Int, bottomCell: Int, merchCol: Int
 
     // initialize data format for cell for dollar double type
     val dataFormat: DataFormat = wb.createDataFormat()
-    var dollarStyle: CellStyle = wb.createCellStyle()
+    val dollarStyle: CellStyle = wb.createCellStyle()
     dollarStyle.dataFormat = dataFormat.getFormat("$#,#0.00")
 
     // set cell color and border color
@@ -64,27 +64,19 @@ fun totalCalculations(wb: Workbook, topCell: Int, bottomCell: Int, merchCol: Int
     // Set cell formula calculations for taxes
     val taxRow = sheet.createRow(bottomCell + 3)
     val taxCell = taxRow.createCell(6)
-    val eval = wb.creationHelper.createFormulaEvaluator()
-    // var res = eval.evaluate(merchCell).formatAsString().toDouble()
     taxCell.cellFormula = "${merchCell.columnIndex.toChar() + 65}${bottomCell + 3}*0.06"
     taxCell.cellStyle = dollarStyle
 
     // Create and set cell for total sum of costs
     val totalChargesRow = sheet.createRow(bottomCell + 5)
     val totalChargesCell = totalChargesRow.createCell(6)
-//    res = eval.evaluate(merchCell).formatAsString().toDouble()
-//    val res1 = eval.evaluate(shipCell).formatAsString().toDouble()
-//    val res2 = eval.evaluate(servCell).formatAsString().toDouble()
-//    val res3 = eval.evaluate(travelCell).formatAsString().toDouble()
-//    val res4 = eval.evaluate(taxCell).formatAsString().toDouble()
-//    totalChargesCell.cellFormula = "$res + $res1 + $res2 + $res3 + $res4"
     totalChargesCell.cellFormula = "SUM(${taxCell.columnIndex.toChar() + 65}${bottomCell + 4}:${travelCell.columnIndex.toChar() + 65}${bottomCell + 3})"
     totalChargesCell.cellStyle = dollarStyle
 
     // Set display cells with formatting
     // Create font style
-    var fontHeight = 16.toShort()
-    var stringStyle: CellStyle = wb.createCellStyle()
+    val fontHeight = 16.toShort()
+    val stringStyle: CellStyle = wb.createCellStyle()
     stringStyle.alignment = HorizontalAlignment.RIGHT
     val font = wb.createFont()
     font.bold = true

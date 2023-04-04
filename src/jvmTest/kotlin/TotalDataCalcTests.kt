@@ -9,7 +9,6 @@ import processing.totalCalculations
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.text.DecimalFormat
 import kotlin.io.path.name
 import kotlin.random.Random
 import kotlin.test.BeforeTest
@@ -54,7 +53,7 @@ class TotalDataCalcTests {
     }
 
     @Test
-    fun totalData_NormalDataFormat() {
+    fun normalDataValues_totalCalculationsDetermined_resultingValuesNormal() {
         // fill cells with dummy data
         for (i in 1..5) {
             val currRow = sheet.createRow(4 + i)
@@ -97,11 +96,9 @@ class TotalDataCalcTests {
     }
 
     @Test
-    fun totalData_NoValues() {
+    fun noDataValues_totalCalculationsDetermined_resultingValuesZero() {
         // calculate cell formula values
-        val dec = DecimalFormat("#,###.00")
         completeTotal = merchCellTotal + shipCellTotal + servCellTotal + travelCellTotal + merchCellTotal * 0.06
-        dec.format(completeTotal)
         expectedToString = " " + merchCellTotal.toString() + " " + shipCellTotal + " " + servCellTotal + " " + travelCellTotal + " " + (merchCellTotal * 0.06) + " " + completeTotal
         // run function to test
         totalCalculations(wb, 5, 5, 6)

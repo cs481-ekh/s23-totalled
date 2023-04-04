@@ -47,7 +47,7 @@ fun LineItemWriter(givenTeam: Team, outputPath: Path): Number {
     WriteToCell(sheet, 1, 2, givenTeam.teamName);
 
     // Write Project Name (F2)
-    WriteToCell(sheet, 1, 5, "{TODO: Add Project Name}");  // TODO: Implement after #118 is done
+    WriteToCell(sheet, 1, 5, "${givenTeam.teamName} Project");
 
     // Write out the line items (Starting on row 4 (5 in excel))
     for(lineItem in givenTeam.lineItemList){
@@ -55,7 +55,7 @@ fun LineItemWriter(givenTeam: Team, outputPath: Path): Number {
 
         // write out lineItem attributes
         WriteToCell(sheet, lastLineWritten, 0, lineItem.cardType.toString());
-        WriteToCell(sheet, lastLineWritten, 1, "{TODO: Get PO}"); // TODO: Implement after #118 is done
+        WriteToCell(sheet, lastLineWritten, 1, lineItem.poNumber);
         WriteToCell(sheet, lastLineWritten, 2, lineItem.vendor);
         WriteToCell(sheet, lastLineWritten, 3, lineItem.date);
         WriteToCell(sheet, lastLineWritten, 4, (lineItem.totalNonTaxable + lineItem.totalTaxable).toString());

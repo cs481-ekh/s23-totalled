@@ -6,7 +6,6 @@ import data.PurchaseType
 import data.Team
 import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import processing.lineItemWriter
 import java.nio.file.Paths
@@ -25,16 +24,22 @@ class LineItemWriterTests {
 
     var outputPath = Paths.get("src/jvmTest/TestOutputFiles")
     var outputFileName = "LineItemWriterTests.xlsx"
+    var lastLineWrittenTo: Int = 0
 
-    @BeforeEach
-    fun init() {
+    private fun init() {
         testTeam = Team(teamName, lineItemList)
         // Call LineItemWriter on testTeam
-        lineItemWriter(testTeam, outputPath, outputFileName)
+        lastLineWrittenTo = lineItemWriter(testTeam, outputPath, outputFileName)
+    }
+
+    private fun sampleTeamObject_LineItemsWritten_ReturnsCorrectLastRowWrittenTo() {
+        assertEquals("Expected last line written to to be 7, but got $lastLineWrittenTo", 7, lastLineWrittenTo)
     }
 
     @Test
     fun sampleTeamObject_LineItemsWritten_ExpectedValuesPopulateExcelSheet() {
+        init()
+
         // Ensure cell values are populated as expected
         // Open LineItemWriterTests.xlsx
         val inputStream = outputPath.resolve(outputFileName).toFile().inputStream()
@@ -85,10 +90,12 @@ class LineItemWriterTests {
         AssertCellAtIndexMatchesValue(sheet, 7, 4, "140.0")
         AssertCellAtIndexMatchesValue(sheet, 7, 5, "Hotel Stay")
         AssertCellAtIndexMatchesValue(sheet, 7, 9, "140.0")
+
+        sampleTeamObject_LineItemsWritten_ReturnsCorrectLastRowWrittenTo()
     }
 
     fun AssertCellAtIndexMatchesValue(sheet: Sheet, rowIndx: Int, colIdx: Int, value: String) {
         val cell = sheet.getRow(rowIndx).getCell(colIdx)
-        assertEquals("Expected $value, but got ${cell.stringCellValue} instead!", cell.stringCellValue, value)
+        assertEquals("Expected $value, but got ${cell.stringCellValue} instead!", value, cell.stringCellValue)
     }
 }

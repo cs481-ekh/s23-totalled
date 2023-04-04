@@ -18,7 +18,7 @@ import java.util.*
  * This function/class simply writes out the TeamExpenseBreakdown when given a Team object.
  * TODO: Write tests for this class!
  */
-fun lineItemWriter(givenTeam: Team, outputPath: Path, fileName: String): Number {
+fun lineItemWriter(givenTeam: Team, outputPath: Path, fileName: String): Int {
     var lastLineWritten = 3; // setting it to 3 because we want first line written to be 4, which is really 5. See the for loop.
 
     var templateFile = File("src/jvmMain/resources/TeamExpenseBreakdownTemplate.xlsx")

@@ -1,121 +1,124 @@
 package processing
 
-import com.github.pjfanning.xlsx.StreamingReader
 import data.PurchaseType
 import data.Team
 import org.apache.poi.ss.usermodel.Sheet
-import org.apache.poi.ss.usermodel.Workbook
+import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import java.io.File
 import java.io.FileInputStream
-import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.nio.file.Files
 import java.nio.file.Path
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
-
-
+import java.nio.file.Paths
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * This function/class simply writes out the TeamExpenseBreakdown when given a Team object.
  * TODO: Write tests for this class!
  */
-fun LineItemWriter(givenTeam: Team, outputPath: Path): Number {
+fun lineItemWriter(givenTeam: Team, outputPath: Path, fileName: String): Number {
     var lastLineWritten = 3; // setting it to 3 because we want first line written to be 4, which is really 5. See the for loop.
 
     var templateFile = File("src/jvmMain/resources/TeamExpenseBreakdownTemplate.xlsx")
 
-    var outputFile = outputPath.toFile();
+    var outputFilePath = Paths.get(outputPath.toString(), fileName)
 
-    // Copy the contents of templatePath to outputFile
-    Files.copy(templateFile.toPath(), outputFile.toPath());
+    var outputFile = outputFilePath.toFile()
 
-    var workbook: Workbook = StreamingReader.builder()
-        .rowCacheSize(100)
-        .bufferSize(700)
-        .open(FileInputStream(outputFile))
+    // Make sure that we clean up any existing file
+    if (outputFile.exists()) {
+        outputFile.delete()
+    }
+
+    // Copy the contents of templateFile to outputFile
+    Files.copy(templateFile.toPath(), outputFile.toPath())
+
+    var workbook = XSSFWorkbook(FileInputStream(outputFile))
 
     // Fill in appropriate cells with the corresponding information
-    var sheet = workbook.getSheetAt(0);
+    var sheet = workbook.getSheetAt(0)
 
-    //Set up the headers
+    // Set up the headers
     // Write the Semester (A1)
-    WriteToCell(sheet, 0, 0, getSemester(givenTeam.lineItemList[0].date) + " Capstone Design");
+    writeToCell(sheet, 0, 0, getSemester(givenTeam.lineItemList[0].date) + " Capstone Design")
 
     // Write Team Name (C2)
-    WriteToCell(sheet, 1, 2, givenTeam.teamName);
+    writeToCell(sheet, 1, 2, givenTeam.teamName)
 
     // Write Project Name (F2)
-    WriteToCell(sheet, 1, 5, "${givenTeam.teamName} Project");
+    writeToCell(sheet, 1, 5, "${givenTeam.teamName} Project")
 
     // Write out the line items (Starting on row 4 (5 in excel))
-    for(lineItem in givenTeam.lineItemList){
-        lastLineWritten++;
+    for (lineItem in givenTeam.lineItemList) {
+        lastLineWritten++
 
         // write out lineItem attributes
-        WriteToCell(sheet, lastLineWritten, 0, lineItem.cardType.toString());
-        WriteToCell(sheet, lastLineWritten, 1, lineItem.poNumber);
-        WriteToCell(sheet, lastLineWritten, 2, lineItem.vendor);
-        WriteToCell(sheet, lastLineWritten, 3, lineItem.date);
-        WriteToCell(sheet, lastLineWritten, 4, (lineItem.totalNonTaxable + lineItem.totalTaxable).toString());
-        WriteToCell(sheet, lastLineWritten, 5, lineItem.description);
+        writeToCell(sheet, lastLineWritten, 0, lineItem.cardType.toString())
+        writeToCell(sheet, lastLineWritten, 1, lineItem.poNumber)
+        writeToCell(sheet, lastLineWritten, 2, lineItem.vendor)
+        writeToCell(sheet, lastLineWritten, 3, lineItem.date)
+        writeToCell(sheet, lastLineWritten, 4, (lineItem.totalNonTaxable + lineItem.totalTaxable).toString())
+        writeToCell(sheet, lastLineWritten, 5, lineItem.description)
 
-        when(lineItem.purchaseType) {
+        when (lineItem.purchaseType) {
             PurchaseType.PURCHASE -> {
-                WriteToCell(sheet, lastLineWritten, 6, lineItem.totalTaxable.toString());
-                WriteToCell(sheet, lastLineWritten, 7, lineItem.totalNonTaxable.toString());
+                writeToCell(sheet, lastLineWritten, 6, lineItem.totalTaxable.toString())
+                writeToCell(sheet, lastLineWritten, 7, lineItem.totalNonTaxable.toString())
             }
-            PurchaseType.SERVICE -> WriteToCell(sheet, lastLineWritten, 8, lineItem.totalNonTaxable.toString());
-            PurchaseType.TRAVEL -> WriteToCell(sheet, lastLineWritten, 9, lineItem.totalNonTaxable.toString());
+            PurchaseType.SERVICE -> writeToCell(sheet, lastLineWritten, 8, lineItem.totalNonTaxable.toString())
+            PurchaseType.TRAVEL -> writeToCell(sheet, lastLineWritten, 9, lineItem.totalNonTaxable.toString())
         }
     }
 
-    try {
-        val out = FileOutputStream(outputPath.toString());
-        workbook.write(out);
-        out.close();
-    } catch (ex: FileNotFoundException) {
-        throw ex;
-    }
+    workbook.write(FileOutputStream(outputFile))
     // Close things up
-    workbook.close();
-    return lastLineWritten;
+    workbook.close()
+    return lastLineWritten
 }
 
 /**
  * Helper function to make writing to cells easier
  */
-private fun WriteToCell(sheet: Sheet,row: Int, column: Int, value: String){
-    var cellRow = sheet.getRow(row);
-    var cell = cellRow.getCell(column);
-
-    cell.setCellValue(value);
+fun writeToCell(sheet: Sheet, rowIdx: Int, colIdx: Int, value: String) {
+    val rowIterator = sheet.rowIterator()
+    while (rowIterator.hasNext()) {
+        val currRow = rowIterator.next()
+        val cellIterator = currRow.cellIterator()
+        while (cellIterator.hasNext()) {
+            val cell = cellIterator.next()
+            if (cell.rowIndex == rowIdx && cell.columnIndex == colIdx) {
+                cell.setCellValue(value)
+                return
+            }
+        }
+    }
 }
 
 /**
  * Helper function to make finding the date easier and to tidy up the above code
  */
 private fun getSemester(dateAsString: String): String {
-    var pattern = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-    var date: LocalDateTime;
+    var acceptableFormats = mutableListOf<SimpleDateFormat>()
+    lateinit var date: Date
 
-    try{
-        date = LocalDateTime.parse(dateAsString, pattern); // attempt #1 to parse
-    } catch(ex: DateTimeParseException){
-        pattern = DateTimeFormatter.ofPattern("MM/dd/yy");
-        try{
-            date = LocalDateTime.parse(dateAsString, pattern); // attempt #2 to parse
-        } catch (ex: DateTimeParseException){
-            throw ex;
-        }
+    acceptableFormats.add(SimpleDateFormat("M/d/yyyy"))
+    acceptableFormats.add(SimpleDateFormat("M/dd/yyyy"))
+    acceptableFormats.add(SimpleDateFormat("MM/dd/yyyy"))
+    acceptableFormats.add(SimpleDateFormat("M/d/yy"))
+    acceptableFormats.add(SimpleDateFormat("M/dd/yy"))
+    acceptableFormats.add(SimpleDateFormat("MM/d/yy"))
+
+    for (pattern in acceptableFormats) {
+        try {
+            date = pattern.parse(dateAsString)
+        } catch (ex: ParseException) { }
     }
 
-    var year = date.year.toString();
+    var thisCalendar = Calendar.getInstance()
+    thisCalendar.setTime(date)
+    var year = thisCalendar.get(Calendar.YEAR)
 
-    if(year.length == 2){
-        year = "20$year";
-    }
-
-    return "Fiscal Year $year";
+    return "Fiscal Year $year"
 }

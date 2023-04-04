@@ -11,12 +11,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
+import ui.components.TotalledInput
 import ui.components.WizardScreen
 import kotlin.system.exitProcess
 
 data class ErrorScreen(val e: Exception) : WizardScreen() {
     override val title = "Error"
-    override val step = 2
+    override val step = 3
     override val nextButtonText = "Exit >"
     override val backButtonText = "< Restart"
     override fun onClickNext(navigator: Navigator) {
@@ -24,7 +25,7 @@ data class ErrorScreen(val e: Exception) : WizardScreen() {
     }
     override fun onClickBack(navigator: Navigator) {
         navigator.popAll()
-        navigator.replace(SelectInputScreen())
+        navigator.replace(SelectInputScreen(TotalledInput()))
     }
 
     @Composable

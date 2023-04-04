@@ -31,23 +31,25 @@ import androidx.compose.ui.unit.dp
  */
 @Composable
 fun StepProgressBar(modifier: Modifier = Modifier, numberOfSteps: Int, currentStep: Int) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Step(
-            modifier = Modifier.weight(1F, false),
-            isComplete = 0 < currentStep,
-            isCurrent = 0 == currentStep,
-            isFirst = true,
-        )
-        for (step in 1 until numberOfSteps) {
+    if (numberOfSteps > 0) {
+        Row(
+            modifier = modifier,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
             Step(
-                modifier = Modifier.weight(1F),
-                isComplete = step < currentStep,
-                isCurrent = step == currentStep,
-                isFirst = false,
+                modifier = Modifier.weight(1F, false),
+                isComplete = 0 < currentStep,
+                isCurrent = 0 == currentStep,
+                isFirst = true,
             )
+            for (step in 1 until numberOfSteps) {
+                Step(
+                    modifier = Modifier.weight(1F),
+                    isComplete = step < currentStep,
+                    isCurrent = step == currentStep,
+                    isFirst = false,
+                )
+            }
         }
     }
 }

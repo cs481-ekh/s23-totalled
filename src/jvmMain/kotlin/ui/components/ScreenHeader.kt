@@ -29,8 +29,9 @@ import androidx.compose.ui.unit.dp
 fun ScreenHeader(
     pageTitle: String,
     currentStep: Int,
+    numberOfSteps: Int,
 ) {
-    Row(modifier = Modifier.padding(top = 12.dp, bottom = 24.dp).fillMaxWidth()) {
+    Row(modifier = Modifier.padding(top = 12.dp, bottom = 24.dp, start = 48.dp, end = 48.dp).fillMaxWidth()) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
@@ -47,7 +48,7 @@ fun ScreenHeader(
                 Text(title, style = MaterialTheme.typography.titleMedium)
             }
             StepProgressBar(
-                numberOfSteps = 3,
+                numberOfSteps = numberOfSteps,
                 currentStep = currentStep,
                 modifier = Modifier.padding(top = 24.dp),
             )

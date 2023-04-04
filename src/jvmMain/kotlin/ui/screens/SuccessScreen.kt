@@ -11,15 +11,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
+import ui.components.TotalledInput
 import ui.components.WizardScreen
 import java.awt.Desktop
 import java.io.File
 import java.lang.Exception
 import kotlin.system.exitProcess
 
-data class SuccessScreen(val outputDirPath: String) : WizardScreen() {
+data class SuccessScreen(val inputData: TotalledInput) : WizardScreen() {
     override val title = "Success"
-    override val step = 3
+    override val step = 4
     override val nextButtonText = "Exit >"
     override val backButtonText = "< Restart"
     override fun onClickNext(navigator: Navigator) {
@@ -27,7 +28,7 @@ data class SuccessScreen(val outputDirPath: String) : WizardScreen() {
     }
     override fun onClickBack(navigator: Navigator) {
         navigator.popAll()
-        navigator.replace(SelectInputScreen())
+        navigator.replace(SelectInputScreen(TotalledInput()))
     }
 
     @Composable
@@ -41,7 +42,7 @@ data class SuccessScreen(val outputDirPath: String) : WizardScreen() {
             Button(
                 onClick = {
                     try {
-                        val dir = File(outputDirPath)
+                        val dir = File(inputData.outputDirPath)
                         Desktop.getDesktop().open(dir)
                     } catch (e: Exception) {
                         e.printStackTrace()

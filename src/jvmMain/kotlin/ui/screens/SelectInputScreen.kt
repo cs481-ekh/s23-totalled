@@ -13,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -21,36 +22,33 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
+import ui.components.TotalledInput
 import ui.components.WizardScreen
 import ui.components.filepicker.FilePickerRow
 
-class SelectInputScreen : WizardScreen() {
-    private var expenseLogPath1 by mutableStateOf("")
-    private var expenseLogPath2 by mutableStateOf("")
+data class SelectInputScreen(var input: TotalledInput) : WizardScreen() {
     override val title = "Select Expense Log(s)"
     override val step = 0
     override var nextEnabled by mutableStateOf(false)
     override val backEnabled = false
     override fun onClickNext(navigator: Navigator) {
-        navigator.push(
-            SelectOutputScreen(
-                expenseLogPath1,
-                expenseLogPath2,
-            ),
-        )
+        navigator.push(SelectOutputScreen(input))
     }
 
     @Composable
     override fun Content() {
         fun maybeEnableNext() {
-            nextEnabled = expenseLogPath1.isNotEmpty()
+            nextEnabled = input.expenseLogPath1.isNotEmpty()
         }
         var secondFilePickerVisible by rememberSaveable { mutableStateOf(false) }
+        LaunchedEffect(Unit) {
+            maybeEnableNext()
+        }
 
         Column() {
             FilePickerRow(
-                pathString = expenseLogPath1,
-                onValueChange = { expenseLogPath1 = it ; maybeEnableNext() },
+                pathString = input.expenseLogPath1,
+                onValueChange = { input.expenseLogPath1 = it ; maybeEnableNext() },
                 label = "Expense Log (.xlsx)",
                 fileExtensions = listOf("xlsx"),
             )
@@ -73,8 +71,8 @@ class SelectInputScreen : WizardScreen() {
                     }
                 }
                 FilePickerRow(
-                    pathString = expenseLogPath2,
-                    onValueChange = { expenseLogPath2 = it },
+                    pathString = input.expenseLogPath2,
+                    onValueChange = { input.expenseLogPath2 = it },
                     label = "Second Expense Log - Optional (.xlsx)",
                     fileExtensions = listOf("xlsx"),
                     visible = secondFilePickerVisible,

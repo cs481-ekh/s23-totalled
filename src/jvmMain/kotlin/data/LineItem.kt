@@ -62,4 +62,5 @@ data class LineItem(
     val vendor: String,
     val cardType: CardType,
     val purchaseType: PurchaseType,
+    val poNumber: String,
 )

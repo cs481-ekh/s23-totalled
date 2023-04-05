@@ -122,12 +122,8 @@ private fun getSemester(dateAsString: String): String {
         } catch (ex: ParseException) { }
     }
 
-    if (date == null) {
-        throw ParseException("Could not parse date", 0)
-    }
-
     var thisCalendar = Calendar.getInstance()
-    thisCalendar.setTime(date)
+    thisCalendar.time = date
     var year = thisCalendar.get(Calendar.YEAR)
 
     return "Fiscal Year $year"

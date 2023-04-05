@@ -41,7 +41,14 @@ fun lineItemWriter(givenTeam: Team, outputPath: Path, fileName: String): Int {
 
     // Set up the headers
     // Write the Semester (A1)
-    writeToCell(sheet, 0, 0, getSemester(givenTeam.lineItemList[0].date) + " Capstone Design")
+    // find the first line item's date that isn't empty and get the semester from it
+    var nonEmptyDateItem = givenTeam.lineItemList.find { it.date != "" }
+
+    if (nonEmptyDateItem != null) {
+        writeToCell(sheet, 0, 0, getSemester(nonEmptyDateItem.date) + " Capstone Design")
+    } else {
+        writeToCell(sheet, 0, 0, "Capstone Design")
+    }
 
     // Write Team Name (C2)
     writeToCell(sheet, 1, 2, givenTeam.teamName)
@@ -116,7 +123,7 @@ private fun getSemester(dateAsString: String): String {
     }
 
     var thisCalendar = Calendar.getInstance()
-    thisCalendar.setTime(date)
+    thisCalendar.time = date
     var year = thisCalendar.get(Calendar.YEAR)
 
     return "Fiscal Year $year"

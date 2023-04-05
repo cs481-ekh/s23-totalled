@@ -21,8 +21,6 @@ fun generateOutput(
     println(outputDirPath)
     println(columnNamesPath)
 
-    // This should probably be changed and the expenseLogPath2 should have some sort of nullable value
-    // or change this to have it be a lateInit...
     val fileParser = if (expenseLogPath2.trim().isEmpty()) {
         FileInputParser(expenseLogPath1, null)
     } else {

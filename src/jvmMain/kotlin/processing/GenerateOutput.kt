@@ -1,6 +1,9 @@
 package processing
 
-import org.apache.poi.ss.usermodel.Sheet
+import org.apache.poi.xssf.usermodel.XSSFWorkbook
+import java.io.File
+import java.io.FileInputStream
+import java.nio.file.Paths
 
 /**
  * Placeholder, rename package/file/function if needed.
@@ -18,21 +21,28 @@ fun generateOutput(
     println(outputDirPath)
     println(columnNamesPath)
 
-    //This should probably be changed and the expenseLogPath2 should have some sort of nullable value
-    //or change this to have it be a lateInit...
-    val fileParser = if (expenseLogPath2.trim().isEmpty())
-        FileInputParser(expenseLogPath1, null) 
-    else 
-        FileInputParser(expenseLogPath1, expenseLogPath2) 
+    // This should probably be changed and the expenseLogPath2 should have some sort of nullable value
+    // or change this to have it be a lateInit...
+    val fileParser = if (expenseLogPath2.trim().isEmpty()) {
+        FileInputParser(expenseLogPath1, null)
+    } else {
+        FileInputParser(expenseLogPath1, expenseLogPath2)
+    }
     val sheetList = fileParser.getAllSheets()
-
 
     val teamParser = SheetToTeamParser(sheetList)
     val teams = teamParser.processAndGetTeams()
-    //Teams is a hash map with the String key value being the team name and the Team being the team
-    //object for the specific Team. This value will be passed to the next step which should be the
-    //Team output writer
+    // Teams is a hash map with the String key value being the team name and the Team being the team
+    // object for the specific Team. This value will be passed to the next step which should be the
+    // Team output writer
 
-    Thread.sleep(1000)
-    throw Exception("Output writing not implemented, parsing has been implemented and ${teams.size} teams found")
+    // generate team expense breakdown for each team in teams using the lineItemWriter function and format using totalCalculations
+    for (team in teams) {
+        var lastLine = lineItemWriter(team.value, Paths.get(outputDirPath), "${team.key} Team Expense Breakdown.xlsx")
+
+        // Open the generated .xlsx file
+        var currentWorkbook = XSSFWorkbook(FileInputStream(File("$outputDirPath\\${team.key} Team Expense Breakdown.xlsx")))
+        totalCalculations(currentWorkbook, 4, lastLine, 6)
+        currentWorkbook.close()
+    }
 }

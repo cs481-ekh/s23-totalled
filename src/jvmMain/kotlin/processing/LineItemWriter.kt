@@ -42,7 +42,14 @@ fun lineItemWriter(givenTeam: Team, outputPath: Path, fileName: String): Int {
 
     // Set up the headers
     // Write the Semester (A1)
-    writeToCell(sheet, 0, 0, getSemester(givenTeam.lineItemList[0].date) + " Capstone Design")
+    // find the first line item's date that isn't empty and get the semester from it
+    var nonEmptyDateItem = givenTeam.lineItemList.find { it.date != "" }
+
+    if (nonEmptyDateItem != null) {
+        writeToCell(sheet, 0, 0, getSemester(nonEmptyDateItem.date) + " Capstone Design")
+    } else {
+        writeToCell(sheet, 0, 0, "Capstone Design")
+    }
 
     // Write Team Name (C2)
     writeToCell(sheet, 1, 2, givenTeam.teamName)
@@ -114,6 +121,10 @@ private fun getSemester(dateAsString: String): String {
         try {
             date = pattern.parse(dateAsString)
         } catch (ex: ParseException) { }
+    }
+
+    if (date == null) {
+        throw ParseException("Could not parse date", 0)
     }
 
     var thisCalendar = Calendar.getInstance()

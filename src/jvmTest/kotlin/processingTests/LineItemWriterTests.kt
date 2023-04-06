@@ -58,38 +58,38 @@ class LineItemWriterTests {
         AssertCellAtIndexMatchesValue(sheet, 4, 1, "team-001")
         AssertCellAtIndexMatchesValue(sheet, 4, 2, "Home Depot")
         AssertCellAtIndexMatchesValue(sheet, 4, 3, "1/2/2023")
-        AssertCellAtIndexMatchesValue(sheet, 4, 4, "12.0")
+        AssertCellAtIndexMatchesValue(sheet, 4, 4, 12.0)
         AssertCellAtIndexMatchesValue(sheet, 4, 5, "Sheet Metal")
-        AssertCellAtIndexMatchesValue(sheet, 4, 6, "12.0")
-        AssertCellAtIndexMatchesValue(sheet, 4, 7, "0.0")
+        AssertCellAtIndexMatchesValue(sheet, 4, 6, 12.0)
+        AssertCellAtIndexMatchesValue(sheet, 4, 7, 0.0)
 
         // item2
         AssertCellAtIndexMatchesValue(sheet, 5, 0, "NONE")
         AssertCellAtIndexMatchesValue(sheet, 5, 1, "team-001")
         AssertCellAtIndexMatchesValue(sheet, 5, 2, "MBE")
         AssertCellAtIndexMatchesValue(sheet, 5, 3, "8/1/2022")
-        AssertCellAtIndexMatchesValue(sheet, 5, 4, "1000.0")
+        AssertCellAtIndexMatchesValue(sheet, 5, 4, 1000.0)
         AssertCellAtIndexMatchesValue(sheet, 5, 5, "Sponsor Fee")
-        AssertCellAtIndexMatchesValue(sheet, 5, 8, "1000.0")
+        AssertCellAtIndexMatchesValue(sheet, 5, 8, 1000.0)
 
         // item3
         AssertCellAtIndexMatchesValue(sheet, 6, 0, "RMB")
         AssertCellAtIndexMatchesValue(sheet, 6, 1, "team-001")
         AssertCellAtIndexMatchesValue(sheet, 6, 2, "PipesUSA.Com")
         AssertCellAtIndexMatchesValue(sheet, 6, 3, "1/3/23")
-        AssertCellAtIndexMatchesValue(sheet, 6, 4, "15.5")
+        AssertCellAtIndexMatchesValue(sheet, 6, 4, 15.5)
         AssertCellAtIndexMatchesValue(sheet, 6, 5, "Piping")
-        AssertCellAtIndexMatchesValue(sheet, 6, 6, "12.0")
-        AssertCellAtIndexMatchesValue(sheet, 6, 7, "3.5")
+        AssertCellAtIndexMatchesValue(sheet, 6, 6, 12.0)
+        AssertCellAtIndexMatchesValue(sheet, 6, 7, 3.5)
 
         // item4
         AssertCellAtIndexMatchesValue(sheet, 7, 0, "TRV")
         AssertCellAtIndexMatchesValue(sheet, 7, 1, "team-001")
         AssertCellAtIndexMatchesValue(sheet, 7, 2, "Hilton Garden Inn")
         AssertCellAtIndexMatchesValue(sheet, 7, 3, "12/25/23")
-        AssertCellAtIndexMatchesValue(sheet, 7, 4, "140.0")
+        AssertCellAtIndexMatchesValue(sheet, 7, 4, 140.0)
         AssertCellAtIndexMatchesValue(sheet, 7, 5, "Hotel Stay")
-        AssertCellAtIndexMatchesValue(sheet, 7, 9, "140.0")
+        AssertCellAtIndexMatchesValue(sheet, 7, 9, 140.0)
 
         sampleTeamObject_LineItemsWritten_ReturnsCorrectLastRowWrittenTo()
     }
@@ -97,5 +97,9 @@ class LineItemWriterTests {
     fun AssertCellAtIndexMatchesValue(sheet: Sheet, rowIndx: Int, colIdx: Int, value: String) {
         val cell = sheet.getRow(rowIndx).getCell(colIdx)
         assertEquals("Expected $value, but got ${cell.stringCellValue} instead!", value, cell.stringCellValue)
+    }
+    fun AssertCellAtIndexMatchesValue(sheet: Sheet, rowIndx: Int, colIdx: Int, value: Double) {
+        val cell = sheet.getRow(rowIndx).getCell(colIdx)
+        assertEquals("Expected $value, but got ${cell.numericCellValue} instead!", value, cell.numericCellValue)
     }
 }

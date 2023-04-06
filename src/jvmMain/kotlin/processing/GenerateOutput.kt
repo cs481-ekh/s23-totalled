@@ -3,6 +3,7 @@ package processing
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import java.io.File
 import java.io.FileInputStream
+import java.io.FileOutputStream
 import java.nio.file.Paths
 
 /**
@@ -36,11 +37,13 @@ fun generateOutput(
 
     // generate team expense breakdown for each team in teams using the lineItemWriter function and format using totalCalculations
     for (team in teams) {
-        var lastLine = lineItemWriter(team.value, Paths.get(outputDirPath), "${team.key} Team Expense Breakdown.xlsx")
+        val lastLine = lineItemWriter(team.value, Paths.get(outputDirPath), "${team.key} Team Expense Breakdown.xlsx")
 
         // Open the generated .xlsx file
-        var currentWorkbook = XSSFWorkbook(FileInputStream(File("$outputDirPath\\${team.key} Team Expense Breakdown.xlsx")))
-        totalCalculations(currentWorkbook, 4, lastLine, 6)
+        val filePath = "$outputDirPath/${team.key} Team Expense Breakdown.xlsx"
+        val currentWorkbook = XSSFWorkbook(FileInputStream(File(filePath)))
+        team.value.totalCharges = totalCalculations(currentWorkbook, 5, lastLine + 1, 6)
+        FileOutputStream(filePath).use { outputStream -> currentWorkbook.write(outputStream) }
         currentWorkbook.close()
     }
 }

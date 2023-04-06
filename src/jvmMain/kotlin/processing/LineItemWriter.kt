@@ -95,7 +95,11 @@ fun writeToCell(sheet: Sheet, rowIdx: Int, colIdx: Int, value: String) {
         while (cellIterator.hasNext()) {
             val cell = cellIterator.next()
             if (cell.rowIndex == rowIdx && cell.columnIndex == colIdx) {
-                cell.setCellValue(value)
+                if (value.toDoubleOrNull() != null) {
+                    cell.setCellValue(value.toDouble())
+                } else {
+                    cell.setCellValue(value)
+                }
                 return
             }
         }

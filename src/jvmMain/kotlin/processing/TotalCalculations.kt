@@ -4,10 +4,12 @@ import org.apache.poi.ss.usermodel.BorderStyle
 import org.apache.poi.ss.usermodel.CellStyle
 import org.apache.poi.ss.usermodel.DataFormat
 import org.apache.poi.ss.usermodel.FillPatternType
+import org.apache.poi.ss.usermodel.FormulaEvaluator
 import org.apache.poi.ss.usermodel.HorizontalAlignment
 import org.apache.poi.ss.usermodel.IndexedColors
 import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.xssf.usermodel.XSSFColor
+import java.lang.Exception
 
 /*
     Takes the information given by existing workbook
@@ -16,7 +18,7 @@ import org.apache.poi.xssf.usermodel.XSSFColor
     whilst formatting output of cells
  */
 
-fun totalCalculations(wb: Workbook, topCell: Int, bottomCell: Int, merchCol: Int) {
+fun totalCalculations(wb: Workbook, topCell: Int, bottomCell: Int, merchCol: Int): Double {
     // initialize worksheet
     val sheet = wb.getSheetAt(0)
 
@@ -101,4 +103,13 @@ fun totalCalculations(wb: Workbook, topCell: Int, bottomCell: Int, merchCol: Int
     totalChargesRow.createCell(7).cellStyle = dollarStyle
     totalChargesRow.createCell(8).cellStyle = dollarStyle
     totalChargesRow.createCell(9).cellStyle = dollarStyle
+
+    return try {
+        // Can't do totalChargesCell.numericCellValue because the formula won't be evaluated
+        val evaluator: FormulaEvaluator = wb.creationHelper.createFormulaEvaluator()
+        evaluator.evaluate(totalChargesCell).numberValue
+    } catch (e: Exception) {
+        e.printStackTrace()
+        0.0
+    }
 }

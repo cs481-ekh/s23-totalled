@@ -3,7 +3,6 @@ package processing
 import data.ProjectMetadata
 import org.apache.poi.ss.usermodel.CellCopyPolicy
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
-import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.nio.file.Files
@@ -45,7 +44,6 @@ fun writeInvoiceRequestFile(outputPath: String, projectList: List<ProjectMetadat
         row.getCell('k'.asColNum).setCellValue(project.zip)
         row.getCell('p'.asColNum).setCellValue(project.amount)
         row.getCell('q'.asColNum).setCellValue(project.amount)
-        println()
 
         if (iterator.hasNext() && separatorRowIndex != 4) {
             sheet.copyRows(4, 4, separatorRowIndex, CellCopyPolicy())

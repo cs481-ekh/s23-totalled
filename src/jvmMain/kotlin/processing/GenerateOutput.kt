@@ -22,6 +22,8 @@ fun generateOutput(
     println(outputDirPath)
     println(columnNamesPath)
 
+    val columnNames = getColumnNames(columnNamesPath)
+
     val fileParser = if (expenseLogPath2.trim().isEmpty()) {
         FileInputParser(expenseLogPath1, null)
     } else {
@@ -46,4 +48,11 @@ fun generateOutput(
         FileOutputStream(filePath).use { outputStream -> currentWorkbook.write(outputStream) }
         currentWorkbook.close()
     }
+
+    val projects = getProjectBookProjects(
+        projectBookPath,
+        teams.values.toList(),
+        columnNames.projectBookColumnNames,
+    )
+    writeInvoiceRequestFile(outputDirPath, projects)
 }

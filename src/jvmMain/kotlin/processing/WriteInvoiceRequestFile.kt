@@ -54,7 +54,7 @@ fun writeInvoiceRequestFile(outputPath: String, projectList: List<ProjectMetadat
         separatorRowIndex += 4
     }
 
-    FileOutputStream("/home/d/Downloads/JavaBooks.xlsx").use { outputStream -> wb.write(outputStream) }
+    FileOutputStream("$outputPath/InvoiceRequest.xlsx").use { outputStream -> wb.write(outputStream) }
 }
 
 val Char.asColNum: Int

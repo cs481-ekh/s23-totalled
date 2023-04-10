@@ -12,7 +12,7 @@ fun writeInvoiceRequestFile(outputPath: String, projectList: List<ProjectMetadat
     // To access a file in this the resources folder we do this:
     val templateFile = object {}.javaClass.classLoader.getResourceAsStream("InvoicingTemplate.xlsx")!!
 
-    val outputFile = Paths.get(outputPath, "InvoiceRequestTemplate.xlsx").toFile()
+    val outputFile = Paths.get(outputPath, "InvoiceRequest.xlsx").toFile()
 
     // Make sure that we clean up any existing file
     if (outputFile.exists()) {
@@ -53,6 +53,7 @@ fun writeInvoiceRequestFile(outputPath: String, projectList: List<ProjectMetadat
     }
 
     FileOutputStream("$outputPath/InvoiceRequest.xlsx").use { outputStream -> wb.write(outputStream) }
+    wb.close()
 }
 
 val Char.asColNum: Int

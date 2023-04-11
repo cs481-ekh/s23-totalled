@@ -1,4 +1,4 @@
-# Totalled
+# Desktop Application for Expense Breakdown Invoicing
 ## Members:
 - Bree Latimer
 - Chase Stauts

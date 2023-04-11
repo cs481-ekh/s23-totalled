@@ -10,18 +10,39 @@ import org.slf4j.LoggerFactory
 
 /**
  * This class will take a list of sheets and process it into Team objects containing LineItems.
+ * If you wish to have specific column names you can pass in a List of strings where the strings inside are the
+ * seven column names in the following order, otherwise the defaults are used:
+ * Senior Design PO, Business Purpose, Total Amount, Amount 2 (Shipping Handling/Non-Taxable amounts),
+ * Card, Date Ordered, Vendor Name
+ *
  * The expected call order of functions after creating a SheetToTeamParser object is as follows:
  * populateColumnHeadings(), filterRows(), createTeams(), then you can access the teams with
  * getTeams()
  * Or you can call processAndGetTeams() and it will take care of the call order and return a
  * populated Teams Map from a new Parser Object.
  */
-class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
+class SheetToTeamParser(
+    private var sheetList: MutableList<Sheet>,
+    private val headings: List<String> = listOf(
+        "senior design po",
+        "business purpose",
+        "total amount",
+        "Amount 2- Shipping and Handling Costs. Senior Design Only.".lowercase(),
+        "card",
+        "date ordered",
+        "vendor name",
+        ),
+) {
 
     private val logger = LoggerFactory.getLogger(this.javaClass)
 
-    // Just to make this easier to deal with I have it up here
-    private val amount2 = "Amount 2- Shipping and Handling Costs. Senior Design Only.".lowercase()
+    private val seniorDesignPO = headings[0].lowercase().trim()
+    private val businessPurpose = headings[1].lowercase().trim()
+    private val totalAmount = headings[2].lowercase().trim()
+    private val amount2 = headings[3].lowercase().trim()
+    private val card = headings[4].lowercase().trim()
+    private val date = headings[5].lowercase().trim()
+    private val vendor = headings[6].lowercase().trim()
 
     // Instance Variables to be used in processing
     private val teamList = HashMap<String, Team>()
@@ -44,16 +65,16 @@ class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
         for (curCell in row) {
             // logger.info(curCell.stringCellValue.lowercase().trim())
             when (curCell.stringCellValue.lowercase().trim()) {
-                "senior design po" -> tempHeadingIndicesMap["senior design po"] = curCell.columnIndex
-                "business purpose" -> tempHeadingIndicesMap["Business Purpose"] = curCell.columnIndex
-                "total amount" -> tempHeadingIndicesMap["Total Amount"] = curCell.columnIndex
+                seniorDesignPO -> tempHeadingIndicesMap["senior design po"] = curCell.columnIndex
+                businessPurpose -> tempHeadingIndicesMap["Business Purpose"] = curCell.columnIndex
+                totalAmount -> tempHeadingIndicesMap["Total Amount"] = curCell.columnIndex
                 // There are technically multiple headings with "amount 2" in each sheet,
                 // so we only want the first one
                 amount2 -> { if (!tempHeadingIndicesMap.containsKey("Shipping and Handling")) {
                     tempHeadingIndicesMap["Shipping and Handling"] = curCell.columnIndex } }
-                "card" -> tempHeadingIndicesMap["card"] = curCell.columnIndex
-                "date ordered" -> tempHeadingIndicesMap["date"] = curCell.columnIndex
-                "vendor name" -> tempHeadingIndicesMap["vendor"] = curCell.columnIndex
+                card -> tempHeadingIndicesMap["card"] = curCell.columnIndex
+                date -> tempHeadingIndicesMap["date"] = curCell.columnIndex
+                vendor -> tempHeadingIndicesMap["vendor"] = curCell.columnIndex
             }
         }
         // logger.info("The Final Map for this sheet is $tempHeadingIndicesMap")

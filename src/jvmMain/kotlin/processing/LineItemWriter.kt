@@ -20,7 +20,7 @@ import java.util.*
 fun lineItemWriter(givenTeam: Team, outputPath: Path, fileName: String): Int {
     var lastLineWritten = 3; // setting it to 3 because we want first line written to be 4, which is really 5. See the for loop.
 
-    var templateFile = File("src/jvmMain/resources/TeamExpenseBreakdownTemplate.xlsx")
+    var templateFile = object {}.javaClass.classLoader.getResourceAsStream("TeamExpenseBreakdownTemplate.xlsx")!!
 
     var outputFilePath = Paths.get(outputPath.toString(), fileName)
 
@@ -32,7 +32,7 @@ fun lineItemWriter(givenTeam: Team, outputPath: Path, fileName: String): Int {
     }
 
     // Copy the contents of templateFile to outputFile
-    Files.copy(templateFile.toPath(), outputFile.toPath())
+    Files.copy(templateFile, outputFile.toPath())
 
     var workbook = XSSFWorkbook(FileInputStream(outputFile))
 

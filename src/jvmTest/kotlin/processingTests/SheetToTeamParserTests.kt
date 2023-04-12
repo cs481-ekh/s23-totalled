@@ -17,19 +17,30 @@ class SheetToTeamParserTests {
     private val logger = LoggerFactory.getLogger(this.javaClass)
 
     private val mockSheetList = Mockito.mock(MutableList::class.java)
+    private val expenseLogInternalColumnNames = listOf(
+        "Senior Design PO",
+        "Business Purpose",
+        "Total Amount",
+        "Amount 2- Shipping and Handling Costs. Senior Design Only.",
+        "Card",
+        "Date Ordered",
+        "Vendor Name",
+    )
+
+    private val headingsMap = (expenseLogInternalColumnNames zip expenseLogInternalColumnNames).toMap()
 
     @Test
     @Suppress("UNCHECKED_CAST")
     fun listOfSheetsGiven_ConstructorCalled_ObjectCreated() {
         logger.info("$dir $path")
-        val parser = SheetToTeamParser(mockSheetList as MutableList<Sheet>)
+        val parser = SheetToTeamParser(mockSheetList as MutableList<Sheet>, headingsMap)
         assertTrue("Constructor failed", parser != null)
     }
 
     @Test
     @Suppress("UNCHECKED_CAST")
     fun listOfEmptySheetsGiven_populateColumHeadingsCalled_NoErrorsThrown() {
-        val parser = SheetToTeamParser(mutableListOf())
+        val parser = SheetToTeamParser(mutableListOf(), headingsMap)
 
         parser.populateColumnHeadingMap()
         assert(true)
@@ -37,7 +48,7 @@ class SheetToTeamParserTests {
 
     @Test
     fun listOfSheetsGiven_populateColumnHeadingsCalled_HeadingsMapPopulatedNoMocks() {
-        val parser = SheetToTeamParser(fip.getAllSheets())
+        val parser = SheetToTeamParser(fip.getAllSheets(), headingsMap)
 
         parser.populateColumnHeadingMap()
         assertEquals("Error Wrong Number of sheets with Senior Design PO found", 12, parser.sheetToHeadingsMap.size)
@@ -45,7 +56,7 @@ class SheetToTeamParserTests {
 
     @Test
     fun givenSheetsWithMapFilledOut_filterRowsCalled_ProperRowsRecorded() {
-        val parser = SheetToTeamParser(fip.getAllSheets())
+        val parser = SheetToTeamParser(fip.getAllSheets(), headingsMap)
         parser.populateColumnHeadingMap()
         parser.filterRows()
 //        for (row in parser.filteredRowList) {
@@ -63,7 +74,7 @@ class SheetToTeamParserTests {
     @Test
     @SuppressWarnings("UNCHECKED_CAST")
     fun givenParserWithFilteredRows_createTeamsCalled_TeamItemsPopulated() {
-        val parser = SheetToTeamParser(fip.getAllSheets())
+        val parser = SheetToTeamParser(fip.getAllSheets(), headingsMap)
         parser.populateColumnHeadingMap()
         parser.filterRows()
 
@@ -78,7 +89,7 @@ class SheetToTeamParserTests {
     @Test
     @SuppressWarnings("UNCHECKED_CAST")
     fun givenNewParser_processAndGetTeamsCalled_TeamItemsPopulated() {
-        val parser = SheetToTeamParser(fip.getAllSheets())
+        val parser = SheetToTeamParser(fip.getAllSheets(), headingsMap)
 
         val teamMap = parser.processAndGetTeams()
 

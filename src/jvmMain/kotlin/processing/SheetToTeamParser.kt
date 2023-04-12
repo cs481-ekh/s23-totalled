@@ -23,26 +23,18 @@ import org.slf4j.LoggerFactory
  */
 class SheetToTeamParser(
     private var sheetList: MutableList<Sheet>,
-    private val headings: List<String> = listOf(
-        "senior design po",
-        "business purpose",
-        "total amount",
-        "Amount 2- Shipping and Handling Costs. Senior Design Only.".lowercase(),
-        "card",
-        "date ordered",
-        "vendor name",
-        ),
+    private val headings: Map<String, String>,
 ) {
 
     private val logger = LoggerFactory.getLogger(this.javaClass)
 
-    private val seniorDesignPO = headings[0].lowercase().trim()
-    private val businessPurpose = headings[1].lowercase().trim()
-    private val totalAmount = headings[2].lowercase().trim()
-    private val amount2 = headings[3].lowercase().trim()
-    private val card = headings[4].lowercase().trim()
-    private val date = headings[5].lowercase().trim()
-    private val vendor = headings[6].lowercase().trim()
+    private val seniorDesignPO = headings["Senior Design PO"]!!.lowercase().trim()
+    private val businessPurpose = headings["Business Purpose"]!!.lowercase().trim()
+    private val totalAmount = headings["Total Amount"]!!.lowercase().trim()
+    private val amount2 = headings["Amount 2- Shipping and Handling Costs. Senior Design Only."]!!.lowercase().trim()
+    private val card = headings["Card"]!!.lowercase().trim()
+    private val date = headings["Date Ordered"]!!.lowercase().trim()
+    private val vendor = headings["Vendor Name"]!!.lowercase().trim()
 
     // Instance Variables to be used in processing
     private val teamList = HashMap<String, Team>()

@@ -9,12 +9,8 @@ import org.apache.poi.ss.usermodel.Sheet
 import org.slf4j.LoggerFactory
 
 /**
- * This class will take a list of sheets and process it into Team objects containing LineItems.
- * If you wish to have specific column names you can pass in a List of strings where the strings inside are the
- * seven column names in the following order, otherwise the defaults are used:
- * Senior Design PO, Business Purpose, Total Amount, Amount 2 (Shipping Handling/Non-Taxable amounts),
- * Card, Date Ordered, Vendor Name
- *
+ * This class will take a list of sheets and map of column names, then process it into Team objects containing
+ * LineItems.
  * The expected call order of functions after creating a SheetToTeamParser object is as follows:
  * populateColumnHeadings(), filterRows(), createTeams(), then you can access the teams with
  * getTeams()

@@ -49,10 +49,12 @@ fun generateOutput(
         currentWorkbook.close()
     }
 
-    val projects = getProjectBookProjects(
-        projectBookPath,
-        teams.values.toList(),
-        columnNames.projectBookColumnNames,
-    )
-    writeInvoiceRequestFile(outputDirPath, projects)
+    if (projectBookPath.trim().isNotEmpty()) {
+        val projects = getProjectBookProjects(
+            projectBookPath,
+            teams.values.toList(),
+            columnNames.projectBookColumnNames,
+        )
+        writeInvoiceRequestFile(outputDirPath, projects)
+    }
 }

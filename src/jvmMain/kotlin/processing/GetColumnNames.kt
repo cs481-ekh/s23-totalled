@@ -8,7 +8,7 @@ private val expenseLogInternalColumnNames = listOf(
     "Senior Design PO",
     "Business Purpose",
     "Total Amount",
-    "Amount 2",
+    "Amount 2- Shipping and Handling Costs. Senior Design Only.",
     "Card",
     "Date Ordered",
     "Vendor Name",

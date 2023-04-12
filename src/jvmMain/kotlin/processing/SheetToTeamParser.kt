@@ -172,7 +172,7 @@ class SheetToTeamParser(
     private fun newLineItem(row: Row, currentMap: HashMap<String, Int>): LineItem {
 //        logger.info("Current Row $row")
 //        logger.info("Current Map $currentMap")
-        logger.info("${row.getCell(currentMap["Total Amount"]!!).stringCellValue}")
+//        logger.info("${row.getCell(currentMap["Total Amount"]!!).stringCellValue}")
         val amount: Double = row.getCell(currentMap["Total Amount"] ?: throw Exception("Error"))
             .stringCellValue.replace("$", "").toDouble()
         val amount2: String = row.getCell(currentMap["Shipping and Handling"] ?: throw Exception("Error"))

@@ -7,6 +7,7 @@ import data.Team
 import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.Sheet
 import org.slf4j.LoggerFactory
+import kotlin.math.floor
 
 /**
  * This class will take a list of sheets and map of column names, then process it into Team objects containing
@@ -79,15 +80,15 @@ class SheetToTeamParser(
         for ((index, curSheet) in sheetList.withIndex()) {
             // logger.info("Current sheet: ${curSheet.sheetName}")
             for (curRow in curSheet) {
-                // logger.info("Current Row: ${curRow.rowNum}")
+                logger.info("Current Row: ${curRow.rowNum}")
                 if (curRow.rowNum > 10 || nextSheet) {
                     nextSheet = false
                     break
                 }
                 for (curCell in curRow) {
-                    // logger.info("Current Cell: ${curCell.stringCellValue} Index: ${curCell.columnIndex}")
-                    if (curCell.stringCellValue.contains("enior")) {
-                        // logger.info("Senior Design PO Found at: ${curCell.columnIndex} See!: ${curCell.stringCellValue}")
+                    logger.info("Current Cell: ${curCell.stringCellValue} Index: ${curCell.columnIndex}")
+                    if (curCell.stringCellValue.contains(seniorDesignPO)) {
+                        logger.info("Senior Design PO Found at: ${curCell.columnIndex} See!: ${curCell.stringCellValue}")
                         useRow(curRow)
                         sheetToHeadingsMap[index] = tempHeadingIndicesMap.clone() as HashMap<String, Int>
                         tempHeadingIndicesMap.clear()
@@ -111,7 +112,7 @@ class SheetToTeamParser(
         var numRowsScanned = 0
         for ((index, currentSheet) in sheetList.withIndex()) {
             // This will get the current design po column, if null then continues to the next sheet
-            // logger.info("SheetToHeadingsMap: $sheetToHeadingsMap")
+            logger.info("SheetToHeadingsMap: $sheetToHeadingsMap")
             val currentSDPColumn = sheetToHeadingsMap[index]!!["senior design po"]
             var blankRows = 0
             // logger.info("Current Sheet: ${currentSheet.sheetName} Index: $index SDPColumn $currentSDPColumn")
@@ -128,7 +129,7 @@ class SheetToTeamParser(
                 } else {
                     blankRows = 0
                 }
-                if (tempRow.getCell(currentSDPColumn!!)?.stringCellValue != "" && !(tempRow.getCell(currentSDPColumn)?.stringCellValue?.contains("esign") ?: continue)) {
+                if (tempRow.getCell(currentSDPColumn!!)?.stringCellValue != "" && !(tempRow.getCell(currentSDPColumn)?.stringCellValue?.contains(seniorDesignPO) ?: continue)) {
                     filteredRowList.add(tempRow)
                     teamListRowMapIndex.add(index)
                 }
@@ -165,6 +166,8 @@ class SheetToTeamParser(
      * a new LineItem object to be inserted into the Team Object
      */
     private fun newLineItem(row: Row, currentMap: HashMap<String, Int>): LineItem {
+        logger.info("Current Row $row")
+        logger.info("Current Map $currentMap")
         val amount: Double = row.getCell(currentMap["Total Amount"] ?: throw Exception("Error"))
             .stringCellValue.replace("$", "").toDouble()
         val amount2: String = row.getCell(currentMap["Shipping and Handling"] ?: throw Exception("Error"))
@@ -210,7 +213,9 @@ class SheetToTeamParser(
                 totalNonTaxable += amount }
         }
         if (totalNonTaxable != 0.0 && totalTaxable != 0.0) {
-            totalTaxable -= totalNonTaxable
+            totalTaxable = totalTaxable.minus(totalNonTaxable) * 100
+            totalTaxable = floor(totalTaxable)
+            totalTaxable /= 100
         }
 
         return LineItem(

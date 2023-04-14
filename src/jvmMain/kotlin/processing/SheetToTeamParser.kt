@@ -7,21 +7,31 @@ import data.Team
 import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.Sheet
 import org.slf4j.LoggerFactory
+import kotlin.math.floor
 
 /**
- * This class will take a list of sheets and process it into Team objects containing LineItems.
+ * This class will take a list of sheets and map of column names, then process it into Team objects containing
+ * LineItems.
  * The expected call order of functions after creating a SheetToTeamParser object is as follows:
  * populateColumnHeadings(), filterRows(), createTeams(), then you can access the teams with
  * getTeams()
  * Or you can call processAndGetTeams() and it will take care of the call order and return a
  * populated Teams Map from a new Parser Object.
  */
-class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
+class SheetToTeamParser(
+    private var sheetList: MutableList<Sheet>,
+    private val headings: Map<String, String>,
+) {
 
     private val logger = LoggerFactory.getLogger(this.javaClass)
 
-    // Just to make this easier to deal with I have it up here
-    private val amount2 = "Amount 2- Shipping and Handling Costs. Senior Design Only.".lowercase()
+    private val seniorDesignPO = headings["Senior Design PO"]!!.lowercase().trim()
+    private val businessPurpose = headings["Business Purpose"]!!.lowercase().trim()
+    private val totalAmount = headings["Total Amount"]!!.lowercase().trim()
+    private val amount2 = headings["Amount 2- Shipping and Handling Costs. Senior Design Only."]!!.lowercase().trim()
+    private val card = headings["Card"]!!.lowercase().trim()
+    private val date = headings["Date Ordered"]!!.lowercase().trim()
+    private val vendor = headings["Vendor Name"]!!.lowercase().trim()
 
     // Instance Variables to be used in processing
     private val teamList = HashMap<String, Team>()
@@ -44,16 +54,16 @@ class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
         for (curCell in row) {
             // logger.info(curCell.stringCellValue.lowercase().trim())
             when (curCell.stringCellValue.lowercase().trim()) {
-                "senior design po" -> tempHeadingIndicesMap["senior design po"] = curCell.columnIndex
-                "business purpose" -> tempHeadingIndicesMap["Business Purpose"] = curCell.columnIndex
-                "total amount" -> tempHeadingIndicesMap["Total Amount"] = curCell.columnIndex
+                seniorDesignPO -> tempHeadingIndicesMap["senior design po"] = curCell.columnIndex
+                businessPurpose -> tempHeadingIndicesMap["Business Purpose"] = curCell.columnIndex
+                totalAmount -> tempHeadingIndicesMap["Total Amount"] = curCell.columnIndex
                 // There are technically multiple headings with "amount 2" in each sheet,
                 // so we only want the first one
                 amount2 -> { if (!tempHeadingIndicesMap.containsKey("Shipping and Handling")) {
                     tempHeadingIndicesMap["Shipping and Handling"] = curCell.columnIndex } }
-                "card" -> tempHeadingIndicesMap["card"] = curCell.columnIndex
-                "date ordered" -> tempHeadingIndicesMap["date"] = curCell.columnIndex
-                "vendor name" -> tempHeadingIndicesMap["vendor"] = curCell.columnIndex
+                card -> tempHeadingIndicesMap["card"] = curCell.columnIndex
+                date -> tempHeadingIndicesMap["date"] = curCell.columnIndex
+                vendor -> tempHeadingIndicesMap["vendor"] = curCell.columnIndex
             }
         }
         // logger.info("The Final Map for this sheet is $tempHeadingIndicesMap")
@@ -67,18 +77,21 @@ class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
     fun populateColumnHeadingMap() {
         var nextSheet = false
 
+        logger.info("Headings: $headings")
+        logger.info("$seniorDesignPO, $businessPurpose, $date, $card, $vendor, $totalAmount, $amount2")
+
         for ((index, curSheet) in sheetList.withIndex()) {
             // logger.info("Current sheet: ${curSheet.sheetName}")
             for (curRow in curSheet) {
-                // logger.info("Current Row: ${curRow.rowNum}")
+//                logger.info("Current Row: ${curRow.rowNum}")
                 if (curRow.rowNum > 10 || nextSheet) {
                     nextSheet = false
                     break
                 }
                 for (curCell in curRow) {
-                    // logger.info("Current Cell: ${curCell.stringCellValue} Index: ${curCell.columnIndex}")
-                    if (curCell.stringCellValue.contains("enior")) {
-                        // logger.info("Senior Design PO Found at: ${curCell.columnIndex} See!: ${curCell.stringCellValue}")
+//                    logger.info("Current Cell: ${curCell.stringCellValue} Index: ${curCell.columnIndex}")
+                    if (curCell.stringCellValue.lowercase().trim().contains(seniorDesignPO)) {
+//                        logger.info("Senior Design PO Found at: ${curCell.columnIndex} See!: ${curCell.stringCellValue}")
                         useRow(curRow)
                         sheetToHeadingsMap[index] = tempHeadingIndicesMap.clone() as HashMap<String, Int>
                         tempHeadingIndicesMap.clear()
@@ -102,10 +115,10 @@ class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
         var numRowsScanned = 0
         for ((index, currentSheet) in sheetList.withIndex()) {
             // This will get the current design po column, if null then continues to the next sheet
-            // logger.info("SheetToHeadingsMap: $sheetToHeadingsMap")
+//            logger.info("SheetToHeadingsMap: $sheetToHeadingsMap")
             val currentSDPColumn = sheetToHeadingsMap[index]!!["senior design po"]
             var blankRows = 0
-            // logger.info("Current Sheet: ${currentSheet.sheetName} Index: $index SDPColumn $currentSDPColumn")
+//            logger.info("Current Sheet: ${currentSheet.sheetName} Index: $index SDPColumn $currentSDPColumn")
             for (tempRow in currentSheet) {
                 numRowsScanned++
                 // logger.info("First Cell Num: ${tempRow.firstCellNum} at row $numRowsScanned")
@@ -119,7 +132,8 @@ class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
                 } else {
                     blankRows = 0
                 }
-                if (tempRow.getCell(currentSDPColumn!!)?.stringCellValue != "" && !(tempRow.getCell(currentSDPColumn)?.stringCellValue?.contains("esign") ?: continue)) {
+//                logger.info("Current Row ${tempRow.rowNum}")
+                if (tempRow.getCell(currentSDPColumn!!)?.stringCellValue != "" && !(tempRow.getCell(currentSDPColumn)?.stringCellValue?.lowercase()?.trim()?.contains(seniorDesignPO) ?: continue)) {
                     filteredRowList.add(tempRow)
                     teamListRowMapIndex.add(index)
                 }
@@ -156,6 +170,9 @@ class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
      * a new LineItem object to be inserted into the Team Object
      */
     private fun newLineItem(row: Row, currentMap: HashMap<String, Int>): LineItem {
+//        logger.info("Current Row $row")
+//        logger.info("Current Map $currentMap")
+//        logger.info("${row.getCell(currentMap["Total Amount"]!!).stringCellValue}")
         val amount: Double = row.getCell(currentMap["Total Amount"] ?: throw Exception("Error"))
             .stringCellValue.replace("$", "").toDouble()
         val amount2: String = row.getCell(currentMap["Shipping and Handling"] ?: throw Exception("Error"))
@@ -201,7 +218,9 @@ class SheetToTeamParser(private var sheetList: MutableList<Sheet>) {
                 totalNonTaxable += amount }
         }
         if (totalNonTaxable != 0.0 && totalTaxable != 0.0) {
-            totalTaxable -= totalNonTaxable
+            totalTaxable = totalTaxable.minus(totalNonTaxable) * 100
+            totalTaxable = floor(totalTaxable)
+            totalTaxable /= 100
         }
 
         return LineItem(

@@ -31,7 +31,7 @@ fun generateOutput(
     }
     val sheetList = fileParser.getAllSheets()
 
-    val teamParser = SheetToTeamParser(sheetList)
+    val teamParser = SheetToTeamParser(sheetList, columnNames.expenseLogColumnNames)
     val teams = teamParser.processAndGetTeams()
     // Teams is a hash map with the String key value being the team name and the Team being the team
     // object for the specific Team. This value will be passed to the next step which should be the
@@ -49,10 +49,12 @@ fun generateOutput(
         currentWorkbook.close()
     }
 
-    val projects = getProjectBookProjects(
-        projectBookPath,
-        teams.values.toList(),
-        columnNames.projectBookColumnNames,
-    )
-    writeInvoiceRequestFile(outputDirPath, projects)
+    if (projectBookPath.trim().isNotEmpty()) {
+        val projects = getProjectBookProjects(
+            projectBookPath,
+            teams.values.toList(),
+            columnNames.projectBookColumnNames,
+        )
+        writeInvoiceRequestFile(outputDirPath, projects)
+    }
 }

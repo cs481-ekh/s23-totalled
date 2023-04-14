@@ -4,7 +4,6 @@ import data.PurchaseType
 import data.Team
 import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
-import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.nio.file.Files
@@ -20,11 +19,11 @@ import java.util.*
 fun lineItemWriter(givenTeam: Team, outputPath: Path, fileName: String): Int {
     var lastLineWritten = 3; // setting it to 3 because we want first line written to be 4, which is really 5. See the for loop.
 
-    var templateFile = File("src/jvmMain/resources/TeamExpenseBreakdownTemplate.xlsx")
+    val templateFile = object {}.javaClass.classLoader.getResourceAsStream("TeamExpenseBreakdownTemplate.xlsx")!!
 
-    var outputFilePath = Paths.get(outputPath.toString(), fileName)
+    val outputFilePath = Paths.get(outputPath.toString(), fileName)
 
-    var outputFile = outputFilePath.toFile()
+    val outputFile = outputFilePath.toFile()
 
     // Make sure that we clean up any existing file
     if (outputFile.exists()) {
@@ -32,17 +31,17 @@ fun lineItemWriter(givenTeam: Team, outputPath: Path, fileName: String): Int {
     }
 
     // Copy the contents of templateFile to outputFile
-    Files.copy(templateFile.toPath(), outputFile.toPath())
+    Files.copy(templateFile, outputFile.toPath())
 
-    var workbook = XSSFWorkbook(FileInputStream(outputFile))
+    val workbook = XSSFWorkbook(FileInputStream(outputFile))
 
     // Fill in appropriate cells with the corresponding information
-    var sheet = workbook.getSheetAt(0)
+    val sheet = workbook.getSheetAt(0)
 
     // Set up the headers
     // Write the Semester (A1)
     // find the first line item's date that isn't empty and get the semester from it
-    var nonEmptyDateItem = givenTeam.lineItemList.find { it.date != "" }
+    val nonEmptyDateItem = givenTeam.lineItemList.find { it.date != "" }
 
     if (nonEmptyDateItem != null) {
         writeToCell(sheet, 0, 0, getSemester(nonEmptyDateItem.date) + " Capstone Design")

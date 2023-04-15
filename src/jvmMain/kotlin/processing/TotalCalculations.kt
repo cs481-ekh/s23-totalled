@@ -17,14 +17,9 @@ fun totalCalculations(wb: Workbook, topCell: Int, bottomCell: Int, merchCol: Int
     val sheet = wb.getSheetAt(0)
 
     // initialize data format for cell
-    val itemStyle = sheet.getRow(5).getCell(5).cellStyle
-    val totalStyle = sheet.getRow(5).getCell(6).cellStyle
     // Create cells and their column reference values
     val totalRow = sheet.createRow(bottomCell + 2)
 
-    for (i in 0..5) {
-        totalRow.createCell(i).cellStyle = itemStyle
-    }
     val merchColLetter = merchCol.toChar() + 65
     val shipColLetter = (merchCol + 1).toChar() + 65
     val servColLetter = (merchCol + 2).toChar() + 65
@@ -33,6 +28,12 @@ fun totalCalculations(wb: Workbook, topCell: Int, bottomCell: Int, merchCol: Int
     val shipCell = totalRow.createCell(7)
     val servCell = totalRow.createCell(8)
     val travelCell = totalRow.createCell(9)
+
+    val itemStyle = sheet.getRow(4).getCell(5).cellStyle
+    val totalStyle = sheet.getRow(5).getCell(6).cellStyle
+    for (i in 0..5) {
+        totalRow.createCell(i).cellStyle = itemStyle
+    }
 
     // Set cell formula for total cells
     merchCell.cellFormula = "SUM($merchColLetter$topCell:$merchColLetter$bottomCell)"

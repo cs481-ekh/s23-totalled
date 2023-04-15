@@ -1,14 +1,8 @@
 package processing
 
-import org.apache.poi.ss.usermodel.BorderStyle
 import org.apache.poi.ss.usermodel.CellStyle
-import org.apache.poi.ss.usermodel.DataFormat
-import org.apache.poi.ss.usermodel.FillPatternType
 import org.apache.poi.ss.usermodel.FormulaEvaluator
-import org.apache.poi.ss.usermodel.HorizontalAlignment
-import org.apache.poi.ss.usermodel.IndexedColors
 import org.apache.poi.ss.usermodel.Workbook
-import org.apache.poi.xssf.usermodel.XSSFColor
 import java.lang.Exception
 
 /*
@@ -22,28 +16,15 @@ fun totalCalculations(wb: Workbook, topCell: Int, bottomCell: Int, merchCol: Int
     // initialize worksheet
     val sheet = wb.getSheetAt(0)
 
-    // initialize data format for cell for dollar double type
-    val dataFormat: DataFormat = wb.createDataFormat()
-    val dollarStyle: CellStyle = wb.createCellStyle()
-    dollarStyle.dataFormat = dataFormat.getFormat("$#,#0.00")
-
-    // set cell color and border color
-    dollarStyle.fillPattern = FillPatternType.SOLID_FOREGROUND
-    val fillRgb = byteArrayOf(221.toByte(), 235.toByte(), 247.toByte())
-    val color = XSSFColor()
-    color.rgb = fillRgb
-    dollarStyle.setFillForegroundColor(color)
-    dollarStyle.borderBottom = BorderStyle.THIN
-    dollarStyle.bottomBorderColor = IndexedColors.CORNFLOWER_BLUE.index
-    dollarStyle.borderTop = BorderStyle.THIN
-    dollarStyle.topBorderColor = IndexedColors.CORNFLOWER_BLUE.index
-    dollarStyle.borderLeft = BorderStyle.THIN
-    dollarStyle.leftBorderColor = IndexedColors.CORNFLOWER_BLUE.index
-    dollarStyle.borderRight = BorderStyle.THIN
-    dollarStyle.rightBorderColor = IndexedColors.CORNFLOWER_BLUE.index
-
+    // initialize data format for cell
+    val itemStyle = sheet.getRow(5).getCell(5).cellStyle
+    val totalStyle = sheet.getRow(5).getCell(6).cellStyle
     // Create cells and their column reference values
     val totalRow = sheet.createRow(bottomCell + 2)
+
+    for (i in 0..5) {
+        totalRow.createCell(i).cellStyle = itemStyle
+    }
     val merchColLetter = merchCol.toChar() + 65
     val shipColLetter = (merchCol + 1).toChar() + 65
     val servColLetter = (merchCol + 2).toChar() + 65
@@ -55,31 +36,31 @@ fun totalCalculations(wb: Workbook, topCell: Int, bottomCell: Int, merchCol: Int
 
     // Set cell formula for total cells
     merchCell.cellFormula = "SUM($merchColLetter$topCell:$merchColLetter$bottomCell)"
-    merchCell.cellStyle = dollarStyle
+    merchCell.cellStyle = totalStyle
     shipCell.cellFormula = "SUM($shipColLetter$topCell:$shipColLetter$bottomCell)"
-    shipCell.cellStyle = dollarStyle
+    shipCell.cellStyle = totalStyle
     servCell.cellFormula = "SUM($servColLetter$topCell:$servColLetter$bottomCell)"
-    servCell.cellStyle = dollarStyle
+    servCell.cellStyle = totalStyle
     travelCell.cellFormula = "SUM($travelColLetter$topCell:$travelColLetter$bottomCell)"
-    travelCell.cellStyle = dollarStyle
+    travelCell.cellStyle = totalStyle
 
     // Set cell formula calculations for taxes
     val taxRow = sheet.createRow(bottomCell + 3)
     val taxCell = taxRow.createCell(6)
     taxCell.cellFormula = "${merchCell.columnIndex.toChar() + 65}${bottomCell + 3}*0.06"
-    taxCell.cellStyle = dollarStyle
+    taxCell.cellStyle = totalStyle
 
     // Create and set cell for total sum of costs
     val totalChargesRow = sheet.createRow(bottomCell + 5)
     val totalChargesCell = totalChargesRow.createCell(6)
     totalChargesCell.cellFormula = "SUM(${taxCell.columnIndex.toChar() + 65}${bottomCell + 4}:${travelCell.columnIndex.toChar() + 65}${bottomCell + 3})"
-    totalChargesCell.cellStyle = dollarStyle
+    totalChargesCell.cellStyle = totalStyle
 
     // Set display cells with formatting
     // Create font style
     val fontHeight = 16.toShort()
     val stringStyle: CellStyle = wb.createCellStyle()
-    stringStyle.alignment = HorizontalAlignment.RIGHT
+    stringStyle.cloneStyleFrom(itemStyle)
     val font = wb.createFont()
     font.bold = true
     font.fontHeightInPoints = fontHeight
@@ -97,12 +78,10 @@ fun totalCalculations(wb: Workbook, topCell: Int, bottomCell: Int, merchCol: Int
     chargesString.setCellValue("TOTAL CHARGES")
 
     // Format leftover cells
-    taxRow.createCell(7).cellStyle = dollarStyle
-    taxRow.createCell(8).cellStyle = dollarStyle
-    taxRow.createCell(9).cellStyle = dollarStyle
-    totalChargesRow.createCell(7).cellStyle = dollarStyle
-    totalChargesRow.createCell(8).cellStyle = dollarStyle
-    totalChargesRow.createCell(9).cellStyle = dollarStyle
+    for (i in 7..9) {
+        taxRow.createCell(i).cellStyle = totalStyle
+        totalChargesRow.createCell(i).cellStyle = totalStyle
+    }
 
     return try {
         // Can't do totalChargesCell.numericCellValue because the formula won't be evaluated

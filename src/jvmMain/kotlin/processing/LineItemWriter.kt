@@ -76,7 +76,7 @@ fun lineItemWriter(givenTeam: Team, outputPath: Path, fileName: String): Int {
             PurchaseType.TRAVEL -> writeToCell(sheet, lastLineWritten, 9, lineItem.totalNonTaxable.toString())
         }
     }
-    val fileOutputStream = (FileOutputStream(outputFile))
+    val fileOutputStream = FileOutputStream(outputFile)
     workbook.write(fileOutputStream)
     // Close things up
     fileOutputStream.close()

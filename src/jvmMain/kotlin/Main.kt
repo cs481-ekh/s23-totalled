@@ -14,6 +14,9 @@ import ui.components.Wizard
 import ui.screens.SelectInputScreen
 import ui.theme.AppTheme
 
+// Also should be updated in build.gradle.kts
+const val TOTALLED_VERSION = "1.0.1"
+
 fun main() = application {
     val windowState = rememberWindowState(
         placement = WindowPlacement.Floating,

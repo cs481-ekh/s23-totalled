@@ -88,21 +88,12 @@ fun lineItemWriter(givenTeam: Team, outputPath: Path, fileName: String): Int {
  * Helper function to make writing to cells easier
  */
 fun writeToCell(sheet: Sheet, rowIdx: Int, colIdx: Int, value: String) {
-    val rowIterator = sheet.rowIterator()
-    while (rowIterator.hasNext()) {
-        val currRow = rowIterator.next()
-        val cellIterator = currRow.cellIterator()
-        while (cellIterator.hasNext()) {
-            val cell = cellIterator.next()
-            if (cell.rowIndex == rowIdx && cell.columnIndex == colIdx) {
-                if (value.toDoubleOrNull() != null) {
-                    cell.setCellValue(value.toDouble())
-                } else {
-                    cell.setCellValue(value)
-                }
-                return
-            }
-        }
+    // Check if the value is a number
+    try {
+        val number = value.toDouble()
+        sheet.getRow(rowIdx).getCell(colIdx).setCellValue(number)
+    } catch (ex: NumberFormatException) {
+        sheet.getRow(rowIdx).getCell(colIdx).setCellValue(value)
     }
 }
 

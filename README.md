@@ -2,7 +2,7 @@
 [![CI](https://github.com/cs481-ekh/s23-totalled/actions/workflows/ci.yml/badge.svg)](https://github.com/cs481-ekh/s23-totalled/actions/workflows/ci.yml)
 ---
 
-## Team
+## Team: [Totalled](https://cs481-ekh.github.io/s23-totalled/)
 ### Bree Latimer, Chase Stauts, D Metz, Paul Ellis
 ## Sponsors
 ### Boise State University Mechanical and Biomedical Engineering Department

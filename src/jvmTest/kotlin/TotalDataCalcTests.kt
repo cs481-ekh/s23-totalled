@@ -7,6 +7,7 @@ import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Test
 import processing.totalCalculations
 import java.io.File
+import java.io.FileOutputStream
 import java.nio.file.Files
 import java.nio.file.Paths
 import kotlin.io.path.name
@@ -17,7 +18,7 @@ import kotlin.test.assertEquals
 class TotalDataCalcTests {
     private val path = System.getProperty("user.dir")
     private val file: File = File("$path/src/jvmTest/TestExcelFiles/", "TotalCalcWorkbook.xlsx")
-    private lateinit var tempFile: File // = File("$path/src/jvmTest/TestExcelFiles/", "tempTotalCalcWorkbook.xlsx")
+    private lateinit var tempFile: File
     private lateinit var fIP: java.io.FileInputStream
     private lateinit var wb: XSSFWorkbook
     private lateinit var sheet: Sheet
@@ -33,9 +34,11 @@ class TotalDataCalcTests {
 
     @BeforeTest
     fun initVars() {
-        // reset the
+        //create dummy file to write to
         tempFile = File.createTempFile("tempTotalCalcWorkbook", ".xlsx", File("$path/src/jvmTest/TestExcelFiles/"))
+        //copy formatting of supplied template file
         file.copyTo(tempFile, true)
+        //Intiate streams and workbook info
         fIP = java.io.FileInputStream(tempFile)
         wb = XSSFWorkbook(fIP)
         sheet = wb.getSheetAt(0)
@@ -83,14 +86,16 @@ class TotalDataCalcTests {
         // run function to test
         totalCalculations(wb, 5, 10, 6)
         val eval = wb.creationHelper.createFormulaEvaluator()
+        val fileOutputStream = FileOutputStream(tempFile)
         // get formula calculated values
         for (i in 1..4) {
             actualToString = "$actualToString ${eval.evaluateInCell(wb.getSheetAt(0).getRow(12).getCell(5 + i))}"
-            wb.write(java.io.FileOutputStream(tempFile))
+            wb.write(fileOutputStream)
         }
         actualToString = "$actualToString ${eval.evaluateInCell(wb.getSheetAt(0).getRow(13).getCell(6))}"
         actualToString = "$actualToString ${eval.evaluateInCell(wb.getSheetAt(0).getRow(15).getCell(6))}"
         wb.close()
+        fileOutputStream.close()
 
         assertEquals(expectedToString, actualToString, "Base case Failed")
     }
@@ -103,14 +108,17 @@ class TotalDataCalcTests {
         // run function to test
         totalCalculations(wb, 5, 5, 6)
         val eval = wb.creationHelper.createFormulaEvaluator()
+        val fileOutputStream = FileOutputStream(tempFile)
         // get formula calculated values
         for (i in 1..4) {
             actualToString = actualToString + " " + eval.evaluateInCell(wb.getSheetAt(0).getRow(7).getCell(5 + i))
-            wb.write(java.io.FileOutputStream(tempFile))
+            wb.write(fileOutputStream)
         }
         actualToString = actualToString + " " + eval.evaluateInCell(wb.getSheetAt(0).getRow(8).getCell(6))
         actualToString = actualToString + " " + eval.evaluateInCell(wb.getSheetAt(0).getRow(10).getCell(6))
         wb.close()
+        fileOutputStream.close()
+
         assertEquals(expectedToString, actualToString, "Base case Failed")
     }
 

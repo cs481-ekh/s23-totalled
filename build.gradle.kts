@@ -79,7 +79,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "Totalled"
-            packageVersion = "1.0.0"
+            packageVersion = "1.0.1" // Also should be updated in Main.kt
             modules("java.compiler", "java.instrument", "java.management", "java.naming", "java.scripting", "java.security.jgss", "java.sql", "java.xml.crypto", "jdk.net", "jdk.unsupported")
             windows {
                 menu = true

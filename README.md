@@ -7,8 +7,6 @@
 ## Sponsors
 ### Boise State University Mechanical and Biomedical Engineering Department
 
----
-
 ## Description
 
 This is a project that is intended to take in Excel Workbooks of Spending and Team data for a Senior Design
@@ -16,8 +14,6 @@ Project and analyze, group and create team based Expense Breakdown Excel Workboo
 in creating Invoices for the sponsors of projects. We implemented our solution using Kotlin and the Gradle
 build system managing our dependencies. This document will describe steps for building, testing, and deploying
 the final solution.
-
---- 
 
 ## Building and Running
 ### Just building
@@ -47,7 +43,7 @@ To build and then run the program use:
 ./gradlew run
 ```
 
-## Testing
+### Testing
 
 In order to test the program you can run the following terminal command from within the project directory:
 
@@ -61,15 +57,13 @@ If this command fails you can try the following terminal command instead:
 ./gradlew test
 ```
 
-## Clean up
+### Clean up
 
 You can clean up all build artifacts by running the following command:
 
 ```console
 ./gradlew clean
 ```
-
----
 
 ## Deployment
 

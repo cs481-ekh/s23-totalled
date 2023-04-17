@@ -5,27 +5,14 @@ on:
     branches:
       - main
     paths-ignore: 
-      - '.github/**'
       - 'docs/**'
       - '**/.gitignore'
-      - 'build.sh'
-      - 'clean.sh'
-      - 'test.sh'
       - 'CONTRIBUTORS'
       - 'LICENSE'
       - 'README.MD'
   pull_request:
     branches: 
       - main
-    paths-ignore:
-      - '.github/**'
-      - 'docs/**'
-      - '**/.gitignore'
-      - 'build.sh'
-      - 'clean.sh'
-      - 'test.sh'
-      - 'CONTRIBUTORS'
-      - 'LICENSE'
   workflow_dispatch:
     inputs:
       logLevel:

@@ -7,8 +7,6 @@
 ## Sponsors
 ### Boise State University Mechanical and Biomedical Engineering Department
 
----
-
 ## Description
 
 This is a project that is intended to take in Excel Workbooks of Spending and Team data for a Senior Design
@@ -17,63 +15,67 @@ in creating Invoices for the sponsors of projects. We implemented our solution u
 build system managing our dependencies. This document will describe steps for building, testing, and deploying
 the final solution.
 
---- 
+## Building and Running
+### Just building
+If you only want to build the project you can use the provided script
+```console
+./build.sh
+```
+Or you can run:
+```console
+./gradlew build
+```
 
-## Building
+### Building a distributable locally
+Using the following command to build without creating an installer:
+```console
+./gradlew createDistributable
+```
 
-### Prepare for deployment
-In order to build the project we have a build script that you can run in the terminal within the project
-directory by calling 
->
-> `$ ./build.sh`
-> 
+To create a msi for installing on windows:
+```console
+./gradlew packageMsi
+```
 
-If the build script does not work on your computer you will need to use the terminal to run the following
-commands from within the project folder:
-
->
-> `$ ./gradlew build`
-> 
-> `$ ./gradlew packageUberJarForCurrentOS`
-> 
-
-Once the second command succeeds there will be a jar found at `build/compose/jars/totalled-{Current OS}-{Version}.jar`
-
-This JAR can then be used to run the program.
+### Running
+To build and then run the program use:
+```console
+./gradlew run
+```
 
 ### Testing
 
 In order to test the program you can run the following terminal command from within the project directory:
->
-> `$ ./test.sh`
-> 
 
-If this command fails you can try the following terminal commands instead:
+```console
+./test.sh
+```
 
-> 
-> `$ ./gradlew build`
-> 
-> `$ ./gradlew test`
+If this command fails you can try the following terminal command instead:
+
+```console
+./gradlew test
+```
 
 ### Clean up
 
-You can clean up all build artifacts by running the following script within the project directory:
+You can clean up all build artifacts by running the following command:
 
->
-> `$ ./clean.sh`
-> 
-
-If this script fails you can try running the following terminal commands instead:
-
-> 
-> `$ ./gradlew clean`
-> 
-
----
+```console
+./gradlew clean
+```
 
 ## Deployment
 
-In order to deploy the program to the end users you will need to follow the steps for building a jar 
-in the build section of this guide. Then you will be able to take the JAR file that is produced and
-share it with any users. The users will then be able to run the JAR like any other program from their
-Desktop or Downloads folder.
+### Building and Deploying
+
+In order to deploy the program to the end users you will need to follow the steps:
+
+1. Go to the GitHub Actions tab.
+2. Navigate to the Deploy action on the left hand side of the page.
+3. Click the "Run workflow" button.
+4. Select the branch you want to deploy from the drop down menu. (It's okay to select the default settings when running the workflow.)
+5. Click the "Run workflow" button when the settings are correct.
+6. Wait for the workflow to complete.
+7. Select the deploy that you would like to publish, most likely the one with the most recent timestamp.
+8. Send the link for the deploy to the Dr. Henderson. He will upload the deploy to the CS481 website.

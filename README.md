@@ -21,7 +21,7 @@ the final solution.
 
 ## Building
 
-### Prepare for deployment
+### Building Locally
 In order to build the project we have a build script that you can run in the terminal within the project
 directory by calling 
 >
@@ -54,6 +54,7 @@ If this command fails you can try the following terminal commands instead:
 > `$ ./gradlew build`
 > 
 > `$ ./gradlew test`
+>
 
 ### Clean up
 
@@ -73,7 +74,15 @@ If this script fails you can try running the following terminal commands instead
 
 ## Deployment
 
-In order to deploy the program to the end users you will need to follow the steps for building a jar 
-in the build section of this guide. Then you will be able to take the JAR file that is produced and
-share it with any users. The users will then be able to run the JAR like any other program from their
-Desktop or Downloads folder.
+### Building and Deploying
+
+In order to deploy the program to the end users you will need to follow the steps:
+
+1. Go to the GitHub Actions tab.
+2. Navigate to the Deploy action on the left hand side of the page.
+3. Click the "Run workflow" button.
+4. Select the branch you want to deploy from the drop down menu. (It's okay to select the default settings when running the workflow.)
+5. Click the "Run workflow" button when the settings are correct.
+6. Wait for the workflow to complete.
+7. Select the deploy that you would like to publish, most likely the one with the most recent timestamp.
+8. Send the link for the deploy to the Dr. Henderson. He will upload the deploy to the CS481 website.

@@ -24,18 +24,17 @@ the final solution.
 ### Building Locally
 In order to build the project we have a build script that you can run in the terminal within the project
 directory by calling 
->
-> `$ ./build.sh`
-> 
+```console
+./build.sh
+```
 
 If the build script does not work on your computer you will need to use the terminal to run the following
 commands from within the project folder:
 
->
-> `$ ./gradlew build`
-> 
-> `$ ./gradlew packageUberJarForCurrentOS`
-> 
+```console
+./gradlew build
+./gradlew packageUberJarForCurrentO
+```
 
 Once the second command succeeds there will be a jar found at `build/compose/jars/totalled-{Current OS}-{Version}.jar`
 
@@ -44,31 +43,31 @@ This JAR can then be used to run the program.
 ### Testing
 
 In order to test the program you can run the following terminal command from within the project directory:
->
-> `$ ./test.sh`
-> 
+
+```console
+./test.sh
+```
 
 If this command fails you can try the following terminal commands instead:
 
-> 
-> `$ ./gradlew build`
-> 
-> `$ ./gradlew test`
->
+```console
+./gradlew build
+./gradlew test
+```
 
 ### Clean up
 
 You can clean up all build artifacts by running the following script within the project directory:
 
->
-> `$ ./clean.sh`
-> 
+```console
+./clean.sh
+```
 
 If this script fails you can try running the following terminal commands instead:
 
-> 
-> `$ ./gradlew clean`
-> 
+```console
+./gradlew clean
+```
 
 ---
 

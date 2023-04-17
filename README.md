@@ -55,7 +55,7 @@ In order to test the program you can run the following terminal command from wit
 ./test.sh
 ```
 
-If this command fails you can try the following terminal commands instead:
+If this command fails you can try the following terminal command instead:
 
 ```console
 ./gradlew test

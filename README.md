@@ -19,7 +19,7 @@ the final solution.
 
 --- 
 
-## Building and running
+## Building and Running
 ### Just building
 If you only want to build the project you can use the provided script
 ```console

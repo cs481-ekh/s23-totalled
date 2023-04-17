@@ -57,13 +57,7 @@ If this command fails you can try the following terminal commands instead:
 
 ### Clean up
 
-You can clean up all build artifacts by running the following script within the project directory:
-
-```console
-./clean.sh
-```
-
-If this script fails you can try running the following terminal commands instead:
+You can clean up all build artifacts by running the following command:
 
 ```console
 ./gradlew clean

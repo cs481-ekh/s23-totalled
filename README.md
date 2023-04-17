@@ -19,28 +19,35 @@ the final solution.
 
 --- 
 
-## Building
-
-### Building Locally
-In order to build the project we have a build script that you can run in the terminal within the project
-directory by calling 
+## Building and running
+### Just building
+If you only want to build the project you can use the provided script
 ```console
 ./build.sh
 ```
-
-If the build script does not work on your computer you will need to use the terminal to run the following
-commands from within the project folder:
-
+Or you can run:
 ```console
 ./gradlew build
-./gradlew packageUberJarForCurrentO
 ```
 
-Once the second command succeeds there will be a jar found at `build/compose/jars/totalled-{Current OS}-{Version}.jar`
+### Building a distributable locally
+Using the following command to build without creating an installer:
+```console
+./gradlew createDistributable
+```
 
-This JAR can then be used to run the program.
+To create a msi for installing on windows:
+```console
+./gradlew packageMsi
+```
 
-### Testing
+### Running
+To build and then run the program use:
+```console
+./gradlew run
+```
+
+## Testing
 
 In order to test the program you can run the following terminal command from within the project directory:
 
@@ -51,11 +58,10 @@ In order to test the program you can run the following terminal command from wit
 If this command fails you can try the following terminal commands instead:
 
 ```console
-./gradlew build
 ./gradlew test
 ```
 
-### Clean up
+## Clean up
 
 You can clean up all build artifacts by running the following command:
 

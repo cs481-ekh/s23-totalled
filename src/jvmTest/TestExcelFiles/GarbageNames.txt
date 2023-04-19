@@ -1,0 +1,15 @@
+# Any empty line or line starting with'#' will be ignored
+# Expense Log
+qwerihwqer
+fjansiueha
+kjfaewoihf
+fijwahiuefiusa
+oineorwne
+nfiusaen
+uebnfslkajsoiuf
+
+Team Abbr
+Sponsor / Funding Department
+Billing Address / BSU Department ID
+Sponsor Contact
+Sponsor Contact email

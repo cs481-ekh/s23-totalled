@@ -46,7 +46,7 @@ fun getColumnNames(columnNamesFilePath: String): ColumnNames {
     while (currentExpenseLogColumn < expenseLogInternalColumnNames.size) {
         val line = fileLines[currentLine].trim()
         if (!line.startsWith("#") && line.isNotEmpty()) {
-            expenseLogColumnsToName[line] = expenseLogInternalColumnNames[currentExpenseLogColumn]
+            expenseLogColumnsToName[expenseLogInternalColumnNames[currentExpenseLogColumn]] = line
             currentExpenseLogColumn++
         }
         currentLine++

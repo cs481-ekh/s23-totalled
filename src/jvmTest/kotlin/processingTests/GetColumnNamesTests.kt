@@ -15,7 +15,7 @@ class GetColumnNamesTests {
             "Senior Design PO" to "Senior Design PO",
             "Business Purpose" to "Business Purpose",
             "Total Amount" to "Total Amount",
-            "Amount 2" to "Amount 2- Shipping and Handling Costs. Senior Design Only.",
+            "Amount 2- Shipping and Handling Costs. Senior Design Only." to "Amount 2",
             "Card" to "Card",
             "Date Ordered" to "Date Ordered",
             "Vendor Name" to "Vendor Name",
@@ -38,13 +38,13 @@ class GetColumnNamesTests {
     fun givenGarbageColumnNamesTxt_whenGetColumnNamesCalled_thenCorrectMapsReturned() {
         val txtFilePath = "$path/src/jvmTest/TestInputFiles/column-names-garbage.txt"
         val expectedExpenseLogMap = mapOf(
-            "kdjflg192 dsls 302934js" to "Senior Design PO",
-            "n9043@2222 222223j" to "Business Purpose",
-            "kljfld9230{RT}Y" to "Total Amount",
-            "12930lksAKLA()FKL" to "Amount 2- Shipping and Handling Costs. Senior Design Only.",
-            "43jljdfklglmn asda" to "Card",
-            "943059j--4" to "Date Ordered",
-            ">HJ/hjK>//hj/HJ\\a" to "Vendor Name",
+            "Senior Design PO" to "kdjflg192 dsls 302934js",
+            "Business Purpose" to "n9043@2222 222223j",
+            "Total Amount" to "kljfld9230{RT}Y",
+            "Amount 2- Shipping and Handling Costs. Senior Design Only." to "12930lksAKLA()FKL",
+            "Card" to "43jljdfklglmn asda",
+            "Date Ordered" to "943059j--4",
+            "Vendor Name" to ">HJ/hjK>//hj/HJ\\a",
         )
         val expectedProjectBookMap = mapOf(
             "/nkasjd3203" to "Team Abbr",

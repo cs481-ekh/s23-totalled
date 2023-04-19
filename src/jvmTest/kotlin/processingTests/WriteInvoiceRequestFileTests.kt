@@ -67,6 +67,28 @@ class WriteInvoiceRequestFileTests {
     )
 
     @Test
+    fun givenEmptyListOfProjects_whenWriteInvoiceRequestFileCalled_thenCorrectFileIsGenerated() {
+        writeInvoiceRequestFile(outputPathString, listOf())
+        val file = Paths.get(outputPathString, "NoInvoiceRequestGenerated.txt").toFile()
+
+        val expectedName = "NoInvoiceRequestGenerated.txt"
+        val actualName = file.name
+        JUnit5Asserter.assertEquals(
+            "Expected $expectedName, but got $actualName instead!",
+            expectedName,
+            actualName,
+        )
+
+        val expectedContent = "No projects in the project book were found that match with the teams in the expense log"
+        val actualContent = file.bufferedReader().use { it.readText() }
+        JUnit5Asserter.assertEquals(
+            "Expected $expectedContent, but got $actualContent instead!",
+            expectedContent,
+            actualContent,
+        )
+    }
+
+    @Test
     fun givenListOfProjects_whenWriteInvoiceRequestFileCalled_thenCorrectFileIsGenerated() {
         writeInvoiceRequestFile(outputPathString, projectList)
         val inputStream = outputPath.resolve(outputFileName).toFile().inputStream()

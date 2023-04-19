@@ -9,6 +9,13 @@ import java.nio.file.Files
 import java.nio.file.Paths
 
 fun writeInvoiceRequestFile(outputPath: String, projectList: List<ProjectMetadata>) {
+    // If there are no projects write a file making that clear to the user
+    if (projectList.isEmpty()) {
+        val outputFile = Paths.get(outputPath, "NoInvoiceRequestGenerated.txt").toFile()
+        outputFile.writeText("No projects in the project book were found that match with the teams in the expense log")
+        return
+    }
+
     // To access a file in this the resources folder we do this:
     val templateFile = object {}.javaClass.classLoader.getResourceAsStream("InvoicingTemplate.xlsx")!!
 

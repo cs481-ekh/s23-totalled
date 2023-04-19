@@ -1,12 +1,12 @@
 
-import org.apache.poi.ss.usermodel.DataFormat
+import org.apache.poi.ss.usermodel.CellStyle
 import org.apache.poi.ss.usermodel.Sheet
-import org.apache.poi.xssf.usermodel.XSSFCellStyle
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Test
 import processing.totalCalculations
 import java.io.File
+import java.io.FileOutputStream
 import java.nio.file.Files
 import java.nio.file.Paths
 import kotlin.io.path.name
@@ -17,12 +17,11 @@ import kotlin.test.assertEquals
 class TotalDataCalcTests {
     private val path = System.getProperty("user.dir")
     private val file: File = File("$path/src/jvmTest/TestExcelFiles/", "TotalCalcWorkbook.xlsx")
-    private lateinit var tempFile: File // = File("$path/src/jvmTest/TestExcelFiles/", "tempTotalCalcWorkbook.xlsx")
+    private lateinit var tempFile: File
     private lateinit var fIP: java.io.FileInputStream
     private lateinit var wb: XSSFWorkbook
     private lateinit var sheet: Sheet
-    private lateinit var dataFormat: DataFormat
-    private lateinit var dollarStyle: XSSFCellStyle
+    private lateinit var totalStyle: CellStyle
     private var merchCellTotal: Double = 0.0
     private var shipCellTotal: Double = 0.0
     private var servCellTotal: Double = 0.0
@@ -33,15 +32,15 @@ class TotalDataCalcTests {
 
     @BeforeTest
     fun initVars() {
-        // reset the
+        // create dummy file to write to
         tempFile = File.createTempFile("tempTotalCalcWorkbook", ".xlsx", File("$path/src/jvmTest/TestExcelFiles/"))
+        // copy formatting of supplied template file
         file.copyTo(tempFile, true)
+        // Intiate streams and workbook info
         fIP = java.io.FileInputStream(tempFile)
         wb = XSSFWorkbook(fIP)
         sheet = wb.getSheetAt(0)
-        dataFormat = wb.createDataFormat()
-        dollarStyle = wb.createCellStyle()
-        dollarStyle.dataFormat = dataFormat.getFormat("$#,#0.00")
+        totalStyle = sheet.getRow(5).getCell(6).cellStyle
         merchCellTotal = 0.0
         shipCellTotal = 0.0
         servCellTotal = 0.0
@@ -58,13 +57,13 @@ class TotalDataCalcTests {
         for (i in 1..5) {
             val currRow = sheet.createRow(4 + i)
             val merchCell = currRow.createCell(6)
-            merchCell.cellStyle = dollarStyle
+            merchCell.cellStyle = totalStyle
             val shipCell = currRow.createCell(7)
-            shipCell.cellStyle = dollarStyle
+            shipCell.cellStyle = totalStyle
             val servCell = currRow.createCell(8)
-            servCell.cellStyle = dollarStyle
+            servCell.cellStyle = totalStyle
             val travelCell = currRow.createCell(9)
-            travelCell.cellStyle = dollarStyle
+            travelCell.cellStyle = totalStyle
             merchCell.setCellValue(Random.nextInt(0, 3000).toDouble())
             shipCell.setCellValue(Random.nextInt(0, 3000).toDouble())
             servCell.setCellValue(Random.nextInt(0, 3000).toDouble())
@@ -83,14 +82,16 @@ class TotalDataCalcTests {
         // run function to test
         totalCalculations(wb, 5, 10, 6)
         val eval = wb.creationHelper.createFormulaEvaluator()
+        val fileOutputStream = FileOutputStream(tempFile)
         // get formula calculated values
         for (i in 1..4) {
             actualToString = "$actualToString ${eval.evaluateInCell(wb.getSheetAt(0).getRow(12).getCell(5 + i))}"
-            wb.write(java.io.FileOutputStream(tempFile))
+            wb.write(fileOutputStream)
         }
         actualToString = "$actualToString ${eval.evaluateInCell(wb.getSheetAt(0).getRow(13).getCell(6))}"
         actualToString = "$actualToString ${eval.evaluateInCell(wb.getSheetAt(0).getRow(15).getCell(6))}"
         wb.close()
+        fileOutputStream.close()
 
         assertEquals(expectedToString, actualToString, "Base case Failed")
     }
@@ -101,16 +102,19 @@ class TotalDataCalcTests {
         completeTotal = merchCellTotal + shipCellTotal + servCellTotal + travelCellTotal + merchCellTotal * 0.06
         expectedToString = " " + merchCellTotal.toString() + " " + shipCellTotal + " " + servCellTotal + " " + travelCellTotal + " " + (merchCellTotal * 0.06) + " " + completeTotal
         // run function to test
-        totalCalculations(wb, 5, 5, 6)
+        totalCalculations(wb, 5, 6, 6)
         val eval = wb.creationHelper.createFormulaEvaluator()
+        val fileOutputStream = FileOutputStream(tempFile)
         // get formula calculated values
         for (i in 1..4) {
-            actualToString = actualToString + " " + eval.evaluateInCell(wb.getSheetAt(0).getRow(7).getCell(5 + i))
-            wb.write(java.io.FileOutputStream(tempFile))
+            actualToString = actualToString + " " + eval.evaluateInCell(wb.getSheetAt(0).getRow(8).getCell(5 + i))
+            wb.write(fileOutputStream)
         }
-        actualToString = actualToString + " " + eval.evaluateInCell(wb.getSheetAt(0).getRow(8).getCell(6))
-        actualToString = actualToString + " " + eval.evaluateInCell(wb.getSheetAt(0).getRow(10).getCell(6))
+        actualToString = actualToString + " " + eval.evaluateInCell(wb.getSheetAt(0).getRow(9).getCell(6))
+        actualToString = actualToString + " " + eval.evaluateInCell(wb.getSheetAt(0).getRow(11).getCell(6))
         wb.close()
+        fileOutputStream.close()
+
         assertEquals(expectedToString, actualToString, "Base case Failed")
     }
 

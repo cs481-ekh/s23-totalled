@@ -17,7 +17,7 @@ import java.util.*
  * This function/class simply writes out the TeamExpenseBreakdown when given a Team object.
  */
 fun lineItemWriter(givenTeam: Team, outputPath: Path, fileName: String): Int {
-    var lastLineWritten = 3; // setting it to 3 because we want first line written to be 4, which is really 5. See the for loop.
+    var lastLineWritten = 3 // setting it to 3 because we want first line written to be 4, which is really 5. See the for loop.
 
     val templateFile = object {}.javaClass.classLoader.getResourceAsStream("TeamExpenseBreakdownTemplate.xlsx")!!
 
@@ -32,8 +32,8 @@ fun lineItemWriter(givenTeam: Team, outputPath: Path, fileName: String): Int {
 
     // Copy the contents of templateFile to outputFile
     Files.copy(templateFile, outputFile.toPath())
-
-    val workbook = XSSFWorkbook(FileInputStream(outputFile))
+    val fileInputStream = FileInputStream(outputFile)
+    val workbook = XSSFWorkbook(fileInputStream)
 
     // Fill in appropriate cells with the corresponding information
     val sheet = workbook.getSheetAt(0)
@@ -76,9 +76,10 @@ fun lineItemWriter(givenTeam: Team, outputPath: Path, fileName: String): Int {
             PurchaseType.TRAVEL -> writeToCell(sheet, lastLineWritten, 9, lineItem.totalNonTaxable.toString())
         }
     }
-
-    workbook.write(FileOutputStream(outputFile))
+    val fileOutputStream = FileOutputStream(outputFile)
+    workbook.write(fileOutputStream)
     // Close things up
+    fileOutputStream.close()
     workbook.close()
     return lastLineWritten
 }
@@ -87,21 +88,12 @@ fun lineItemWriter(givenTeam: Team, outputPath: Path, fileName: String): Int {
  * Helper function to make writing to cells easier
  */
 fun writeToCell(sheet: Sheet, rowIdx: Int, colIdx: Int, value: String) {
-    val rowIterator = sheet.rowIterator()
-    while (rowIterator.hasNext()) {
-        val currRow = rowIterator.next()
-        val cellIterator = currRow.cellIterator()
-        while (cellIterator.hasNext()) {
-            val cell = cellIterator.next()
-            if (cell.rowIndex == rowIdx && cell.columnIndex == colIdx) {
-                if (value.toDoubleOrNull() != null) {
-                    cell.setCellValue(value.toDouble())
-                } else {
-                    cell.setCellValue(value)
-                }
-                return
-            }
-        }
+    // Check if the value is a number
+    try {
+        val number = value.toDouble()
+        sheet.getRow(rowIdx).getCell(colIdx).setCellValue(number)
+    } catch (ex: NumberFormatException) {
+        sheet.getRow(rowIdx).getCell(colIdx).setCellValue(value)
     }
 }
 
@@ -109,7 +101,7 @@ fun writeToCell(sheet: Sheet, rowIdx: Int, colIdx: Int, value: String) {
  * Helper function to make finding the date easier and to tidy up the above code
  */
 private fun getSemester(dateAsString: String): String {
-    var acceptableFormats = mutableListOf<SimpleDateFormat>()
+    val acceptableFormats = mutableListOf<SimpleDateFormat>()
     lateinit var date: Date
 
     acceptableFormats.add(SimpleDateFormat("M/d/yyyy"))
@@ -125,9 +117,9 @@ private fun getSemester(dateAsString: String): String {
         } catch (ex: ParseException) { }
     }
 
-    var thisCalendar = Calendar.getInstance()
+    val thisCalendar = Calendar.getInstance()
     thisCalendar.time = date
-    var year = thisCalendar.get(Calendar.YEAR)
+    val year = thisCalendar.get(Calendar.YEAR)
 
     return "Fiscal Year $year"
 }

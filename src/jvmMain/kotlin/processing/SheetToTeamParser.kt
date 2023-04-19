@@ -113,9 +113,10 @@ class SheetToTeamParser(
         // Each row check if senior design po has data
         // push row into a list
         var numRowsScanned = 0
+//        logger.info("${sheetList.size} + ${sheetList[sheetList.size - 1]}")
         for ((index, currentSheet) in sheetList.withIndex()) {
             // This will get the current design po column, if null then continues to the next sheet
-//            logger.info("SheetToHeadingsMap: $sheetToHeadingsMap")
+//            logger.info("SheetToHeadingsMap $index: ${sheetToHeadingsMap[index]}")
             val currentSDPColumn = sheetToHeadingsMap[index]!!["senior design po"]
             var blankRows = 0
 //            logger.info("Current Sheet: ${currentSheet.sheetName} Index: $index SDPColumn $currentSDPColumn")

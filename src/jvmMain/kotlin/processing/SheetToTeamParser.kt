@@ -77,8 +77,8 @@ class SheetToTeamParser(
     fun populateColumnHeadingMap() {
         var nextSheet = false
 
-        //logger.info("Headings: $headings")
-        //logger.info("$seniorDesignPO, $businessPurpose, $date, $card, $vendor, $totalAmount, $amount2")
+        // logger.info("Headings: $headings")
+        // logger.info("$seniorDesignPO, $businessPurpose, $date, $card, $vendor, $totalAmount, $amount2")
 
         for ((index, curSheet) in sheetList.withIndex()) {
             // logger.info("Current sheet: ${curSheet.sheetName}")

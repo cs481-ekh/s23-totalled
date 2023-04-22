@@ -26,7 +26,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Totalled
-          path: D:\a\s23-totalled\s23-totalled\build\compose\binaries\main\msi\Totalled-1.0.0.msi
+          path: D:\a\s23-totalled\s23-totalled\build\compose\binaries\main\msi\
       - name: Upload default column names
         uses: actions/upload-artifact@v3
         with:

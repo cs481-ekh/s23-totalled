@@ -22,8 +22,13 @@ jobs:
         uses: gradle/gradle-build-action@v2
       - name: packageMsi
         run: ./gradlew packageMsi
-      - name: Upload Totalled package
+      - name: Upload Totalled msi
         uses: actions/upload-artifact@v3
         with:
           name: Totalled
           path: D:\a\s23-totalled\s23-totalled\build\compose\binaries\main\msi\Totalled-1.0.0.msi
+      - name: Upload default column names
+        uses: actions/upload-artifact@v3
+        with:
+          name: Totalled
+          path: D:\a\s23-totalled\s23-totalled\src\jvmTest\TestInputFiles\column-names-default.txt

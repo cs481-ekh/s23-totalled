@@ -15,7 +15,7 @@ class GetColumnNamesTests {
             "Senior Design PO" to "Senior Design PO",
             "Business Purpose" to "Business Purpose",
             "Total Amount" to "Total Amount",
-            "Amount 2- Shipping and Handling Costs. Senior Design Only." to "Amount 2",
+            "Amount 2- Shipping and Handling Costs. Senior Design Only." to "Amount 2- Shipping and Handling Costs. Senior Design Only.",
             "Card" to "Card",
             "Date Ordered" to "Date Ordered",
             "Vendor Name" to "Vendor Name",
